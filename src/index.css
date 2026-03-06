@@ -2,49 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
 @layer base {
   :root {
-
     /* base colors */
-    --background: 60 20% 96%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 83 23% 94%; /* #f1f4ee - soft sage background */
+    --foreground: 140 25% 15%; /* #1e2f2e - dark deep green text */
 
     /* card */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 140 25% 15%;
 
     /* popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 140 25% 15%;
 
-    /* brand colors (green theme like screenshot) */
-    --primary: 140 25% 32%;
-    --primary-foreground: 210 40% 98%;
+    /* brand colors (Skincare Green Theme) */
+    --primary: 140 25% 25%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 120 18% 92%;
-    --secondary-foreground: 140 25% 32%;
+    --secondary: 100 15% 90%;
+    --secondary-foreground: 140 25% 25%;
 
-    --muted: 120 18% 92%;
-    --muted-foreground: 215 16% 46%;
+    --muted: 100 12% 92%;
+    --muted-foreground: 140 10% 40%;
 
-    --accent: 120 18% 92%;
-    --accent-foreground: 140 25% 32%;
+    --accent: 100 15% 85%;
+    --accent-foreground: 140 25% 25%;
+
+    --accent-green: 110 18% 88%; /* light green for product circles */
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 210 16% 90%;
-    --input: 210 16% 90%;
-    --ring: 140 25% 32%;
+    --border: 140 10% 86%; /* subtle borders */
+    --input: 140 10% 86%;
+    --ring: 140 25% 25%;
 
-    --radius: 0.6rem;
-
-    /* optional charts */
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --radius: 0rem; /* crisp corners as per design */
   }
 
   .dark {
@@ -78,29 +74,41 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased font-sans;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Cormorant Garamond", serif;
+  }
+
+  .font-cursive {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .circle-bg {
+    @apply bg-[hsl(var(--accent-green))] rounded-full;
   }
 }
 
 @layer components {
-
   /* container for pages */
   .container-page {
-    @apply max-w-7xl mx-auto px-6;
+    @apply max-w-[1400px] mx-auto px-4 md:px-10;
+  }
+
+  /* section padding */
+  .section-padding {
+    @apply py-24;
   }
 
   /* product cards */
   .product-card {
-    @apply bg-card border rounded-xl p-4 hover:shadow-md transition;
+    @apply bg-transparent border-none p-0;
   }
-
-  /* buttons */
-  .btn-primary {
-    @apply bg-primary text-primary-foreground px-4 py-2 rounded-md;
-  }
-
-  .btn-outline {
-    @apply border border-border px-4 py-2 rounded-md hover:bg-muted;
-  }
-
 }
