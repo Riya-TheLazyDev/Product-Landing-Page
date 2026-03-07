@@ -1,7 +1,7 @@
 export default function Subscribe() {
   return (
-    <section className="bg-foreground text-white py-12 md:py-16 px-4 md:px-0">
-      <div className="container-page flex flex-col lg:flex-row border border-white/20 p-8 md:p-12 items-center justify-between gap-8 md:gap-12 text-center lg:text-left">
+    <section className="bg-foreground text-white py-12 md:py-10 px-4 md:px-0">
+      <div className="container-page flex flex-col lg:flex-row md:p-12 items-center justify-between gap-8 md:gap-12 text-center lg:text-left">
         <h3 className="text-3xl md:text-4xl font-serif max-w-sm leading-tight">
           Subscribe to get 10% off on your first order
         </h3>
