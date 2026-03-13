@@ -4,6 +4,7 @@ export const products = [
     name: "Harmony",
     price: 25,
     ratings: 5.0,
+    category: "Protect",
     image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108",
   },
   {
@@ -11,6 +12,7 @@ export const products = [
     name: "Luxe",
     price: 22,
     ratings: 4.9,
+    category: "Regenerates",
     image: "https://images.unsplash.com/photo-1556228724-4c63b8c8c0c4",
   },
   {
@@ -18,6 +20,7 @@ export const products = [
     name: "Opulent",
     price: 17.5,
     ratings: 5.0,
+    category: "Revitalizes",
     image: "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd",
   },
   {
@@ -25,6 +28,7 @@ export const products = [
     name: "Cocoon",
     price: 23,
     ratings: 5.0,
+    category: "Feeds",
     image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b",
   },
   {
@@ -32,6 +36,7 @@ export const products = [
     name: "Iridescent",
     price: 25.9,
     ratings: 4.6,
+    category: "Regulates",
     image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519",
   },
   {
@@ -39,6 +44,7 @@ export const products = [
     name: "Silken",
     price: 17.5,
     ratings: 5.0,
+    category: "Purifies",
     image: "https://images.unsplash.com/photo-1580870069867-74c57ee1bb07",
   },
   {
@@ -46,6 +52,7 @@ export const products = [
     name: "Grace",
     price: 13,
     ratings: 4.9,
+    category: "Protect",
     image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c",
   },
   {
@@ -53,6 +60,7 @@ export const products = [
     name: "Tranquil",
     price: 23,
     ratings: 4.8,
+    category: "Regenerates",
     image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad",
   },
   {
@@ -60,6 +68,7 @@ export const products = [
     name: "Pure",
     price: 19.9,
     ratings: 4.9,
+    category: "Revitalizes",
     image: "https://images.unsplash.com/photo-1556228578-dd0b9aebf7c9",
   },
   {
@@ -67,6 +76,7 @@ export const products = [
     name: "Velour",
     price: 23.9,
     ratings: 4.6,
+    category: "Feeds",
     image: "https://images.unsplash.com/photo-1629198723497-7c4c13f0b7f3",
   },
   {
@@ -74,6 +84,7 @@ export const products = [
     name: "Radiant",
     price: 23,
     ratings: 5.0,
+    category: "Regulates",
     image: "https://images.unsplash.com/photo-1585238342024-78d387f4a707",
   },
   {
@@ -81,6 +92,7 @@ export const products = [
     name: "Iridescent Plus",
     price: 15,
     ratings: 4.8,
+    category: "Purifies",
     image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348",
   },
   {
@@ -88,6 +100,7 @@ export const products = [
     name: "Nectar",
     price: 19.9,
     ratings: 5.0,
+    category: "Protect",
     image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be",
   },
   {
@@ -95,6 +108,7 @@ export const products = [
     name: "Vivid",
     price: 24.9,
     ratings: 4.6,
+    category: "Regenerates",
     image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9",
   },
   {
@@ -102,6 +116,7 @@ export const products = [
     name: "Elixir",
     price: 20,
     ratings: 5.0,
+    category: "Revitalizes",
     image: "https://images.unsplash.com/photo-1620916297391-1cdd22e4c9df",
   },
   {
@@ -109,6 +124,7 @@ export const products = [
     name: "Ethereal",
     price: 25,
     ratings: 4.9,
+    category: "Feeds",
     image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc",
   },
 ];
