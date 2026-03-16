@@ -80,23 +80,37 @@ export default function ProductSection() {
       {/* FILTER BAR */}
       <div className="flex flex-col gap-8 mb-10">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="flex items-center gap-2 md:gap-3 flex-nowrap overflow-x-auto no-scrollbar pb-2 lg:pb-0">
-            {InfoData.map((data) => (
-              <InfoButton
-                key={data.details}
-                details={data.details}
-                active={activeFilter === data.details}
-                onClick={() => setActiveFilter(data.details)}
-              />
-            ))}
-
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full w-8 h-8 border-foreground/20 hover:bg-foreground hover:text-white transition-all shrink-0"
+          <div className="relative flex-1 min-w-0 w-full">
+            <div
+              id="category-scroll"
+              className="flex items-center gap-2 md:gap-3 flex-nowrap overflow-x-auto no-scrollbar pb-2 lg:pb-0 pr-12 w-full"
             >
-              <ArrowRight size={14} />
-            </Button>
+              {InfoData.map((data) => (
+                <InfoButton
+                  key={data.details}
+                  details={data.details}
+                  active={activeFilter === data.details}
+                  onClick={() => setActiveFilter(data.details)}
+                />
+              ))}
+            </div>
+
+            <div className="absolute right-0 top-0 bottom-2 lg:bottom-0 flex items-center bg-gradient-to-l from-background via-background/90 to-transparent pl-8 pointer-events-none">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full w-8 h-8 border-foreground/20 hover:bg-foreground hover:text-white transition-all shrink-0 bg-background pointer-events-auto shadow-sm"
+                onClick={() => {
+                  const scrollContainer =
+                    document.getElementById("category-scroll");
+                  if (scrollContainer) {
+                    scrollContainer.scrollBy({ left: 200, behavior: "smooth" });
+                  }
+                }}
+              >
+                <ArrowRight size={14} />
+              </Button>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 w-full md:w-auto">
