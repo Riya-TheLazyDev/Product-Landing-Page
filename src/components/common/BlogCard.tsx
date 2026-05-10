@@ -1,4 +1,9 @@
+"use client";
+
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 export interface BlogCardProps {
   id: string;
@@ -6,47 +11,95 @@ export interface BlogCardProps {
   publishedAt: string;
   author: string;
   image: string;
-  content: string;
+  excerpt: string;
+  category: string;
+  variant?: "large" | "small";
 }
 
 export default function BlogCard({
+  id,
   title,
   publishedAt,
   author,
   image,
-  content,
+  excerpt,
+  category,
+  variant = "small",
 }: BlogCardProps) {
+  const isLarge = variant === "large";
+
   return (
-    <article className="flex flex-col group cursor-pointer">
-      {/* image */}
-      <div className="overflow-hidden mb-5">
-        <img
-          src={image}
-          alt={title}
-          className="aspect-square object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-      </div>
+    <Link href={`/blogs/${id}`}>
+      <motion.article
+        whileHover={{ y: -10 }}
+        className={`group relative overflow-hidden rounded-[2rem] transition-all duration-500
+          ${isLarge ? "h-[500px] md:h-[600px]" : "h-[280px] md:h-[300px]"}
+          bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl
+        `}
+      >
+        {/* Luxury Shine Effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20">
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+        </div>
 
-      {/* meta */}
-      <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-3 font-sans">
-        {publishedAt} • {author}
-      </p>
+        {/* Image Container */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:rotate-1"
+            loading="lazy"
+            sizes={isLarge ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
+          />
+          {/* Layered Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500 z-10" />
+          
+          {/* Storm Blue / Champagne Gold Accent Glows */}
+          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-900/20 blur-[100px] rounded-full group-hover:bg-blue-800/30 transition-colors duration-700 z-10" />
+          <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#D4AF37]/5 blur-[100px] rounded-full group-hover:bg-[#D4AF37]/10 transition-colors duration-700 z-10" />
+        </div>
 
-      {/* title */}
-      <h3 className="text-xl font-serif font-medium mb-3 leading-tight group-hover:text-foreground/70 transition-colors">
-        {title}
-      </h3>
+        {/* Content */}
+        <div className={`relative z-30 h-full flex flex-col justify-end p-8 md:p-12 transition-transform duration-500 ${isLarge ? "max-w-2xl" : "max-w-full"}`}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold backdrop-blur-md">
+                {category}
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-medium">
+                {publishedAt}
+              </span>
+            </div>
 
-      {/* content */}
-      <p className="text-sm text-foreground/60 mb-5 leading-relaxed line-clamp-2">
-        {content}
-      </p>
+            <h3 className={`${isLarge ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"} font-serif font-light leading-tight mb-4 text-white group-hover:text-[#D4AF37] transition-colors duration-500`}>
+              {title}
+            </h3>
 
-      {/* read more */}
-      <button className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest group-hover:gap-3 transition-all underline underline-offset-4 decoration-border">
-        Read more
-        <ArrowRight size={14} />
-      </button>
-    </article>
+            {isLarge && (
+              <p className="text-white/60 text-sm md:text-base mb-8 leading-relaxed font-light tracking-wide line-clamp-2">
+                {excerpt}
+              </p>
+            )}
+
+            <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-[#D4AF37] font-bold">
+                Read Story
+              </span>
+              <ArrowRight size={14} className="text-[#D4AF37]" />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Glowing Border on Hover */}
+        <div className="absolute inset-0 border border-[#D4AF37]/0 group-hover:border-[#D4AF37]/30 rounded-[2rem] transition-colors duration-500 z-40 pointer-events-none" />
+      </motion.article>
+    </Link>
   );
 }
+

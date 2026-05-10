@@ -1,147 +1,80 @@
+"use client";
+
 import { Instagram, Twitter, Facebook } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Footer() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.6, ease: [0.2, 0, 0.2, 1] as any } 
+    }
+  };
+
   return (
-    <footer className="bg-background border-t border-border/40 text-sm">
-      {/* MAIN GRID */}
-      <div className="container-page grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-l border-border/40">
-        {/* COL 1 */}
-        <div className="flex flex-col items-center border-r border-b lg:border-b-0 border-border/40 px-8 text-center py-12">
-          <h3 className="text-2xl font-serif mb-2 tracking-tight">VELVETY</h3>
-
-          <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-8 font-sans">
-            Facial & skincare
-          </p>
-
-          <p className="text-xs uppercase tracking-widest text-foreground/60 mb-2">
-            Opening hours
-          </p>
-
-          <p className="text-sm font-medium">Monday to Saturday:</p>
-          <p className="text-sm font-medium mb-8 text-foreground/80">
-            10:30 a.m. to 7 p.m.
-          </p>
-
-          <div className="flex gap-5 text-foreground/60">
-            <Instagram
-              size={18}
-              className="hover:text-foreground cursor-pointer transition-colors"
-            />
-            <Twitter
-              size={18}
-              className="hover:text-foreground cursor-pointer transition-colors"
-            />
-            <Facebook
-              size={18}
-              className="hover:text-foreground cursor-pointer transition-colors"
-            />
+    <footer className="relative pt-24 pb-12 border-t border-white/5">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="container-page grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-20"
+      >
+        <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start text-center md:text-left">
+          <h3 className="text-2xl font-serif mb-4 tracking-[0.2em] gradient-text">ELEVARA</h3>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-foreground/40 mb-8">Facial & skincare</p>
+          
+          <div className="flex gap-6 text-foreground/40">
+            <Instagram size={18} className="hover:text-primary transition-all cursor-pointer" />
+            <Twitter size={18} className="hover:text-primary transition-all cursor-pointer" />
+            <Facebook size={18} className="hover:text-primary transition-all cursor-pointer" />
           </div>
-        </div>
+        </motion.div>
 
-        {/* COL 2 */}
-        <div className="border-r border-b sm:border-b-0 border-border/40 px-8 text-center py-12">
-          <h4 className="text-xs uppercase tracking-widest font-semibold mb-6">
-            Shop
-          </h4>
-
-          <ul className="space-y-3 text-sm text-foreground/60">
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Skincare
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Facial
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Soap
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Candles
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Auto Fragrances
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Gifts
-            </li>
+        <motion.div variants={itemVariants} className="text-center md:text-left">
+          <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-primary/60">Collection</h4>
+          <ul className="space-y-4 text-[10px] uppercase tracking-widest text-foreground/40 font-bold">
+            <li className="hover:text-foreground transition-all cursor-pointer">Fragrances</li>
+            <li className="hover:text-foreground transition-all cursor-pointer">Rituals</li>
+            <li className="hover:text-foreground transition-all cursor-pointer">Bespoke</li>
+            <li className="hover:text-foreground transition-all cursor-pointer">Gifts</li>
           </ul>
-        </div>
+        </motion.div>
 
-        {/* COL 3 */}
-        <div className="border-r border-b lg:border-b-0 border-border/40 px-8 text-center py-12">
-          <h4 className="text-xs uppercase tracking-widest font-semibold mb-6">
-            Help Desk
-          </h4>
-
-          <ul className="space-y-3 text-sm text-foreground/60">
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Chat
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              FAQ
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Shipping & Returns
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Contact
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Policies
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Accessibility
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              My Account
-            </li>
+        <motion.div variants={itemVariants} className="text-center md:text-left">
+          <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-primary/60">Assistance</h4>
+          <ul className="space-y-4 text-[10px] uppercase tracking-widest text-foreground/40 font-bold">
+            <li className="hover:text-foreground transition-all cursor-pointer">Contact</li>
+            <li className="hover:text-foreground transition-all cursor-pointer">Shipping</li>
+            <li className="hover:text-foreground transition-all cursor-pointer">Policies</li>
+            <li className="hover:text-foreground transition-all cursor-pointer">FAQ</li>
           </ul>
-        </div>
+        </motion.div>
 
-        {/* COL 4 */}
-        <div className="border-r border-border/40 px-8 text-center py-12">
-          <h4 className="text-xs uppercase tracking-widest font-semibold mb-6">
-            Stores
-          </h4>
+        <motion.div variants={itemVariants} className="text-center md:text-left">
+          <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-primary/60">Philosophy</h4>
+          <p className="text-[10px] uppercase tracking-widest text-foreground/30 leading-loose font-bold">
+            Crafting cinematic experiences through the art of scent and liquid glass technology.
+          </p>
+        </motion.div>
+      </motion.div>
 
-          <ul className="space-y-3 text-sm text-foreground/60">
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Manhattan
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Brooklyn
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Tokyo
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Jakarta
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Paris
-            </li>
-            <li className="hover:text-foreground transition-colors cursor-pointer">
-              Buenos Aires
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {/* BOTTOM BAR */}
-      <div className="border-t border-border/40">
-        <div className="container-page flex flex-col md:flex-row items-center justify-between py-8 md:py-6 gap-6 text-[10px] uppercase tracking-widest text-foreground/40 font-medium text-center md:text-left">
-          <p>© Designed by DhuhaCreative. Powered by UI8.</p>
-
-          <div className="flex gap-8">
-            <span className="hover:text-foreground cursor-pointer transition-colors">
-              Licenses
-            </span>
-            <span className="hover:text-foreground cursor-pointer transition-colors">
-              Privacy
-            </span>
-            <span className="hover:text-foreground cursor-pointer transition-colors">
-              Terms
-            </span>
-          </div>
+      <div className="container-page pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[9px] uppercase tracking-[0.3em] text-foreground/30 font-bold">
+        <p>© 2024 ELEVARA BEAUTY. ALL RIGHTS RESERVED.</p>
+        <div className="flex gap-10">
+          <span className="hover:text-foreground cursor-pointer transition-all">Privacy</span>
+          <span className="hover:text-foreground cursor-pointer transition-all">Terms</span>
+          <span className="hover:text-foreground cursor-pointer transition-all">Cookies</span>
         </div>
       </div>
     </footer>
