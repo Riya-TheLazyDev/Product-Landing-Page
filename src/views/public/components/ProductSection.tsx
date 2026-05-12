@@ -12,7 +12,7 @@ export default function ProductSection() {
   return (
     <section id="shop" className="section-padding bg-[#030303]">
       <div className="container-page">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -20,11 +20,12 @@ export default function ProductSection() {
         >
           <span className="subtitle-luxury mb-6 block">The Bestsellers</span>
           <h2 className="title-luxury text-5xl md:text-8xl text-white mb-10">
-            Signature <br /> 
+            Signature <br />
             <span className="text-white/5 italic">Selections</span>
           </h2>
           <p className="text-editorial text-[10px] md:text-xs uppercase tracking-[0.4em] max-w-lg mx-auto">
-            Experience the pinnacle of our olfactory artistry through these two iconic compositions.
+            Experience the pinnacle of our olfactory artistry through these two
+            iconic compositions.
           </p>
         </motion.div>
 
@@ -36,15 +37,22 @@ export default function ProductSection() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 1.2,
+                delay: idx * 0.2,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="relative group"
             >
               <div className="absolute -inset-4 bg-white/[0.01] blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-              <ProductCard {...product} />
+              <ProductCard
+                {...product}
+                isLuxuryPerfume={product.isLuxuryPerfume}
+              />
               <div className="mt-8 px-6 text-center">
                 <p className="text-editorial text-[10px] uppercase tracking-widest leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
-                  {idx === 0 
-                    ? "A masterclass in complexity, blending rare oud with ethereal floral notes." 
+                  {idx === 0
+                    ? "A masterclass in complexity, blending rare oud with ethereal floral notes."
                     : "Capture the raw essence of the ocean at midnight, deep and mysterious."}
                 </p>
               </div>

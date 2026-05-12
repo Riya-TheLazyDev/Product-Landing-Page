@@ -1,5 +1,14 @@
 export const products = [
   {
+    id: "noir-eternel",
+    name: "Noir Éternel",
+    price: 385,
+    ratings: 4.9,
+    category: "Luxury",
+    image: "/assets/product.jpeg",
+    isLuxuryPerfume: true,
+  },
+  {
     id: 1,
     name: "Harmony",
     price: 25,
@@ -14,6 +23,7 @@ export const products = [
     ratings: 4.9,
     category: "Regenerates",
     image: "/assets/product.jpeg",
+    description: "A rejuvenating formula that restores skin's natural glow.",
   },
   {
     id: 3,
@@ -22,6 +32,7 @@ export const products = [
     ratings: 5.0,
     category: "Revitalizes",
     image: "/assets/product.jpeg",
+    description: "Rich nutrients that revitalize tired skin cells.",
   },
   {
     id: 4,
@@ -30,6 +41,7 @@ export const products = [
     ratings: 5.0,
     category: "Feeds",
     image: "/assets/product.jpeg",
+    description: "Deep nourishment for ultimate skin protection.",
   },
   {
     id: 5,
@@ -38,6 +50,7 @@ export const products = [
     ratings: 4.6,
     category: "Regulates",
     image: "/assets/product.jpeg",
+    description: "Balances skin tone and texture perfectly.",
   },
   {
     id: 6,
@@ -46,6 +59,7 @@ export const products = [
     ratings: 5.0,
     category: "Purifies",
     image: "/assets/product.jpeg",
+    description: "Gentle purification for sensitive skin types.",
   },
   {
     id: 7,
@@ -54,6 +68,7 @@ export const products = [
     ratings: 4.9,
     category: "Protect",
     image: "/assets/product.jpeg",
+    description: "Lightweight protection against environmental stressors.",
   },
   {
     id: 8,
@@ -62,6 +77,7 @@ export const products = [
     ratings: 4.8,
     category: "Regenerates",
     image: "/assets/product.jpeg",
+    description: "Calming regeneration for overnight recovery.",
   },
   {
     id: 9,
@@ -70,6 +86,7 @@ export const products = [
     ratings: 4.9,
     category: "Revitalizes",
     image: "/assets/product.jpeg",
+    description: "Pure ingredients for maximum effectiveness.",
   },
   {
     id: 10,
@@ -78,6 +95,7 @@ export const products = [
     ratings: 4.6,
     category: "Feeds",
     image: "/assets/product.jpeg",
+    description: "Luxurious feeding for supple, smooth skin.",
   },
   {
     id: 11,
@@ -86,6 +104,7 @@ export const products = [
     ratings: 5.0,
     category: "Regulates",
     image: "/assets/product.jpeg",
+    description: "Enhances natural radiance and glow.",
   },
   {
     id: 12,
@@ -94,6 +113,7 @@ export const products = [
     ratings: 4.8,
     category: "Purifies",
     image: "/assets/product.jpeg",
+    description: "Advanced purification with added benefits.",
   },
   {
     id: 13,
@@ -102,6 +122,7 @@ export const products = [
     ratings: 5.0,
     category: "Protect",
     image: "/assets/product.jpeg",
+    description: "Sweet protection with natural extracts.",
   },
   {
     id: 14,
@@ -110,6 +131,7 @@ export const products = [
     ratings: 4.6,
     category: "Regenerates",
     image: "/assets/product.jpeg",
+    description: "Vibrant regeneration for youthful appearance.",
   },
   {
     id: 15,
@@ -118,6 +140,7 @@ export const products = [
     ratings: 5.0,
     category: "Revitalizes",
     image: "/assets/product.jpeg",
+    description: "Potent elixir for dramatic skin transformation.",
   },
   {
     id: 16,
@@ -126,5 +149,6 @@ export const products = [
     ratings: 4.9,
     category: "Feeds",
     image: "/assets/product.jpeg",
+    description: "Ethereal nourishment for divine skin.",
   },
 ];

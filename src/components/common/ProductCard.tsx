@@ -10,15 +10,26 @@ type Props = {
   price: number;
   ratings: number;
   image?: string;
+  isLuxuryPerfume?: boolean;
 };
 
-export default function ProductCard({ id, name, price, image, ratings }: Props) {
+export default function ProductCard({
+  id,
+  name,
+  price,
+  image,
+  ratings,
+  isLuxuryPerfume,
+}: Props) {
   const isNew = parseInt(id.toString()) % 3 === 0;
   const isBestSeller = parseInt(id.toString()) % 5 === 0;
 
+  // All products now route to dynamic PDP
+  const productLink = `/products/${id}`;
+
   return (
-    <div className="group relative flex flex-col h-full">
-      <Link href={`/products/${id}`} className="relative block aspect-[4/5] overflow-hidden bg-[#0a0a0a] border border-white/[0.03]">
+    <a href={productLink} className="group relative flex flex-col h-full">
+      <div className="relative">
         {/* Status Tags */}
         <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
           {isNew && (
@@ -33,39 +44,35 @@ export default function ProductCard({ id, name, price, image, ratings }: Props) 
           )}
         </div>
 
-        {/* Wishlist Button */}
-        <button className="absolute top-6 right-6 z-20 text-white/20 hover:text-primary transition-colors duration-500">
-          <Heart size={14} />
-        </button>
-
-        <Image
-          src={image || "/assets/product.jpeg"}
-          alt={name}
-          fill
-          className="object-contain p-8 transition-transform duration-[1.5s] ease-[0.16, 1, 0.3, 1] group-hover:scale-110"
-          sizes="(max-width: 768px) 50vw, 25vw"
-        />
-        
-        {/* Quick Add - Bag Icon */}
-        <button className="absolute bottom-6 right-6 z-20 w-10 h-10 flex items-center justify-center bg-white/5 border border-white/5 text-white/40 hover:bg-white hover:text-black transition-all duration-700 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0">
-          <ShoppingBag size={14} />
-        </button>
-      </Link>
+        <div className="relative block aspect-[4/5] overflow-hidden bg-[#0a0a0a] border border-white/[0.03]">
+          <Image
+            src={image || "/assets/product.jpeg"}
+            alt={name}
+            fill
+            className="object-contain p-8 transition-transform duration-[1.5s] ease-[0.16, 1, 0.3, 1] group-hover:scale-110"
+            sizes="(max-width: 768px) 50vw, 25vw"
+          />
+        </div>
+      </div>
 
       <div className="flex flex-col items-center pt-8 text-center">
-        <span className="text-[7px] uppercase tracking-[0.5em] text-white/20 font-bold mb-3">L'Essence Collection</span>
+        <span className="text-[7px] uppercase tracking-[0.5em] text-white/20 font-bold mb-3">
+          L'Essence Collection
+        </span>
         <h3 className="text-sm md:text-base font-serif font-light text-white mb-3 tracking-[0.05em] group-hover:text-primary transition-colors duration-1000">
           {name}
         </h3>
-        
+
         {/* Rating */}
         <div className="flex items-center gap-1 mb-4">
           {[...Array(5)].map((_, i) => (
-            <Star 
-              key={i} 
-              size={8} 
-              fill={i < Math.floor(ratings) ? "#D4AF37" : "none"} 
-              className={i < Math.floor(ratings) ? "text-primary" : "text-white/10"} 
+            <Star
+              key={i}
+              size={8}
+              fill={i < Math.floor(ratings) ? "#D4AF37" : "none"}
+              className={
+                i < Math.floor(ratings) ? "text-primary" : "text-white/10"
+              }
             />
           ))}
           <span className="text-[7px] text-white/20 ml-2">({ratings})</span>
@@ -75,7 +82,6 @@ export default function ProductCard({ id, name, price, image, ratings }: Props) 
           ${price.toFixed(2)}
         </p>
       </div>
-    </div>
+    </a>
   );
 }
-
