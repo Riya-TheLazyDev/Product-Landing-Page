@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "../index.css";
 import Header from "@/components/layouts/components/Header";
@@ -17,9 +17,18 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "ELEVARA | Facial & Skincare",
-  description: "Experience the future of skincare with our premium liquid glass collection.",
+  title: "ELEVARA | Luxury Skincare & Fragrance",
+  description: "ELEVARA offers a cinematic collection of premium facial skincare and bespoke fragrances, meticulously crafted with liquid glass technology and botanical essences.",
+  keywords: ["luxury skincare", "bespoke fragrances", "liquid glass technology", "premium beauty", "ELEVARA"],
+  authors: [{ name: "ELEVARA" }],
 };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 
 export default function RootLayout({
   children,
@@ -29,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
-        <CustomCursor />
+        {/* <CustomCursor /> */}
         <Header />
         <main>{children}</main>
         <Footer />

@@ -6,143 +6,118 @@
 
 @layer base {
   :root {
-    --background: 240 10% 4%;
-    --foreground: 210 20% 98%;
-    --primary: 35 30% 70%; /* Soft Gold */
-    --primary-foreground: 240 10% 4%;
-    --secondary: 240 10% 12%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 240 10% 15%;
-    --muted-foreground: 240 10% 70%;
-    --accent: 35 30% 50%;
-    --accent-foreground: 210 20% 98%;
-    --border: 240 10% 20%;
-    --radius: 1rem;
-    --site-margin: 2%;
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
+    --primary: 35 25% 60%; /* Muted Antique Gold */
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 50%;
+    --accent: 35 20% 40%;
+    --accent-foreground: 0 0% 98%;
+    --border: 0 0% 12%;
+    --radius: 0rem; /* Sharp edges for luxury feel */
+    --site-margin: 3%;
   }
 
   @media (min-width: 768px) {
     :root {
-      --site-margin: 4%;
+      --site-margin: 6%;
     }
   }
 
   @media (min-width: 1280px) {
     :root {
-      --site-margin: 5%;
+      --site-margin: 3%;
     }
   }
 
   body {
-    @apply bg-background text-foreground antialiased font-sans selection:bg-primary/30;
+    @apply bg-background text-foreground antialiased font-sans selection:bg-primary/20;
     overflow-x: hidden;
-    background: #050505;
+    background: #020202;
     padding: 0 var(--site-margin);
+    letter-spacing: -0.01em;
   }
 
-  * {
-    cursor: none !important; /* Hide native cursor globally to use the custom asset */
+  /* Handle cursor suppression for touch devices */
+  @media (pointer: fine) {
+    /* cursor: none !important; */
   }
+
 
   .container-page {
-    @apply max-w-[1400px] mx-auto w-full;
+    @apply max-w-[1800px] mx-auto w-full px-6 sm:px-10 md:px-16;
   }
 
-  /* Optimized background ambient motion */
+  /* Extremely Subtle Ambient Lighting */
   body::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     background: 
-      radial-gradient(circle at 20% 20%, rgba(214,195,165,0.05), transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(191,162,122,0.03), transparent 40%);
-    animation: ambientShift 20s ease-in-out infinite alternate;
+      radial-gradient(circle at 50% 0%, rgba(214,195,165,0.03), transparent 70%);
     pointer-events: none;
-    will-change: transform;
-  }
-
-  @keyframes ambientShift {
-    from { transform: scale(1); }
-    to { transform: scale(1.1) translate(1%, 1%); }
   }
 
   h1, h2, h3, h4 {
-    @apply font-serif font-light tracking-tight;
+    @apply font-serif font-light tracking-[-0.03em] leading-[1.05];
   }
 }
 
 @layer components {
-  /* Cinematic Luxury Glass */
+  /* Minimalist Luxury Glass */
   .glass-premium {
-    background: rgba(10, 10, 10, 0.4);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: rgba(5, 5, 5, 0.7);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.02);
   }
 
   .glass-card {
-    background: rgba(15, 15, 15, 0.6);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(214, 195, 165, 0.1);
-    transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.4s ease;
-    will-change: transform, border-color;
+    background: rgba(10, 10, 10, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .glass-card:hover {
-    border-color: rgba(214, 195, 165, 0.3);
-    transform: translateY(-5px);
+    border-color: rgba(214, 195, 165, 0.1);
+    background: rgba(10, 10, 10, 0.5);
   }
 
-  /* Luxury Shine Effect */
-  .shine-effect {
-    position: relative;
-    overflow: hidden;
+  /* Editorial Typography System */
+  .title-luxury {
+    @apply font-serif font-light tracking-[-0.04em] leading-[0.95];
   }
 
-  .shine-effect::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-      45deg,
-      transparent 45%,
-      rgba(255, 255, 255, 0.05) 50%,
-      transparent 55%
-    );
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+  .subtitle-luxury {
+    @apply text-[8px] md:text-[9px] uppercase tracking-[0.6em] text-primary font-bold;
   }
 
-  .shine-effect:hover::after {
-    transform: translateX(100%);
+  .text-editorial {
+    @apply text-white/40 font-light leading-relaxed tracking-wider;
   }
 
-  /* Cinematic Typography Reveal */
-  .reveal-text {
-    overflow: hidden;
-    display: inline-block;
-  }
-
-  /* Custom Cursor Styles */
+  /* Custom Cursor - Ultra Minimal */
   .custom-cursor {
-    width: 20px;
-    height: 20px;
+    width: 8px;
+    height: 8px;
     background: white;
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 9999;
     mix-blend-mode: difference;
-    transition: transform 0.1s ease-out;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .custom-cursor-dot {
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
     background: url('/my_cursor.cur') no-repeat center center;
     background-size: contain;
     position: fixed;
@@ -150,20 +125,7 @@
     z-index: 10000;
   }
 
-  /* GPU Optimized Gradients */
-  .gradient-text {
-    background: linear-gradient(135deg, #fff 0%, #d6c3a5 50%, #fff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% auto;
-    animation: shimmerText 8s linear infinite;
-  }
-
-  @keyframes shimmerText {
-    to { background-position: 200% center; }
-  }
-
-  /* Editorial Luxury Utilities */
+  /* Subtle Shine Sweep - Very Light */
   .shine-sweep {
     position: relative;
     overflow: hidden;
@@ -179,46 +141,39 @@
     background: linear-gradient(
       45deg,
       transparent 0%,
-      rgba(214, 195, 165, 0.05) 45%,
-      rgba(214, 195, 165, 0.2) 50%,
-      rgba(214, 195, 165, 0.05) 55%,
+      rgba(255, 255, 255, 0.01) 45%,
+      rgba(255, 255, 255, 0.03) 50%,
+      rgba(255, 255, 255, 0.01) 55%,
       transparent 100%
     );
     transform: rotate(25deg);
-    transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
   }
 
   .shine-sweep:hover::after {
-    transform: rotate(25deg) translate(50%, 50%);
+    transform: rotate(25deg) translate(30%, 30%);
   }
 
-  .text-glow {
-    text-shadow: 0 0 20px rgba(214, 195, 165, 0.3);
-  }
-
-  /* Premium Button */
+  /* Haute Couture Button */
   .btn-luxury {
-    @apply relative px-8 py-3 rounded-full overflow-hidden transition-all duration-500 border border-white/10;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    @apply relative px-12 py-5 rounded-none overflow-hidden transition-all duration-1000 border border-white/5;
+    background: transparent;
   }
 
   .btn-luxury:hover {
-    @apply border-white/30;
-    box-shadow: 0 0 20px rgba(214, 195, 165, 0.1);
-    transform: scale(1.02);
+    @apply border-white/20 bg-white/[0.02];
+    letter-spacing: 0.3em;
   }
 
-  /* Mobile Optimizations */
-  @media (max-width: 768px) {
-    .glass-premium, .glass-card {
-      backdrop-filter: none; /* Disable expensive blur on mobile */
-      background: rgba(10, 10, 10, 0.9);
-    }
-    
-    .custom-cursor, .custom-cursor-dot {
-      display: none;
-    }
+  /* Spacing Rhythm */
+  .section-padding {
+    @apply py-12 md:py-20;
+  }
+
+
+  .editorial-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 items-center;
   }
 }
 

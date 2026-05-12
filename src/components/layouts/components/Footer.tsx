@@ -35,29 +35,35 @@ export default function Footer() {
           <p className="text-[10px] uppercase tracking-[0.3em] text-foreground/40 mb-8">Facial & skincare</p>
           
           <div className="flex gap-6 text-foreground/40">
-            <Instagram size={18} className="hover:text-primary transition-all cursor-pointer" />
-            <Twitter size={18} className="hover:text-primary transition-all cursor-pointer" />
-            <Facebook size={18} className="hover:text-primary transition-all cursor-pointer" />
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <Instagram size={18} className="hover:text-primary transition-all cursor-pointer" />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              <Twitter size={18} className="hover:text-primary transition-all cursor-pointer" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <Facebook size={18} className="hover:text-primary transition-all cursor-pointer" />
+            </a>
           </div>
         </motion.div>
 
         <motion.div variants={itemVariants} className="text-center md:text-left">
           <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-primary/60">Collection</h4>
           <ul className="space-y-4 text-[10px] uppercase tracking-widest text-foreground/40 font-bold">
-            <li className="hover:text-foreground transition-all cursor-pointer">Fragrances</li>
-            <li className="hover:text-foreground transition-all cursor-pointer">Rituals</li>
-            <li className="hover:text-foreground transition-all cursor-pointer">Bespoke</li>
-            <li className="hover:text-foreground transition-all cursor-pointer">Gifts</li>
+            <li><a href="/#shop" className="hover:text-foreground transition-all cursor-pointer">Fragrances</a></li>
+            <li><a href="/#shop" className="hover:text-foreground transition-all cursor-pointer">Rituals</a></li>
+            <li><a href="/#shop" className="hover:text-foreground transition-all cursor-pointer">Bespoke</a></li>
+            <li><a href="/#shop" className="hover:text-foreground transition-all cursor-pointer">Gifts</a></li>
           </ul>
         </motion.div>
 
         <motion.div variants={itemVariants} className="text-center md:text-left">
           <h4 className="text-[10px] uppercase tracking-[0.3em] font-bold mb-8 text-primary/60">Assistance</h4>
           <ul className="space-y-4 text-[10px] uppercase tracking-widest text-foreground/40 font-bold">
-            <li className="hover:text-foreground transition-all cursor-pointer">Contact</li>
-            <li className="hover:text-foreground transition-all cursor-pointer">Shipping</li>
-            <li className="hover:text-foreground transition-all cursor-pointer">Policies</li>
-            <li className="hover:text-foreground transition-all cursor-pointer">FAQ</li>
+            <li><a href="#subscribe" className="hover:text-foreground transition-all cursor-pointer">Contact</a></li>
+            <li><a href="#" className="hover:text-foreground transition-all cursor-pointer">Shipping</a></li>
+            <li><a href="#" className="hover:text-foreground transition-all cursor-pointer">Policies</a></li>
+            <li><a href="#" className="hover:text-foreground transition-all cursor-pointer">FAQ</a></li>
           </ul>
         </motion.div>
 
@@ -72,9 +78,9 @@ export default function Footer() {
       <div className="container-page pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-[9px] uppercase tracking-[0.3em] text-foreground/30 font-bold">
         <p>© 2024 ELEVARA BEAUTY. ALL RIGHTS RESERVED.</p>
         <div className="flex gap-10">
-          <span className="hover:text-foreground cursor-pointer transition-all">Privacy</span>
-          <span className="hover:text-foreground cursor-pointer transition-all">Terms</span>
-          <span className="hover:text-foreground cursor-pointer transition-all">Cookies</span>
+          <a href="#" className="hover:text-foreground cursor-pointer transition-all">Privacy</a>
+          <a href="#" className="hover:text-foreground cursor-pointer transition-all">Terms</a>
+          <a href="#" className="hover:text-foreground cursor-pointer transition-all">Cookies</a>
         </div>
       </div>
     </footer>

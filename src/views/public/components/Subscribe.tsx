@@ -1,44 +1,79 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { Check } from "lucide-react";
 
 export default function Subscribe() {
-  return (
-    <section className="py-24 relative">
-      <div className="container-page relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="glass-premium rounded-[2.5rem] p-12 md:p-16"
-        >
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
-            <div className="max-w-xl">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-primary font-medium mb-4 block">
-                Newsletter
-              </span>
-              <h3 className="text-4xl md:text-5xl font-serif font-light leading-tight gradient-text">
-                Join the exclusive <br className="hidden md:block" /> beauty circle
-              </h3>
-              <p className="text-foreground/50 text-sm mt-6 font-medium">
-                Subscribe to receive private offers and 10% off your first luxury order.
-              </p>
-            </div>
+  const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-            <div className="w-full max-w-md">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <input
-                  placeholder="Your Email Address"
-                  className="flex-1 px-8 py-4 text-xs font-bold uppercase tracking-widest bg-white/5 border border-white/10 focus:border-primary/50 outline-none transition-all placeholder:text-foreground/20 rounded-full"
-                />
-                <button className="btn-luxury px-10 py-4 text-xs font-bold uppercase tracking-widest whitespace-nowrap">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setIsSubmitted(true);
+      setEmail("");
+    }
+  };
+
+  return (
+    <section id="subscribe" className="section-padding bg-[#050505]">
+      <div className="container-page">
+        <div className="max-w-4xl mx-auto glass-card p-12 md:p-24 text-center border-white/[0.03]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="subtitle-luxury mb-8 block text-primary">Private List</span>
+            <h2 className="title-luxury text-4xl md:text-6xl text-white mb-10">
+              Join the <br /> 
+              <span className="text-white/20 italic">Inner Circle</span>
+            </h2>
+            <p className="text-white/40 text-xs md:text-sm uppercase tracking-[0.2em] font-light mb-16 max-w-md mx-auto leading-relaxed">
+              Receive exclusive access to new collection launches and private olfactory events.
+            </p>
+
+            <AnimatePresence mode="wait">
+              {!isSubmitted ? (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onSubmit={handleSubmit}
+                  className="relative max-w-md mx-auto"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ENTER YOUR EMAIL"
+                    className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-[10px] tracking-[0.3em] text-white focus:outline-none focus:border-primary transition-colors placeholder:text-white/10 uppercase font-bold"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-0 bottom-4 text-[10px] tracking-[0.3em] font-bold text-primary hover:text-white transition-colors"
+                  >
+                    JOIN
+                  </button>
+                </motion.form>
+              ) : (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="py-4"
+                >
+                  <p className="text-primary text-[10px] tracking-[0.4em] font-bold uppercase">
+                    Welcome to the Circle
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -7,6 +7,15 @@ const ProductSection = dynamic(() => import("@/views/public/components/ProductSe
   loading: () => <div className="h-96" />,
   ssr: false,
 });
+const Showcase = dynamic(() => import("@/views/public/components/Showcase"), {
+  ssr: false,
+});
+const FragranceNotes = dynamic(() => import("@/views/public/components/FragranceNotes"), {
+  ssr: false,
+});
+const Collections = dynamic(() => import("@/views/public/components/Collections"), {
+  ssr: false,
+});
 const Features = dynamic(() => import("@/views/public/components/Features"), {
   ssr: false,
 });
@@ -21,7 +30,10 @@ export default function HomeClient() {
   return (
     <>
       <Hero />
+      <Showcase />
       <ProductSection />
+      <FragranceNotes />
+      <Collections />
       <Features />
       <BlogSection />
       <Subscribe />

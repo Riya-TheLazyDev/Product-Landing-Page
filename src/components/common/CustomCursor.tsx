@@ -22,8 +22,8 @@ export default function CustomCursor() {
       mouseX = e.clientX;
       mouseY = e.clientY;
       
-      // Immediate position for the custom asset dot
-      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      // Immediate position for the custom asset dot (centered)
+      dot.style.transform = `translate3d(${mouseX - 16}px, ${mouseY - 16}px, 0)`;
     };
 
     const animate = () => {

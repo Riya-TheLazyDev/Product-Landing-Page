@@ -62,33 +62,33 @@ export default function BlogCard({
         </div>
 
         {/* Content */}
-        <div className={`relative z-30 h-full flex flex-col justify-end p-8 md:p-12 transition-transform duration-500 ${isLarge ? "max-w-2xl" : "max-w-full"}`}>
+        <div className={`relative z-30 h-full flex flex-col justify-end p-6 md:p-12 transition-transform duration-500 ${isLarge ? "max-w-2xl" : "max-w-full"}`}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="flex items-center gap-4 mb-4">
-              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold backdrop-blur-md">
+            <div className="flex items-center gap-4 mb-3 md:mb-4">
+              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold backdrop-blur-md">
                 {category}
               </span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-medium">
+              <span className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-white/40 font-medium">
                 {publishedAt}
               </span>
             </div>
 
-            <h3 className={`${isLarge ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"} font-serif font-light leading-tight mb-4 text-white group-hover:text-[#D4AF37] transition-colors duration-500`}>
+            <h3 className={`${isLarge ? "text-2xl md:text-5xl" : "text-lg md:text-2xl"} font-serif font-light leading-tight mb-3 md:mb-4 text-white group-hover:text-[#D4AF37] transition-colors duration-500`}>
               {title}
             </h3>
 
             {isLarge && (
-              <p className="text-white/60 text-sm md:text-base mb-8 leading-relaxed font-light tracking-wide line-clamp-2">
+              <p className="hidden sm:block text-white/60 text-xs md:text-base mb-6 md:mb-8 leading-relaxed font-light tracking-wide line-clamp-2">
                 {excerpt}
               </p>
             )}
 
-            <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-              <span className="text-[10px] uppercase tracking-[0.3em] text-[#D4AF37] font-bold">
+            <div className="flex items-center gap-3 md:gap-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+              <span className="text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-[#D4AF37] font-bold">
                 Read Story
               </span>
               <ArrowRight size={14} className="text-[#D4AF37]" />
