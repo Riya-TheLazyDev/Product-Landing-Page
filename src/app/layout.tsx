@@ -4,6 +4,7 @@ import "../index.css";
 import Header from "@/components/layouts/components/Header";
 import Footer from "@/components/layouts/components/Footer";
 import CustomCursor from "@/components/common/CustomCursor";
+import CartToast from "@/components/cart/CartToast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
+        <CartToast />
       </body>
     </html>
   );

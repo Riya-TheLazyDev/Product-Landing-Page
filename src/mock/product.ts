@@ -1,4 +1,17 @@
-export const products = [
+export interface Product {
+  id: number | string;
+  name: string;
+  price: number;
+  ratings: number;
+  category: string;
+  image?: string;
+  isLuxuryPerfume?: boolean;
+  description?: string;
+  perfumeType?: string;
+  sizeOptions?: string[];
+}
+
+export const products: Product[] = [
   {
     id: "noir-eternel",
     name: "Noir Éternel",
@@ -7,6 +20,8 @@ export const products = [
     category: "Luxury",
     image: "/assets/product.jpeg",
     isLuxuryPerfume: true,
+    perfumeType: "Eau de Parfum",
+    sizeOptions: ["50 ml", "100 ml", "200 ml · Maison"],
   },
   {
     id: 1,

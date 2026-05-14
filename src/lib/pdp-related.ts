@@ -1,6 +1,6 @@
-import { products } from "@/mock/product";
+import { products, type Product } from "@/mock/product";
 
-export type MockProduct = (typeof products)[number];
+export type MockProduct = Product;
 
 const CATEGORY_SUBTITLE: Record<string, string> = {
   Luxury: "Noir oud · velvet dusk accord",

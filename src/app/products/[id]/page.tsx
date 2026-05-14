@@ -1,16 +1,10 @@
 import React from "react";
 import { products } from "@/mock/product";
-import {
-  ArrowLeft,
-  Star,
-  ShoppingBag,
-  Shield,
-  Truck,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowLeft, Star, Shield, Truck, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import PdpAddToCart from "@/components/pdp/PdpAddToCart";
 import PdpRelatedFragrances from "@/components/pdp/PdpRelatedFragrances";
 import {
   getLuxurySubtitle,
@@ -125,12 +119,7 @@ export default function ProductPage({
               ))}
             </div>
 
-            <button className="btn-luxury w-full py-5 group flex items-center justify-center gap-4">
-              <ShoppingBag size={18} />
-              <span className="text-xs uppercase tracking-[0.3em] font-bold">
-                Add to Collection
-              </span>
-            </button>
+            <PdpAddToCart product={product} />
           </div>
         </div>
 
