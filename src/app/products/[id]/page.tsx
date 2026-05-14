@@ -11,6 +11,11 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import PdpRelatedFragrances from "@/components/pdp/PdpRelatedFragrances";
+import {
+  getLuxurySubtitle,
+  getRelatedProducts,
+} from "@/lib/pdp-related";
 
 export default function ProductPage({
   params,
@@ -23,6 +28,15 @@ export default function ProductPage({
   if (!product) {
     notFound();
   }
+
+  const relatedProducts = getRelatedProducts(product.id, 6);
+  const relatedItems = relatedProducts.map((p) => ({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    image: p.image,
+    subtitle: getLuxurySubtitle(p),
+  }));
 
   return (
     <div className="min-h-screen pt-32 pb-20 px-4 md:px-8 bg-[#050505]">
@@ -119,6 +133,8 @@ export default function ProductPage({
             </button>
           </div>
         </div>
+
+        <PdpRelatedFragrances items={relatedItems} />
       </div>
     </div>
   );

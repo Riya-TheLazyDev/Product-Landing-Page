@@ -19,7 +19,7 @@ export default function ShopGrid({ filters }: any) {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: (idx % 3) * 0.1 }}
           >
-            <ProductCard {...product} id={idx + 1} />
+            <ProductCard {...product} />
           </motion.div>
         ))}
       </AnimatePresence>

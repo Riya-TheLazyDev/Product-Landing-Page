@@ -11,7 +11,7 @@ export default function Hero() {
       transition: {
         duration: 7,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: "easeInOut" as const,
       },
     },
   };
@@ -23,7 +23,7 @@ export default function Hero() {
       transition: {
         duration: 7,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: "easeInOut" as const,
         delay: 0.3,
       },
     },
