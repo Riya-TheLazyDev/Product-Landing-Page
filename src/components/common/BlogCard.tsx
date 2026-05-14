@@ -34,12 +34,12 @@ export default function BlogCard({
         whileHover={{ y: -10 }}
         className={`group relative overflow-hidden rounded-[2rem] transition-all duration-500
           ${isLarge ? "h-[500px] md:h-[600px]" : "h-[280px] md:h-[300px]"}
-          bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl
+          bg-black/60 backdrop-blur-md border border-white/[0.08] shadow-2xl
         `}
       >
         {/* Luxury Shine Effect */}
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
         </div>
 
         {/* Image Container */}

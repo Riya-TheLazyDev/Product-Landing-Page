@@ -17,9 +17,9 @@ export default function Subscribe() {
   };
 
   return (
-    <section id="subscribe" className="section-padding bg-[#050505]">
+    <section id="subscribe" className="section-padding bg-[#000000]">
       <div className="container-page">
-        <div className="max-w-4xl mx-auto glass-card p-12 md:p-24 text-center border-white/[0.03]">
+        <div className="glass-obsidian mx-auto max-w-4xl border border-white/[0.06] p-12 text-center md:p-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -28,9 +28,9 @@ export default function Subscribe() {
             <span className="subtitle-luxury mb-8 block text-primary">Private List</span>
             <h2 className="title-luxury text-4xl md:text-6xl text-white mb-10">
               Join the <br /> 
-              <span className="text-white/20 italic">Inner Circle</span>
+              <span className="text-primary/25 italic">Inner Circle</span>
             </h2>
-            <p className="text-white/40 text-xs md:text-sm uppercase tracking-[0.2em] font-light mb-16 max-w-md mx-auto leading-relaxed">
+            <p className="mx-auto mb-16 max-w-md text-xs font-light uppercase leading-relaxed tracking-[0.2em] text-white/60 md:text-sm">
               Receive exclusive access to new collection launches and private olfactory events.
             </p>
 

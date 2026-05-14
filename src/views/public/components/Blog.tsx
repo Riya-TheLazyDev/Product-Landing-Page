@@ -13,18 +13,18 @@ export default function BlogSection() {
   const sideBlogs = featuredBlogs.slice(1);
 
   return (
-    <section id="journal" className="section-padding bg-[#030303]">
+    <section id="journal" className="section-padding bg-[#010101]">
       <div className="container-page">
         <div className="editorial-grid mb-16 md:mb-20">
           <div>
             <span className="subtitle-luxury mb-6 block">The Journal</span>
             <h2 className="title-luxury text-5xl md:text-7xl text-white">
               Olfactory <br /> 
-              <span className="text-white/20 italic">Stories</span>
+              <span className="text-primary/25 italic">Stories</span>
             </h2>
           </div>
           <div className="flex items-end">
-            <p className="text-white/40 text-sm md:text-base leading-relaxed font-light tracking-wide max-w-sm">
+            <p className="text-sm font-light leading-relaxed tracking-wide text-white/60 md:text-base max-w-sm">
               Explore the intricate world of Elevara through our curated collection of scent narratives and luxury insights.
             </p>
           </div>

@@ -25,18 +25,18 @@ const NOTES = [
 
 export default function FragranceNotes() {
   return (
-    <section className="section-padding bg-[#030303]">
+    <section className="section-padding bg-[#010101]">
       <div className="container-page">
         <div className="editorial-grid mb-24">
           <div>
             <span className="subtitle-luxury mb-6 block">Olfactory Pyramid</span>
             <h2 className="title-luxury text-5xl md:text-7xl text-white">
               The Architecture <br /> 
-              <span className="text-white/20 italic">of Scent</span>
+              <span className="text-primary/25 italic">of Scent</span>
             </h2>
           </div>
           <div className="flex items-end">
-            <p className="text-white/40 text-sm md:text-base leading-relaxed font-light tracking-wide max-w-sm">
+            <p className="text-sm font-light leading-relaxed tracking-wide text-white/60 md:text-base max-w-sm">
               Each Elevara fragrance is a complex structure of carefully balanced layers, evolving over time on the skin.
             </p>
           </div>
@@ -67,13 +67,13 @@ export default function FragranceNotes() {
 
               <div className="flex flex-wrap gap-3 mb-8">
                 {note.items.map((item) => (
-                  <span key={item} className="px-4 py-2 bg-white/5 border border-white/5 text-[9px] uppercase tracking-widest text-white/60 font-bold group-hover:border-primary/20 transition-colors">
+                  <span key={item} className="border border-white/[0.08] bg-black/50 px-4 py-2 text-[9px] font-bold uppercase tracking-widest text-white/70 transition-colors group-hover:border-primary/25">
                     {item}
                   </span>
                 ))}
               </div>
 
-              <p className="text-xs md:text-sm text-white/30 leading-relaxed font-light tracking-wide">
+              <p className="text-xs font-light leading-relaxed tracking-wide text-white/50 md:text-sm">
                 {note.description}
               </p>
             </motion.div>

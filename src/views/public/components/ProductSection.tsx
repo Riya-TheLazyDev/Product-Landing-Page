@@ -10,7 +10,7 @@ export default function ProductSection() {
   const featuredProducts = products.slice(0, 2);
 
   return (
-    <section id="shop" className="section-padding bg-[#030303]">
+    <section id="shop" className="section-padding bg-[#010101]">
       <div className="container-page">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -21,7 +21,7 @@ export default function ProductSection() {
           <span className="subtitle-luxury mb-6 block">The Bestsellers</span>
           <h2 className="title-luxury text-5xl md:text-8xl text-white mb-10">
             Signature <br />
-            <span className="text-white/5 italic">Selections</span>
+            <span className="text-primary/20 italic">Selections</span>
           </h2>
           <p className="text-editorial text-[10px] md:text-xs uppercase tracking-[0.4em] max-w-lg mx-auto">
             Experience the pinnacle of our olfactory artistry through these two
@@ -44,13 +44,13 @@ export default function ProductSection() {
               }}
               className="relative group"
             >
-              <div className="absolute -inset-4 bg-white/[0.01] blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <div className="absolute -inset-4 rounded-full bg-primary/[0.025] opacity-0 blur-2xl transition-opacity duration-1000 group-hover:opacity-100" />
               <ProductCard
                 {...product}
                 isLuxuryPerfume={product.isLuxuryPerfume}
               />
               <div className="mt-8 px-6 text-center">
-                <p className="text-editorial text-[10px] uppercase tracking-widest leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
+                <p className="text-editorial text-[10px] uppercase tracking-widest leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
                   {idx === 0
                     ? "A masterclass in complexity, blending rare oud with ethereal floral notes."
                     : "Capture the raw essence of the ocean at midnight, deep and mysterious."}

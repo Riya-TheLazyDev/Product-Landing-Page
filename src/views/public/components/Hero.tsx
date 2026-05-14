@@ -2,130 +2,107 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Hero() {
-  const floatingVariants = {
-    animate: {
-      y: [0, -16, 0],
-      x: [-4, 4, -4],
-      transition: {
-        duration: 7,
-        repeat: Infinity,
-        ease: "easeInOut" as const,
-      },
-    },
-  };
-
-  const outlineVariants = {
-    animate: {
-      y: [0, -12, 0],
-      x: [-3, 3, -3],
-      transition: {
-        duration: 7,
-        repeat: Infinity,
-        ease: "easeInOut" as const,
-        delay: 0.3,
-      },
-    },
-  };
-
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden bg-[#050307]"
+      className="relative min-h-screen overflow-hidden bg-[#010102]"
     >
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/assets/product.jpeg"
-          alt="Dark luxury perfume background"
-          fill
-          className="object-cover object-center opacity-60 blur-sm grayscale contrast-110"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-[#020202]/95" />
-        <div className="pointer-events-none absolute left-1/3 top-20 h-96 w-96 rounded-full bg-[#8b7355]/8 blur-3xl" />
-        <div className="pointer-events-none absolute right-1/4 top-40 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
+      {/* Deep cinematic field — black-dominant, minimal haze */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(214,195,165,0.045),transparent_55%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020204] via-[#010101] to-[#000000]" />
+        <div className="absolute bottom-0 left-1/2 h-[45vh] w-[min(140vw,900px)] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(214,195,165,0.04),transparent_70%)] opacity-80" />
       </div>
 
-      <div className="relative z-20 mx-auto flex min-h-screen max-w-7xl items-center px-6 py-16 sm:px-10 lg:px-16">
-        <div className="grid w-full gap-12 lg:grid-cols-2 lg:items-center">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6 py-20 sm:px-10 lg:px-16">
+        <div className="grid w-full items-center gap-16 lg:grid-cols-2 lg:gap-12">
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-8"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-xl space-y-10"
           >
-            <div className="space-y-6">
-              <span className="inline-block text-[10px] uppercase tracking-[0.55em] text-white/40 font-semibold">
-                L'Essence de l'Éthéré
+            <div className="space-y-7">
+              <span className="subtitle-luxury block tracking-[0.55em]">
+                Elevāra · Maison de Parfum
               </span>
-              <h1 className="text-5xl font-serif uppercase tracking-[-0.04em] text-white sm:text-6xl lg:text-[5.5rem] leading-[0.9] drop-shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+              <h1 className="font-serif text-[clamp(2.75rem,8vw,5.5rem)] font-light uppercase tracking-[-0.04em] text-white leading-[0.92]">
                 ELEVARA
               </h1>
-              <p className="max-w-xl text-sm leading-8 text-white/70 md:text-base">
-                A cinematic fragrance narrative woven in midnight mist, luminous
-                spice, and glass-clear elegance. Refined, layered, and crafted
-                for the modern luxury ritual.
+              <p className="max-w-md font-serif text-lg text-primary/90 tracking-[0.02em] md:text-xl">
+                Noir luminosity. Silence, then sillage.
+              </p>
+              <p className="max-w-md text-sm leading-relaxed text-white/70 md:text-[0.95rem]">
+                A single composition — carved from obsidian glass, rare resins,
+                and moonlit florals. For those who wear the night.
               </p>
             </div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                delay: 0.25,
+                duration: 1.15,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="flex flex-wrap gap-4"
             >
               <button
+                type="button"
                 onClick={() =>
                   document
                     .getElementById("shop")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="rounded-full bg-white px-10 py-4 text-[10px] uppercase tracking-[0.35em] text-black shadow-[0_18px_60px_rgba(255,255,255,0.12)] transition duration-500 hover:bg-white/90"
+                className="rounded-full bg-white px-10 py-4 text-[10px] uppercase tracking-[0.32em] text-black shadow-[0_20px_70px_-30px_rgba(255,255,255,0.22)] transition duration-700 hover:bg-white/95"
               >
-                Discover Collection
+                Discover collection
               </button>
-              <button className="rounded-full border border-white/15 bg-white/5 px-10 py-4 text-[10px] uppercase tracking-[0.35em] text-white transition duration-500 hover:border-white/30 hover:bg-white/10">
-                Shop Signature
-              </button>
+              <Link
+                href="/shop"
+                className="rounded-full border border-white/[0.12] bg-black/40 px-10 py-4 text-[10px] uppercase tracking-[0.32em] text-white/90 backdrop-blur-sm transition duration-700 hover:border-primary/35 hover:text-primary"
+              >
+                Shop signature
+              </Link>
             </motion.div>
           </motion.div>
 
-          <div className="relative flex items-center justify-center lg:justify-end">
+          <div className="relative flex justify-center lg:justify-end">
             <motion.div
-              variants={outlineVariants}
-              animate="animate"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="absolute inset-0 rounded-[3rem] border border-white/10 lg:inset-auto lg:h-[620px] lg:w-[420px]"
-              style={{
-                boxShadow:
-                  "inset 0 0 40px rgba(255,255,255,0.05), 0 0 60px rgba(0,0,0,0.3)",
-              }}
-            />
-
-            <motion.div
-              variants={floatingVariants}
-              animate="animate"
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 rounded-[2.75rem] border border-white/10 bg-white/8 p-5 shadow-[0_50px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl lg:h-[600px] lg:w-[400px]"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-[min(100%,380px)] sm:max-w-[420px]"
             >
-              <div className="absolute inset-0 rounded-[2.75rem] bg-gradient-to-br from-white/5 via-transparent to-black/20" />
-              <div className="relative h-full overflow-hidden rounded-[2.5rem] bg-[#08080a]">
-                <Image
-                  src="/assets/product.jpeg"
-                  alt="Premium perfume bottle"
-                  fill
-                  className="object-cover object-center"
-                  priority
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/5" />
-              </div>
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: "easeInOut" as const,
+                }}
+                className="relative overflow-hidden rounded-[2.5rem] border border-white/[0.07] bg-[rgba(2,2,4,0.72)] p-[1px] shadow-[0_60px_120px_-50px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-md"
+              >
+                <div className="rounded-[2.45rem] bg-gradient-to-b from-white/[0.04] to-transparent p-1">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[2.25rem] bg-[#030305]">
+                    <Image
+                      src="/assets/product.jpeg"
+                      alt="Elevāra signature fragrance"
+                      fill
+                      priority
+                      className="object-contain object-center scale-[1.02] p-8"
+                      sizes="(max-width: 1024px) 90vw, 420px"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
-
-            <div className="pointer-events-none absolute -right-32 top-0 h-56 w-56 rounded-full bg-white/5 blur-3xl opacity-30" />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Lock, Minus, Plus, Trash2 } from "lucide-react";
+import { Lock, MapPin, Minus, Plus, Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import type { CartTotals } from "@/lib/cart-totals";
 import { useCartStore } from "@/stores/cart-store";
@@ -17,6 +17,7 @@ type Props = {
   primaryDisabled?: boolean;
   busy?: boolean;
   onExpress: () => void;
+  deliveryPreview?: string;
 };
 
 function SummaryLine({
@@ -113,6 +114,7 @@ export default function CheckoutOrderSummary({
   primaryDisabled,
   busy,
   onExpress,
+  deliveryPreview,
 }: Props) {
   const items = useCartStore((s) => s.items);
   const incrementQuantity = useCartStore((s) => s.incrementQuantity);
@@ -148,6 +150,16 @@ export default function CheckoutOrderSummary({
             ))}
           </AnimatePresence>
         </div>
+
+        {deliveryPreview ? (
+          <div className="mb-6 rounded-xl border border-white/[0.08] bg-black/45 px-4 py-3">
+            <div className="mb-1.5 flex items-center gap-2 text-[8px] font-bold uppercase tracking-[0.35em] text-white/40">
+              <MapPin size={12} className="text-primary/75" strokeWidth={1.25} />
+              Delivery
+            </div>
+            <p className="text-xs leading-relaxed text-white/75">{deliveryPreview}</p>
+          </div>
+        ) : null}
 
         <dl className="mt-8 space-y-4 border-t border-white/[0.06] pt-8 text-sm">
           <div className="flex justify-between gap-4 text-white/50">

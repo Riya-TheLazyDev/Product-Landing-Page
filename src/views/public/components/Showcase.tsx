@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
 import { useRef } from "react";
 
 export default function Showcase() {
@@ -11,40 +10,43 @@ export default function Showcase() {
     offset: ["start end", "end start"],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [-5, 5]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.92, 1]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [-1.5, 1.5]);
 
   return (
-    <section ref={containerRef} className="section-padding bg-[#050505] overflow-hidden">
+    <section
+      ref={containerRef}
+      className="section-padding overflow-hidden bg-[#010101]"
+    >
       <div className="container-page">
-        <div className="text-center mb-20 md:mb-32">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
+        <div className="mb-16 text-center md:mb-24">
+          <motion.span
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="subtitle-luxury mb-6 block"
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="subtitle-luxury mb-5 block"
           >
-            The Masterpiece
+            The masterpiece
           </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 30 }}
+          <motion.h2
+            initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="title-luxury text-5xl md:text-8xl text-white"
+            transition={{ duration: 1, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="title-luxury text-5xl text-white md:text-7xl lg:text-8xl"
           >
-            A Symphony of <br /> 
-            <span className="text-white/20 italic">Senses</span>
+            A symphony of <br />
+            <span className="text-primary/25 italic">senses</span>
           </motion.h2>
         </div>
 
-        <div className="relative h-[600px] md:h-[800px] flex items-center justify-center">
-          {/* Ambient Lighting */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[1000px] h-[600px] md:h-[1000px] bg-primary/5 rounded-full blur-[160px] opacity-50" />
-          
-          <motion.div 
+        <div className="relative flex h-[min(72vh,720px)] items-center justify-center md:h-[min(78vh,820px)]">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[min(90vw,920px)] w-[min(90vw,920px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.035] blur-[100px]" />
+
+          <motion.div
             style={{ scale, rotate }}
-            className="relative w-full max-w-[800px] aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl"
+            className="relative w-full max-w-[820px] overflow-hidden rounded-[1.75rem] border border-white/[0.07] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.95)]"
           >
             <video
               src="/assets/Video.mp4"
@@ -52,34 +54,9 @@ export default function Showcase() {
               muted
               loop
               playsInline
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
-            
-            {/* Cinematic Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-          </motion.div>
-
-          {/* Floating Accents */}
-          <motion.div
-            animate={{ y: [0, -20, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-0 left-10 md:left-20 max-w-[150px] text-left hidden md:block"
-          >
-            <p className="text-[8px] uppercase tracking-[0.4em] text-primary font-bold mb-4">Discovery</p>
-            <p className="text-[10px] uppercase tracking-widest text-white/40 leading-relaxed">
-              Exploration of rare elements gathered from the edges of the world.
-            </p>
-          </motion.div>
-
-          <motion.div
-            animate={{ y: [0, 20, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-0 right-10 md:right-20 max-w-[150px] text-right hidden md:block"
-          >
-            <p className="text-[8px] uppercase tracking-[0.4em] text-primary font-bold mb-4">Craftsmanship</p>
-            <p className="text-[10px] uppercase tracking-widest text-white/40 leading-relaxed">
-              Poured by hand into artisanal liquid glass vessels.
-            </p>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
           </motion.div>
         </div>
       </div>

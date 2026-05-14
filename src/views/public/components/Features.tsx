@@ -26,18 +26,18 @@ const FEATURES = [
 
 export default function Features() {
   return (
-    <section id="about" className="section-padding bg-[#050505]">
+    <section id="about" className="section-padding bg-[#010101]">
       <div className="container-page">
         <div className="editorial-grid mb-16 md:mb-20">
           <div>
             <span className="subtitle-luxury mb-6 block">Our Philosophy</span>
             <h2 className="title-luxury text-5xl md:text-7xl text-white">
               Conscious <br /> 
-              <span className="text-white/20 italic">Excellence</span>
+              <span className="text-primary/25 italic">Excellence</span>
             </h2>
           </div>
           <div className="flex items-end">
-            <p className="text-white/40 text-sm md:text-base leading-relaxed font-light tracking-wide max-w-sm">
+            <p className="text-sm font-light leading-relaxed tracking-wide text-white/60 md:text-base max-w-sm">
               We believe in beauty that respects the earth. Our commitment to sustainability is as deep as our commitment to quality.
             </p>
           </div>
@@ -59,7 +59,7 @@ export default function Features() {
               <h3 className="text-[10px] uppercase tracking-[0.4em] text-white font-bold mb-6">
                 {feature.title}
               </h3>
-              <p className="text-xs md:text-sm text-white/30 leading-relaxed font-light tracking-wide">
+              <p className="text-xs font-light leading-relaxed tracking-wide text-white/50 md:text-sm">
                 {feature.details}
               </p>
             </motion.div>

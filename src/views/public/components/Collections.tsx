@@ -26,13 +26,13 @@ const COLLECTIONS = [
 
 export default function Collections() {
   return (
-    <section className="section-padding bg-[#050505]">
+    <section className="section-padding bg-[#010101]">
       <div className="container-page">
         <div className="text-center mb-24">
           <span className="subtitle-luxury mb-6 block">Our Worlds</span>
           <h2 className="title-luxury text-5xl md:text-8xl text-white">
             Curated <br /> 
-            <span className="text-white/20 italic">Collections</span>
+            <span className="text-primary/25 italic">Collections</span>
           </h2>
         </div>
 
@@ -48,14 +48,14 @@ export default function Collections() {
                 collection.align === "right" ? "md:flex-row-reverse" : ""
               }`}
             >
-              <div className="relative flex-1 w-full aspect-[4/3] md:aspect-[16/9] overflow-hidden border border-white/5">
+              <div className="relative aspect-[4/3] w-full flex-1 overflow-hidden border border-white/[0.07] md:aspect-[16/9]">
                 <Image
                   src={collection.image}
                   alt={collection.title}
                   fill
                   className="object-cover transition-transform duration-[2s] hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-black/40" />
+                <div className="absolute inset-0 bg-black/55" />
               </div>
 
               <div className="flex-1 text-center md:text-left">
@@ -65,7 +65,7 @@ export default function Collections() {
                 <h3 className="text-4xl md:text-6xl font-serif font-light text-white mb-6">
                   {collection.title}
                 </h3>
-                <p className="text-white/40 text-sm md:text-base leading-relaxed font-light tracking-widest uppercase mb-10">
+                <p className="mb-10 text-sm font-light uppercase leading-relaxed tracking-widest text-white/60 md:text-base">
                   {collection.tagline}
                 </p>
                 <button className="text-[10px] uppercase tracking-[0.4em] font-bold text-white hover:text-primary transition-colors py-2 border-b border-white/10 hover:border-primary/40">
