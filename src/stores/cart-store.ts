@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { CartLine, WishlistEntry } from "@/types/cart";
+import {
+  defaultCheckoutDraft,
+  type CheckoutDraft,
+} from "@/types/checkout";
 import { makeLineId } from "@/lib/cart-line";
 
 type Toast = { message: string; id: number } | null;
@@ -19,6 +23,8 @@ interface CartState {
   items: CartLine[];
   wishlist: WishlistEntry[];
   toast: Toast;
+  checkoutStep: number;
+  checkoutDraft: CheckoutDraft;
   addItem: (p: AddToCartPayload) => void;
   removeItem: (lineId: string) => void;
   setQuantity: (lineId: string, quantity: number) => void;
@@ -28,6 +34,10 @@ interface CartState {
   moveToWishlist: (lineId: string) => void;
   showToast: (message: string) => void;
   dismissToast: () => void;
+  setCheckoutStep: (step: number) => void;
+  updateCheckoutDraft: (patch: Partial<CheckoutDraft>) => void;
+  resetCheckoutSession: () => void;
+  placeOrder: () => void;
 }
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
@@ -38,6 +48,31 @@ export const useCartStore = create<CartState>()(
       items: [],
       wishlist: [],
       toast: null,
+      checkoutStep: 0,
+      checkoutDraft: defaultCheckoutDraft(),
+
+      setCheckoutStep: (step) =>
+        set({ checkoutStep: Math.max(0, Math.min(3, Math.floor(step))) }),
+
+      updateCheckoutDraft: (patch) =>
+        set((s) => ({
+          checkoutDraft: { ...s.checkoutDraft, ...patch },
+        })),
+
+      resetCheckoutSession: () =>
+        set({
+          checkoutStep: 0,
+          checkoutDraft: defaultCheckoutDraft(),
+        }),
+
+      placeOrder: () => {
+        set({
+          items: [],
+          checkoutStep: 0,
+          checkoutDraft: defaultCheckoutDraft(),
+        });
+        get().showToast("Merci — your Elevāra order is confirmed.");
+      },
 
       showToast: (message) => {
         if (toastTimer) clearTimeout(toastTimer);
@@ -158,7 +193,20 @@ export const useCartStore = create<CartState>()(
       partialize: (s) => ({
         items: s.items,
         wishlist: s.wishlist,
+        checkoutStep: s.checkoutStep,
+        checkoutDraft: s.checkoutDraft,
       }),
+      merge: (persisted, current) => {
+        const p = persisted as Partial<CartState>;
+        return {
+          ...current,
+          ...p,
+          checkoutDraft: {
+            ...defaultCheckoutDraft(),
+            ...(p.checkoutDraft ?? {}),
+          },
+        };
+      },
     }
   )
 );

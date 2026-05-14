@@ -253,19 +253,16 @@ export default function CartPageView() {
                   </p>
                 )}
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    showToast("Checkout experience opens very soon.")
-                  }
-                  className="group relative mb-4 w-full overflow-hidden rounded-none border border-primary/40 bg-gradient-to-r from-primary via-[#e8dcc8] to-primary py-5 text-[10px] font-bold uppercase tracking-[0.35em] text-[#0a0a0c] shadow-[0_20px_60px_-28px_rgba(214,195,165,0.55)] transition-all duration-700 hover:tracking-[0.42em] active:scale-[0.99]"
+                <Link
+                  href="/checkout"
+                  className="group relative mb-4 flex w-full items-center justify-center overflow-hidden rounded-none border border-primary/40 bg-gradient-to-r from-primary via-[#e8dcc8] to-primary py-5 text-[10px] font-bold uppercase tracking-[0.35em] text-[#0a0a0c] shadow-[0_20px_60px_-28px_rgba(214,195,165,0.55)] transition-all duration-700 hover:tracking-[0.42em] active:scale-[0.99]"
                 >
                   <span className="relative z-10 inline-flex items-center justify-center gap-3">
                     <Lock size={14} strokeWidth={1.5} />
                     Proceed to checkout
                   </span>
                   <div className="absolute inset-0 translate-x-[-100%] bg-white/25 transition-transform duration-1000 ease-out group-hover:translate-x-[100%]" />
-                </button>
+                </Link>
 
                 <button
                   type="button"
