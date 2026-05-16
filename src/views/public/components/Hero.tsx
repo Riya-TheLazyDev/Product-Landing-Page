@@ -39,7 +39,7 @@ export default function Hero() {
       <div
         className="hero-environment hero-environment--brand"
         role="img"
-        aria-label="Elevāra Luxe Noir fragrance — purple and gold atmospheric background"
+        aria-label="Elevāra Luxe Noir fragrance — obsidian and gold atmospheric background"
       >
         <img
           src={HERO_BG}
@@ -66,7 +66,7 @@ export default function Hero() {
             <span className="text-accent-gold">Legacy</span>
           </h1>
           <p className="mb-10 max-w-lg text-sm leading-relaxed text-white/88 drop-shadow-[0_4px_32px_rgba(0,0,0,0.75)] md:text-base">
-            Luxe Noir unfolds in liquid light — rare resins, moonlit florals, and
+            Luxe Noir unfolds in liquid obsidian — rare resins, smoked woods, and
             a sillage that lingers long after the room falls silent.
           </p>
 

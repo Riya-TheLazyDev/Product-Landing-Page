@@ -20,7 +20,7 @@
     --radius: 0rem; /* Sharp edges for luxury feel */
     --site-margin: 0px;
 
-    /* Elevāra liquid luxury palette (reference: purple · black · gold) */
+    /* Elevāra liquid luxury palette (reference: obsidian · charcoal · gold) */
     --cin-obsidian: #050308;
     --cin-charcoal: #0a0612;
     --cin-graphite: #120a1c;
@@ -28,18 +28,18 @@
     --cin-navy: #0f0820;
     --cin-deep: #030205;
     --cin-gold: 214, 195, 165;
-    --cin-purple: 140, 72, 210;
-    --cin-magenta: 195, 75, 165;
-    --cin-violet: 98, 52, 168;
-    --cin-blue: 120, 80, 200;
+    --cin-obsidian-rgb: 5, 3, 8;
+    --cin-charcoal-rgb: 10, 6, 18;
+    --cin-navy-rgb: 15, 8, 32;
+    --cin-midnight-rgb: 8, 4, 15;
   }
 
   body {
     @apply bg-background text-foreground antialiased font-sans selection:bg-primary/25;
     overflow-x: hidden;
     background:
-      radial-gradient(ellipse 75% 55% at 15% -8%, rgba(var(--cin-purple), 0.22), transparent 58%),
-      radial-gradient(ellipse 65% 50% at 88% 12%, rgba(var(--cin-magenta), 0.14), transparent 52%),
+      radial-gradient(ellipse 75% 55% at 15% -8%, rgba(var(--cin-obsidian-rgb), 0.22), transparent 58%),
+      radial-gradient(ellipse 65% 50% at 88% 12%, rgba(var(--cin-charcoal-rgb), 0.14), transparent 52%),
       radial-gradient(ellipse 90% 40% at 50% 100%, rgba(8, 4, 14, 0.9), transparent 55%),
       linear-gradient(168deg, #12081f 0%, var(--cin-obsidian) 35%, var(--cin-deep) 100%);
     padding: 0;
@@ -81,9 +81,9 @@
     background:
       linear-gradient(
         165deg,
-        #1a0a2e 0%,
+        #050505 0%,
         var(--cin-obsidian) 22%,
-        #0c0614 48%,
+        #030303 48%,
         var(--cin-graphite) 72%,
         var(--cin-deep) 100%
       );
@@ -95,17 +95,17 @@
     background:
       radial-gradient(
         ellipse 55% 45% at 72% 18%,
-        rgba(var(--cin-magenta), 0.28),
+        rgba(var(--cin-charcoal-rgb), 0.28),
         transparent 58%
       ),
       radial-gradient(
         ellipse 50% 42% at 28% 55%,
-        rgba(var(--cin-purple), 0.22),
+        rgba(var(--cin-obsidian-rgb), 0.22),
         transparent 55%
       ),
       radial-gradient(
         ellipse 60% 38% at 50% 88%,
-        rgba(var(--cin-violet), 0.18),
+        rgba(var(--cin-navy-rgb), 0.18),
         transparent 60%
       );
     filter: blur(48px);
@@ -120,7 +120,7 @@
     background:
       radial-gradient(
         ellipse 70% 55% at 18% 22%,
-        rgba(var(--cin-purple), 0.16),
+        rgba(var(--cin-obsidian-rgb), 0.16),
         transparent 58%
       ),
       radial-gradient(
@@ -130,7 +130,7 @@
       ),
       radial-gradient(
         ellipse 90% 40% at 50% 100%,
-        rgba(20, 8, 32, 0.7),
+        rgba(10, 10, 15, 0.7),
         transparent 62%
       );
     animation: cinematicAmbientShift 28s ease-in-out infinite;
@@ -157,27 +157,27 @@
     animation: cinematicGlowGold 22s ease-in-out infinite;
   }
 
-  .cinematic-atmosphere__glow--blue {
+  .cinematic-atmosphere__glow--midnight {
     width: min(60vw, 560px);
     height: min(60vw, 560px);
     bottom: 5%;
     left: -12%;
     background: radial-gradient(
       circle,
-      rgba(var(--cin-purple), 0.2),
+      rgba(var(--cin-obsidian-rgb), 0.2),
       transparent 70%
     );
     animation: cinematicGlowBlue 26s ease-in-out infinite;
   }
 
-  .cinematic-atmosphere__glow--mid {
+  .cinematic-atmosphere__glow--charcoal {
     width: min(50vw, 440px);
     height: min(50vw, 440px);
     top: 38%;
     left: 42%;
     background: radial-gradient(
       circle,
-      rgba(var(--cin-magenta), 0.14),
+      rgba(var(--cin-charcoal-rgb), 0.14),
       transparent 72%
     );
     animation: cinematicGlowMid 32s ease-in-out infinite;
@@ -196,22 +196,29 @@
   .cinematic-atmosphere__grain {
     position: absolute;
     inset: 0;
-    opacity: 0.038;
+    opacity: 0.045;
     mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
   }
 
   .cinematic-atmosphere__mist {
     position: absolute;
     inset: auto -10% -18% -10%;
-    height: 58vh;
+    height: 65vh;
     background:
-      radial-gradient(ellipse 55% 28% at 28% 70%, rgba(var(--cin-purple), 0.16), transparent 68%),
-      radial-gradient(ellipse 65% 32% at 72% 62%, rgba(var(--cin-magenta), 0.1), transparent 64%),
-      linear-gradient(to top, rgba(5, 2, 10, 0.85), transparent);
-    filter: blur(22px);
-    opacity: 0.8;
+      radial-gradient(ellipse 60% 32% at 32% 75%, rgba(var(--cin-obsidian-rgb), 0.22), transparent 70%),
+      radial-gradient(ellipse 70% 38% at 68% 68%, rgba(var(--cin-charcoal-rgb), 0.15), transparent 68%),
+      linear-gradient(to top, rgba(3, 1, 8, 0.92), transparent);
+    filter: blur(42px);
+    opacity: 0.85;
+    animation: cinematicMistDrift 45s ease-in-out infinite alternate;
+  }
+
+  @keyframes cinematicMistDrift {
+    from { transform: translateX(-2%) translateY(1%); }
+    to { transform: translateX(2%) translateY(-1%); }
   }
 
   @keyframes cinematicPlumeDrift {
@@ -306,23 +313,24 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.55;
+    opacity: 0.45;
     background:
-      linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.018) 46%, transparent 68%),
-      radial-gradient(ellipse 85% 34% at 50% 100%, rgba(72, 91, 139, 0.12), transparent 66%);
+      linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.012) 46%, transparent 68%),
+      radial-gradient(ellipse 85% 38% at 50% 100%, rgba(10, 15, 25, 0.14), transparent 72%);
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
   }
 
   .cinematic-section--a::before {
     background:
       linear-gradient(
         180deg,
-        rgba(24, 10, 42, 0.55) 0%,
-        rgba(6, 4, 12, 0.12) 45%,
-        rgba(14, 8, 28, 0.5) 100%
+        rgba(8, 8, 8, 0.55) 0%,
+        rgba(4, 4, 4, 0.12) 45%,
+        rgba(10, 10, 10, 0.5) 100%
       ),
       radial-gradient(
         ellipse 90% 52% at 18% 6%,
-        rgba(var(--cin-purple), 0.14),
+        rgba(var(--cin-obsidian-rgb), 0.14),
         transparent 55%
       ),
       radial-gradient(
@@ -336,13 +344,13 @@
     background:
       linear-gradient(
         175deg,
-        rgba(18, 8, 36, 0.5) 0%,
-        rgba(8, 5, 14, 0.18) 50%,
-        rgba(22, 10, 40, 0.48) 100%
+        rgba(12, 12, 12, 0.5) 0%,
+        rgba(6, 6, 6, 0.18) 50%,
+        rgba(9, 9, 9, 0.48) 100%
       ),
       radial-gradient(
         ellipse 70% 45% at 100% 50%,
-        rgba(var(--cin-magenta), 0.12),
+        rgba(var(--cin-charcoal-rgb), 0.12),
         transparent 60%
       ),
       radial-gradient(
@@ -356,13 +364,13 @@
     background:
       linear-gradient(
         185deg,
-        rgba(20, 10, 38, 0.48) 0%,
-        rgba(6, 4, 12, 0.2) 55%,
-        rgba(12, 6, 30, 0.55) 100%
+        rgba(7, 7, 7, 0.48) 0%,
+        rgba(4, 4, 4, 0.2) 55%,
+        rgba(5, 5, 5, 0.55) 100%
       ),
       radial-gradient(
         ellipse 60% 40% at 0% 80%,
-        rgba(var(--cin-purple), 0.1),
+        rgba(var(--cin-obsidian-rgb), 0.1),
         transparent 58%
       );
   }
@@ -385,7 +393,7 @@
   .environment-scene--rain::before {
     background:
       linear-gradient(112deg, transparent 0 34%, rgba(255, 255, 255, 0.035) 35%, transparent 36% 100%),
-      linear-gradient(112deg, transparent 0 58%, rgba(var(--cin-purple), 0.06) 59%, transparent 60% 100%);
+      linear-gradient(112deg, transparent 0 58%, rgba(var(--cin-obsidian-rgb), 0.06) 59%, transparent 60% 100%);
     background-size: 240px 100%, 320px 100%;
     opacity: 0.28;
     transform: skewX(-8deg);
@@ -393,7 +401,7 @@
 
   .environment-scene--rain::after {
     background:
-      radial-gradient(ellipse 100% 36% at 50% 100%, rgba(24, 10, 42, 0.72), transparent 68%),
+      radial-gradient(ellipse 100% 36% at 50% 100%, rgba(8, 8, 8, 0.72), transparent 68%),
       radial-gradient(ellipse 45% 42% at 74% 38%, rgba(214, 195, 165, 0.075), transparent 66%),
       linear-gradient(180deg, transparent, rgba(2, 4, 8, 0.72));
     filter: blur(0.2px);
@@ -402,14 +410,14 @@
   .environment-scene--waterfall::before {
     background:
       repeating-linear-gradient(100deg, rgba(255, 255, 255, 0.028) 0 1px, transparent 1px 18px),
-      radial-gradient(ellipse 55% 50% at 20% 25%, rgba(var(--cin-magenta), 0.14), transparent 62%);
+      radial-gradient(ellipse 55% 50% at 20% 25%, rgba(var(--cin-charcoal-rgb), 0.14), transparent 62%);
     opacity: 0.5;
   }
 
   .environment-scene--waterfall::after {
     background:
       radial-gradient(ellipse 90% 42% at 50% 0%, rgba(214, 195, 165, 0.04), transparent 62%),
-      radial-gradient(ellipse 110% 34% at 50% 100%, rgba(var(--cin-purple), 0.16), transparent 64%);
+      radial-gradient(ellipse 110% 34% at 50% 100%, rgba(var(--cin-obsidian-rgb), 0.16), transparent 64%);
   }
 
   .cinematic-hero {
@@ -466,12 +474,12 @@
   .glass-clear {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(255, 255, 255, 0.05) 45%,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.4) 45%,
       rgba(255, 255, 255, 0.1) 100%
     );
-    backdrop-filter: blur(22px) saturate(125%);
-    -webkit-backdrop-filter: blur(22px) saturate(125%);
+    backdrop-filter: blur(28px) saturate(110%);
+    -webkit-backdrop-filter: blur(28px) saturate(110%);
     border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
@@ -493,18 +501,18 @@
     background:
       linear-gradient(
         165deg,
-        rgba(28, 10, 48, 0.72) 0%,
-        rgba(8, 4, 16, 0.28) 38%,
-        rgba(3, 2, 8, 0.94) 100%
+        rgba(10, 10, 12, 0.72) 0%,
+        rgba(4, 4, 6, 0.28) 38%,
+        rgba(2, 2, 3, 0.94) 100%
       ),
       radial-gradient(
         ellipse 100% 80% at 50% -15%,
-        rgba(var(--cin-magenta), 0.14),
+        rgba(var(--cin-charcoal-rgb), 0.14),
         transparent 52%
       ),
       radial-gradient(
         ellipse 58% 46% at 78% 56%,
-        rgba(var(--cin-purple), 0.2),
+        rgba(var(--cin-obsidian-rgb), 0.2),
         transparent 58%
       );
   }
@@ -531,12 +539,12 @@
     background:
       radial-gradient(
         ellipse 120% 60% at 50% 110%,
-        rgba(var(--cin-violet), 0.35),
+        rgba(var(--cin-navy-rgb), 0.35),
         transparent 55%
       ),
       radial-gradient(
         ellipse 90% 50% at 20% 30%,
-        rgba(var(--cin-magenta), 0.12),
+        rgba(var(--cin-charcoal-rgb), 0.12),
         transparent 50%
       );
   }
@@ -582,11 +590,11 @@
     inset: 0;
     z-index: 1;
     background:
-      linear-gradient(90deg, rgba(5, 2, 12, 0.78) 0%, rgba(8, 4, 18, 0.4) 42%, rgba(5, 2, 12, 0.75) 100%),
-      linear-gradient(180deg, rgba(5, 2, 12, 0.25) 0%, rgba(5, 2, 12, 0.02) 45%, rgba(3, 1, 8, 0.9) 100%),
-      radial-gradient(ellipse 50% 50% at 74% 45%, rgba(var(--cin-gold), 0.16), transparent 62%),
-      radial-gradient(ellipse 70% 54% at 28% 18%, rgba(var(--cin-purple), 0.28), transparent 62%),
-      radial-gradient(ellipse 45% 40% at 55% 60%, rgba(var(--cin-magenta), 0.15), transparent 58%);
+      linear-gradient(90deg, rgba(3, 1, 8, 0.82) 0%, rgba(5, 3, 12, 0.35) 42%, rgba(3, 1, 8, 0.78) 100%),
+      linear-gradient(180deg, rgba(3, 1, 8, 0.28) 0%, transparent 45%, rgba(2, 1, 5, 0.95) 100%),
+      radial-gradient(ellipse 55% 55% at 75% 45%, rgba(var(--cin-gold), 0.12), transparent 65%),
+      radial-gradient(ellipse 75% 60% at 25% 15%, rgba(var(--cin-obsidian-rgb), 0.25), transparent 65%),
+      radial-gradient(ellipse 50% 45% at 55% 65%, rgba(var(--cin-charcoal-rgb), 0.12), transparent 62%);
   }
 
   .hero-environment__horizon {
@@ -605,7 +613,7 @@
   .cinematic-edge-glow {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      0 0 90px -20px rgba(var(--cin-purple), 0.22),
+      0 0 90px -20px rgba(var(--cin-obsidian-rgb), 0.22),
       0 0 70px -28px rgba(var(--cin-gold), 0.1);
   }
 
@@ -620,18 +628,24 @@
 
   .glass-card {
     @apply glass-clear glass-clear--card;
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 12px 32px -12px rgba(0, 0, 0, 0.5);
   }
 
   .glass-card:hover {
     border-color: rgba(255, 255, 255, 0.22);
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.07) 50%,
-      rgba(255, 255, 255, 0.14) 100%
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.12) 100%
     );
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 24px 48px -18px rgba(0, 0, 0, 0.7);
+    transform: translateY(-2px);
   }
 
   .perfume-showcase {
@@ -645,7 +659,7 @@
     border-radius: inherit;
     background:
       radial-gradient(ellipse 54% 42% at 50% 24%, rgba(214, 195, 165, 0.16), transparent 64%),
-      radial-gradient(ellipse 75% 42% at 50% 78%, rgba(var(--cin-purple), 0.18), transparent 66%);
+      radial-gradient(ellipse 75% 42% at 50% 78%, rgba(var(--cin-obsidian-rgb), 0.18), transparent 66%);
     filter: blur(34px);
     opacity: 0.9;
     transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
@@ -679,11 +693,11 @@
   .glass-obsidian {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.4) 0%,
       rgba(2, 2, 4, 0.94) 100%
     );
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(115%);
+    -webkit-backdrop-filter: blur(20px) saturate(115%);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.06),
@@ -721,8 +735,8 @@
     border-radius: 50%;
     background: radial-gradient(
       circle at 30% 30%,
-      rgba(var(--cin-magenta), 0.18),
-      rgba(var(--cin-purple), 0.1) 42%,
+      rgba(var(--cin-charcoal-rgb), 0.18),
+      rgba(var(--cin-obsidian-rgb), 0.1) 42%,
       transparent 70%
     );
     filter: blur(60px);
@@ -733,7 +747,7 @@
     background: radial-gradient(
       circle at 70% 40%,
       rgba(var(--cin-gold), 0.14),
-      rgba(var(--cin-magenta), 0.06) 50%,
+      rgba(var(--cin-charcoal-rgb), 0.06) 50%,
       transparent 70%
     );
   }
@@ -771,21 +785,22 @@
     @apply glass-shine relative overflow-hidden rounded-full border border-white/10 px-8 py-3.5 text-[9px] font-bold uppercase tracking-[0.32em] text-white transition-all duration-700;
     background: linear-gradient(
       135deg,
-      rgba(var(--cin-purple), 0.35) 0%,
-      rgba(40, 12, 72, 0.75) 50%,
-      rgba(12, 6, 24, 0.9) 100%
+      rgba(var(--cin-obsidian-rgb), 0.35) 0%,
+      rgba(15, 15, 20, 0.75) 50%,
+      rgba(8, 8, 12, 0.9) 100%
     );
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 12px 40px -8px rgba(var(--cin-purple), 0.45);
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 10px 30px -10px rgba(0, 0, 0, 0.6),
+      0 0 40px -15px rgba(var(--cin-obsidian-rgb), 0.35);
   }
 
   .btn-liquid:hover {
-    border-color: rgba(var(--cin-purple), 0.5);
+    border-color: rgba(var(--cin-obsidian-rgb), 0.5);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      0 0 50px -8px rgba(var(--cin-magenta), 0.55),
-      0 16px 48px -12px rgba(0, 0, 0, 0.6);
+      0 0 60px -10px rgba(var(--cin-charcoal-rgb), 0.45),
+      0 20px 40px -15px rgba(0, 0, 0, 0.7);
     transform: translateY(-1px);
   }
 
@@ -794,7 +809,7 @@
     background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.14) 0%,
-      rgba(255, 255, 255, 0.05) 50%,
+      rgba(0, 0, 0, 0.4) 50%,
       rgba(255, 255, 255, 0.1) 100%
     );
   }
@@ -845,7 +860,7 @@
       115deg,
       #f0e6d4 0%,
       #d6c3a5 38%,
-      #e8b4c8 72%,
+      #c0b090 72%,
       #d6c3a5 100%
     );
     -webkit-background-clip: text;
@@ -935,24 +950,24 @@
     @apply pointer-events-none absolute left-1/2 top-[42%] h-[55%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[42px];
   }
 
-  .collection-card__glow--purple {
-    background: rgba(140, 72, 210, 0.5);
+  .collection-card__glow--obsidian {
+    background: rgba(var(--cin-obsidian-rgb), 0.35);
   }
 
   .collection-card__glow--amber {
-    background: rgba(214, 165, 100, 0.48);
+    background: rgba(214, 165, 100, 0.22);
   }
 
-  .collection-card__glow--magenta {
-    background: rgba(195, 75, 165, 0.45);
+  .collection-card__glow--charcoal {
+    background: rgba(var(--cin-charcoal-rgb), 0.28);
   }
 
   .collection-card__glow--gold {
-    background: rgba(214, 195, 165, 0.42);
+    background: rgba(var(--cin-gold), 0.18);
   }
 
-  .collection-card__glow--violet {
-    background: rgba(98, 52, 168, 0.48);
+  .collection-card__glow--navy {
+    background: rgba(var(--cin-navy-rgb), 0.25);
   }
 
   .collection-card__footer {
@@ -1001,7 +1016,8 @@
   .heading-display {
     @apply title-luxury text-white;
     font-size: clamp(2.25rem, 7vw + 0.25rem, 5.5rem);
-    line-height: 0.95;
+    line-height: 0.92;
+    letter-spacing: -0.05em;
   }
 
   .heading-section {
@@ -1018,7 +1034,8 @@
 
   .subtitle-luxury {
     @apply text-[7px] font-bold uppercase text-primary sm:text-[8px] md:text-[9px];
-    letter-spacing: 0.35em;
+    letter-spacing: 0.45em;
+    opacity: 0.85;
   }
 
   @media (min-width: 640px) {
@@ -1034,7 +1051,7 @@
   }
 
   .text-editorial {
-    @apply text-white/[0.52] font-light leading-relaxed tracking-wider;
+    @apply text-white/[0.48] font-light leading-relaxed tracking-widest;
   }
 
   .auth-input {
@@ -1122,7 +1139,7 @@
 
   /* Spacing Rhythm */
   .section-padding {
-    @apply py-10 sm:py-14 md:py-20;
+    @apply py-16 sm:py-20 md:py-28;
   }
 
   .editorial-grid {
@@ -1178,4 +1195,27 @@
 @keyframes bubbleFloat {
   0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
   50% { transform: translateY(-10px) scale(1.1); opacity: 1; }
+}
+
+/* Custom Scrollbar for Admin */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--cin-gold), 0.2);
+}
+
+/* Fix for possible layout shift on headers */
+html {
+  scrollbar-gutter: stable;
 }

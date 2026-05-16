@@ -9,11 +9,11 @@ import type { Product } from "@/mock/product";
 import { useCartStore } from "@/stores/cart-store";
 
 const GLOW_VARIANTS = [
-  "collection-card__glow--purple",
+  "collection-card__glow--obsidian",
   "collection-card__glow--amber",
-  "collection-card__glow--magenta",
+  "collection-card__glow--charcoal",
   "collection-card__glow--gold",
-  "collection-card__glow--violet",
+  "collection-card__glow--navy",
 ] as const;
 
 type Props = {

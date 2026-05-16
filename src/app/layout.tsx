@@ -31,19 +31,24 @@ export const viewport: Viewport = {
 };
 
 
-export default function RootLayout({
+import { headers } from "next/headers";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-invoke-path") || "";
+  const isAdmin = pathname.startsWith("/admin");
+
   return (
     <html lang="en">
       <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
-        <CinematicAtmosphere />
-        {/* <CustomCursor /> */}
-        <Header />
-        <main className="main-content">{children}</main>
-        <Footer />
+        {!isAdmin && <CinematicAtmosphere />}
+        {!isAdmin && <Header />}
+        <main className={isAdmin ? "" : "main-content"}>{children}</main>
+        {!isAdmin && <Footer />}
         <CartToast />
       </body>
     </html>
