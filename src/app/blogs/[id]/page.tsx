@@ -23,7 +23,7 @@ export default function BlogDetailPage() {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-[#010102] flex items-center justify-center">
+      <div className="cinematic-page min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl text-white mb-4 font-serif">Story Not Found</h1>
           <Link href="/blogs" className="text-[#D4AF37] uppercase tracking-widest text-xs">Return to Journal</Link>
@@ -35,7 +35,7 @@ export default function BlogDetailPage() {
   const relatedBlogs = blogs.filter(b => b.id !== id).slice(0, 2);
 
   return (
-    <main ref={containerRef} className="min-h-screen bg-[#010102] text-white selection:bg-[#D4AF37]/30">
+    <main ref={containerRef} className="cinematic-page min-h-screen text-white selection:bg-[#D4AF37]/30">
       {/* Cinematic Hero Section */}
       <section className="relative h-[85vh] w-full overflow-hidden">
         <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
@@ -85,7 +85,7 @@ export default function BlogDetailPage() {
       </section>
 
       {/* Editorial Content Section */}
-      <section className="relative z-20 py-24 bg-[#010102]">
+      <section className="cinematic-section cinematic-section--b relative z-20 py-24">
         <div className="container-page px-6 lg:px-12 max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -153,7 +153,7 @@ export default function BlogDetailPage() {
       </section>
 
       {/* Related Stories */}
-      <section className="py-32 bg-[#030305] relative overflow-hidden">
+      <section className="cinematic-section cinematic-section--c relative overflow-hidden py-32">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         
         <div className="container-page px-6 lg:px-12 max-w-7xl mx-auto">

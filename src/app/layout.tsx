@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "../index.css";
+import CinematicAtmosphere from "@/components/layouts/CinematicAtmosphere";
 import Header from "@/components/layouts/components/Header";
 import Footer from "@/components/layouts/components/Footer";
 import CustomCursor from "@/components/common/CustomCursor";
@@ -27,7 +28,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 
@@ -39,9 +39,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
+        <CinematicAtmosphere />
         {/* <CustomCursor /> */}
         <Header />
-        <main>{children}</main>
+        <main className="main-content">{children}</main>
         <Footer />
         <CartToast />
       </body>

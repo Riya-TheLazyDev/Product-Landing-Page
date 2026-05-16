@@ -3,68 +3,34 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import PageHero from "@/components/layouts/PageHero";
 
 export default function AboutPage() {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ["start start", "end end"],
   });
 
-  const heroY = useTransform(scrollYProgress, [0, 0.2], ["0%", "40%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const bannerY = useTransform(scrollYProgress, [0.3, 0.6], ["0%", "18%"]);
 
   return (
-    <main ref={containerRef} className="bg-[#010102] text-white overflow-hidden">
-      {/* Cinematic Hero */}
-      <section className="relative h-screen w-full flex items-center justify-center">
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=2000"
-            alt="Elevāra brand atmospheric background"
-            fill
-            className="object-cover scale-105 opacity-40 mix-blend-luminosity"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#010102]/20 via-[#010102]/60 to-[#010102]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(214,195,165,0.05),transparent_60%)]" />
-        </motion.div>
+    <main ref={containerRef} className="cinematic-page overflow-hidden text-white">
+      <PageHero
+        image="/assets/hero-brand.png"
+        eyebrow="The Maison"
+        align="center"
+        title={
+          <>
+            Crafting <span className="text-accent-gold">Eternity</span>
+          </>
+        }
+        description="Born from darkness. Distilled in light. A study in the silent power of true luxury."
+      />
 
-        <div className="relative z-10 text-center px-6 mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="subtitle-luxury block tracking-[0.6em] mb-8 text-[#D4AF37]/80">
-              The Maison
-            </span>
-            <h1 className="text-[clamp(3.5rem,10vw,8rem)] font-serif font-light leading-[0.85] tracking-[-0.02em] mb-10">
-              CRAFTING<br />
-              <span className="italic text-white/80">Eternity</span>
-            </h1>
-            <p className="max-w-xl mx-auto text-sm md:text-base text-white/60 tracking-widest uppercase leading-loose">
-              Born from darkness. Distilled in light. A study in the silent power of true luxury.
-            </p>
-          </motion.div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-        >
-          <span className="text-[9px] uppercase tracking-[0.4em] text-white/30">Discover</span>
-          <div className="w-px h-16 bg-gradient-to-b from-white/30 to-transparent" />
-        </motion.div>
-      </section>
-
-      {/* Philosophy Section */}
-      <section className="py-32 relative">
-        <div className="container-page px-6 lg:px-12 max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-20 items-center">
+      <section className="cinematic-section cinematic-section--c relative py-24 md:py-32">
+        <div className="container-page mx-auto max-w-5xl px-6 lg:px-12">
+          <div className="grid items-center gap-16 md:grid-cols-2 md:gap-20">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -72,101 +38,105 @@ export default function AboutPage() {
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-10"
             >
-              <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-serif leading-[1.1] font-light">
-                The Architecture<br />of <span className="italic text-[#D4AF37]">Emotion</span>.
+              <h2 className="heading-section">
+                The Architecture of{" "}
+                <span className="text-accent-gold">Emotion</span>
               </h2>
-              <div className="space-y-6 text-white/60 font-light leading-relaxed text-lg">
+              <div className="space-y-6 text-lg font-light leading-relaxed text-white/65">
                 <p>
-                  At Elevāra, we do not simply mix ingredients; we architect emotions. Each fragrance is conceived as a sanctuary—a private world carved out of scent, designed for those who command the room in silence.
+                  At Elevāra, we do not simply mix ingredients; we architect
+                  emotions. Each fragrance is conceived as a sanctuary — a
+                  private world carved out of scent.
                 </p>
                 <p>
-                  Our philosophy is rooted in the contrast between shadow and illumination. We source the rarest, most volatile nocturnal blooms and anchor them with deep, primordial resins that have been aged in darkness.
+                  Our philosophy is rooted in contrast between shadow and
+                  illumination: nocturnal blooms anchored by primordial resins
+                  aged in darkness.
                 </p>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative aspect-[3/4] w-full rounded-full overflow-hidden border border-white/10"
+              className="glass-clear glass-clear--card relative aspect-[3/4] overflow-hidden"
             >
               <Image
-                src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1200"
-                alt="Craftsmanship"
+                src="/assets/product.jpeg"
+                alt="Elevāra craftsmanship"
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-black/30 mix-blend-multiply" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Craftsmanship Parallax Banner */}
-      <section className="h-[80vh] relative flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
+      <section className="relative flex h-[70vh] min-h-[420px] items-center justify-center overflow-hidden">
+        <motion.div style={{ y: bannerY }} className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?q=80&w=2000"
-            alt="Dark floral essence"
+            src="/assets/hero-brand.png"
+            alt=""
             fill
-            className="object-cover opacity-30"
+            className="object-cover opacity-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#010102] via-transparent to-[#010102]" />
-        </div>
-        
-        <div className="relative z-10 text-center max-w-4xl px-6">
-          <motion.div
+          <div className="absolute inset-0 bg-black/55" />
+        </motion.div>
+
+        <div className="relative z-10 max-w-4xl px-6 text-center">
+          <motion.p
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2 }}
+            className="font-serif text-2xl italic leading-relaxed text-white/92 md:text-4xl"
           >
-            <p className="font-serif text-3xl md:text-5xl italic text-white/90 leading-relaxed mb-10">
-              "We measure our craft not by the ingredients we include, but by the memories they are capable of holding."
-            </p>
-            <span className="text-[10px] uppercase tracking-[0.4em] text-[#D4AF37]">
-              — The Master Perfumer
-            </span>
-          </motion.div>
+            &ldquo;We measure our craft not by the ingredients we include, but
+            by the memories they are capable of holding.&rdquo;
+          </motion.p>
+          <p className="mt-8 text-[10px] uppercase tracking-[0.4em] text-primary">
+            — The Master Perfumer
+          </p>
         </div>
       </section>
 
-      {/* The Journey Section */}
-      <section className="py-32 bg-[#010102]">
-        <div className="container-page px-6 lg:px-12 max-w-7xl mx-auto">
-          <div className="text-center mb-24">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-4 block">The Process</span>
-            <h2 className="text-4xl md:text-5xl font-serif text-white font-light">From Soil to Soul</h2>
+      <section className="cinematic-section cinematic-section--b py-24 md:py-32">
+        <div className="container-page mx-auto max-w-7xl px-6 lg:px-12">
+          <div className="mb-20 text-center md:mb-24">
+            <span className="subtitle-luxury mb-4 block">The Process</span>
+            <h2 className="heading-section">
+              From Soil to <span className="text-accent-gold">Soul</span>
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
+          <div className="grid gap-8 md:grid-cols-3 md:gap-10">
             {[
               {
                 title: "01. Sourcing",
-                desc: "We traverse the globe for ingredients that refuse to compromise—midnight orchids from the tropics, ancient oud from deep forests."
+                desc: "Midnight orchids, ancient oud — ingredients that refuse to compromise.",
               },
               {
                 title: "02. Distillation",
-                desc: "Time is our most expensive raw material. Our extracts are cold-pressed and slow-aged, allowing the complex notes to unfold organically."
+                desc: "Cold-pressed, slow-aged extracts so complex notes unfold organically.",
               },
               {
                 title: "03. Composition",
-                desc: "Housed in obsidian glass that protects the delicate molecular structure, each flacon is hand-polished and sealed with precision."
-              }
+                desc: "Obsidian glass flacons, hand-polished and sealed with precision.",
+              },
             ].map((step, idx) => (
               <motion.div
                 key={step.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: idx * 0.2 }}
-                className="group relative p-10 border border-white/5 bg-white/[0.01] rounded-[2.5rem] hover:bg-white/[0.03] transition-colors duration-500"
+                transition={{ duration: 0.8, delay: idx * 0.15 }}
+                className="glass-clear glass-clear--card p-10"
               >
-                <div className="absolute top-0 right-10 w-20 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <h3 className="text-xl font-serif mb-6 text-[#D4AF37]">{step.title}</h3>
-                <p className="text-white/60 font-light leading-relaxed tracking-wide">
+                <h3 className="mb-6 font-serif text-xl text-primary">{step.title}</h3>
+                <p className="font-light leading-relaxed tracking-wide text-white/58">
                   {step.desc}
                 </p>
               </motion.div>

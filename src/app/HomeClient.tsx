@@ -10,9 +10,6 @@ const ProductSection = dynamic(
     ssr: false,
   },
 );
-const Showcase = dynamic(() => import("@/views/public/components/Showcase"), {
-  ssr: false,
-});
 const FragranceNotes = dynamic(
   () => import("@/views/public/components/FragranceNotes"),
   {
@@ -39,7 +36,6 @@ export default function HomeClient() {
   return (
     <>
       <Hero />
-      <Showcase />
       <ProductSection />
       <FragranceNotes />
       <Collections />

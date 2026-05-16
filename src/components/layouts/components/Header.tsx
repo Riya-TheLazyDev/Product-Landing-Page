@@ -2,20 +2,31 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { Heart, MapPin, Menu, Package, Settings, ShoppingBag, UserRound, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { selectCartQuantity, useCartStore } from "@/stores/cart-store";
+import { useAuthStore } from "@/stores/auth-store";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mounted, setMounted] = useState(false);
 
   const cartCount = useCartStore((s) => selectCartQuantity(s.items));
+  const profile = useAuthStore((s) => s.profile);
+  const logout = useAuthStore((s) => s.logout);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,6 +55,12 @@ export default function Header() {
   ];
 
   const displayCount = mounted ? cartCount : 0;
+  const accountLinks = [
+    { label: "My Orders", href: "/orders", icon: Package },
+    { label: "Wishlist", href: "/wishlist", icon: Heart },
+    { label: "Saved Addresses", href: "/account/addresses", icon: MapPin },
+    { label: "Account Settings", href: "/account/settings", icon: Settings },
+  ];
 
   return (
     <>
@@ -51,24 +68,24 @@ export default function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="glass-premium fixed top-0 left-0 right-0 z-[100] border-b border-white/[0.02]"
+        className="glass-clear fixed top-0 left-0 right-0 z-[100] border-b border-white/[0.1]"
       >
         <div className="container-page flex items-center justify-between h-12 md:h-14 relative">
           <Link
             href="/"
             className="flex items-center gap-2 cursor-pointer group"
           >
-            <h1 className="text-sm md:text-base font-serif font-light tracking-[0.4em] uppercase text-white transition-all duration-1000 group-hover:tracking-[0.5em]">
+            <h1 className="text-xs font-serif font-light tracking-[0.3em] uppercase text-white transition-all duration-1000 group-hover:tracking-[0.4em] sm:text-sm md:text-base md:group-hover:tracking-[0.5em]">
               ELEVARA
             </h1>
           </Link>
 
-          <nav className="hidden lg:flex gap-16 text-[8px] font-bold uppercase tracking-[0.5em] text-white/30 absolute left-1/2 -translate-x-1/2">
+          <nav className="hidden lg:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className={`transition-all duration-1000 relative group ${activeSection === link.id ? "text-primary" : "hover:text-white"}`}
+                className={`nav-pill ${activeSection === link.id ? "nav-pill--active" : ""}`}
                 onClick={(e) => {
                   if (link.href.startsWith("/#")) {
                     e.preventDefault();
@@ -79,14 +96,11 @@ export default function Header() {
                 }}
               >
                 {link.name}
-                <span
-                  className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-[1px] bg-primary transition-all duration-1000 ${activeSection === link.id ? "w-3" : "w-0 group-hover:w-3"}`}
-                />
               </a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-6 md:gap-8 text-[8px] font-bold uppercase tracking-[0.5em] text-white/30">
+          <div className="flex items-center gap-5 text-[8px] font-bold uppercase tracking-[0.45em] text-white/30 md:gap-7">
             <Link
               href="/cart"
               className="relative flex items-center gap-2 text-white/30 transition-all hover:text-primary group"
@@ -105,6 +119,93 @@ export default function Header() {
                 </span>
               )}
             </Link>
+
+            <div className="relative hidden sm:block">
+              {profile ? (
+                <button
+                  type="button"
+                  onClick={() => setIsAccountOpen((v) => !v)}
+                  className="group flex items-center gap-2 text-white/34 transition-all hover:text-primary"
+                  aria-expanded={isAccountOpen}
+                >
+                  <UserRound
+                    size={13}
+                    strokeWidth={1}
+                    className="transition-transform duration-700 group-hover:-translate-y-0.5"
+                  />
+                  <span className="hidden xl:inline max-w-[92px] truncate">
+                    {profile.role === "admin" ? "Admin" : profile.name.split(" ")[0]}
+                  </span>
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className="group flex items-center gap-2 text-white/34 transition-all hover:text-primary"
+                >
+                  <UserRound
+                    size={13}
+                    strokeWidth={1}
+                    className="transition-transform duration-700 group-hover:-translate-y-0.5"
+                  />
+                  <span className="hidden xl:inline">Login</span>
+                </Link>
+              )}
+
+              <AnimatePresence>
+                {profile && isAccountOpen ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    className="glass-liquid absolute right-0 top-8 w-72 overflow-hidden rounded-2xl p-3 shadow-[0_28px_90px_-40px_rgba(0,0,0,0.95)]"
+                  >
+                    <div className="border-b border-white/[0.07] px-4 py-4">
+                      <p className="font-serif text-lg normal-case tracking-normal text-white">
+                        {profile.name}
+                      </p>
+                      <p className="mt-1 truncate text-[9px] uppercase tracking-[0.22em] text-white/36">
+                        {profile.email}
+                      </p>
+                    </div>
+                    <div className="py-2">
+                      {profile.role === "admin" ? (
+                        <Link
+                          href="/admin/dashboard"
+                          onClick={() => setIsAccountOpen(false)}
+                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-[9px] uppercase tracking-[0.26em] text-white/54 transition hover:bg-white/[0.04] hover:text-primary"
+                        >
+                          <Settings size={13} strokeWidth={1.25} />
+                          Admin Dashboard
+                        </Link>
+                      ) : (
+                        accountLinks.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsAccountOpen(false)}
+                            className="flex items-center gap-3 rounded-xl px-4 py-3 text-[9px] uppercase tracking-[0.26em] text-white/54 transition hover:bg-white/[0.04] hover:text-primary"
+                          >
+                            <item.icon size={13} strokeWidth={1.25} />
+                            {item.label}
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logout();
+                        setIsAccountOpen(false);
+                      }}
+                      className="w-full rounded-xl border border-white/[0.07] px-4 py-3 text-left text-[9px] uppercase tracking-[0.26em] text-white/44 transition hover:border-primary/30 hover:text-primary"
+                    >
+                      Logout
+                    </button>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </div>
 
             <button
               type="button"
@@ -129,11 +230,11 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[90] bg-[#050505]/95 backdrop-blur-2xl lg:hidden flex flex-col items-center justify-center pt-20"
+            className="glass-liquid fixed inset-0 z-[90] lg:hidden flex flex-col items-center justify-center pt-20"
           >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-10 pointer-events-none">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full blur-[100px]" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px]" />
+              <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-[rgba(140,72,210,0.22)] blur-[100px]" />
             </div>
 
             <nav className="flex flex-col items-center gap-8 text-xl font-serif tracking-[0.2em] uppercase">
@@ -169,14 +270,41 @@ export default function Header() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45 }}
+                transition={{ delay: 0.4 }}
+              >
+                {profile ? (
+                  <Link
+                    href={profile.role === "admin" ? "/admin/dashboard" : "/account/settings"}
+                    className="gradient-text inline-flex items-center gap-3"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {profile.role === "admin" ? "Admin" : "Account"}
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="gradient-text inline-flex items-center gap-3"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                )}
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
                 className="mt-8 pt-8 border-t border-white/10 w-48 text-center"
               >
                 <button
                   type="button"
+                  onClick={() => {
+                    if (profile) logout();
+                    setIsMobileMenuOpen(false);
+                  }}
                   className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary"
                 >
-                  Login / Account
+                  {profile ? "Logout" : "Private Account"}
                 </button>
               </motion.div>
             </nav>

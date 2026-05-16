@@ -22,13 +22,13 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative pt-24 pb-12 border-t border-white/5">
+    <footer className="glass-premium relative mt-8 rounded-t-3xl border-t border-white/10 pt-24 pb-12">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="container-page grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-20"
+        className="container-page mb-16 grid grid-cols-1 gap-10 sm:mb-20 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4"
       >
         <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start text-center md:text-left">
           <h3 className="text-2xl font-serif mb-4 tracking-[0.2em] gradient-text">ELEVARA</h3>

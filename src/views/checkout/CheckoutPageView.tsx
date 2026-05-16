@@ -11,6 +11,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import CartTrustStrip from "@/components/cart/CartTrustStrip";
+import AuthGate from "@/components/auth/AuthGate";
 import CheckoutContactProfiles from "@/components/checkout/CheckoutContactProfiles";
 import CheckoutOrderSummary from "@/components/checkout/CheckoutOrderSummary";
 import CheckoutPaymentMethods from "@/components/checkout/CheckoutPaymentMethods";
@@ -50,7 +51,11 @@ export default function CheckoutPageView() {
       setHydrated(true)
     );
     if (useCartStore.persist.hasHydrated()) setHydrated(true);
-    return unsub;
+    const fallback = window.setTimeout(() => setHydrated(true), 250);
+    return () => {
+      window.clearTimeout(fallback);
+      unsub();
+    };
   }, []);
 
   useEffect(() => {
@@ -132,7 +137,7 @@ export default function CheckoutPageView() {
 
   if (!hydrated) {
     return (
-      <div className="min-h-screen bg-[#03040a] pt-32 flex items-center justify-center">
+      <div className="cinematic-page min-h-screen pt-32 flex items-center justify-center">
         <div className="h-10 w-10 animate-spin rounded-full border border-primary/30 border-t-primary" />
       </div>
     );
@@ -140,7 +145,7 @@ export default function CheckoutPageView() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#03040a] pt-32 flex items-center justify-center">
+      <div className="cinematic-page min-h-screen pt-32 flex items-center justify-center">
         <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">
           Returning to cart…
         </p>
@@ -149,10 +154,8 @@ export default function CheckoutPageView() {
   }
 
   return (
-    <div className="min-h-screen bg-[#03040a] pt-28 pb-24 px-4 md:px-8">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(214,195,165,0.07),transparent)] pointer-events-none" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#070b18]/90 via-[#03040a] to-[#020205] pointer-events-none" />
-
+    <AuthGate role="user">
+    <div className="cinematic-page cinematic-section cinematic-section--b min-h-screen pb-24 pt-28">
       <div className="container-page">
         <Link
           href="/cart"
@@ -345,5 +348,6 @@ export default function CheckoutPageView() {
         <CartTrustStrip />
       </div>
     </div>
+    </AuthGate>
   );
 }

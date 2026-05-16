@@ -2,154 +2,158 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import PageHero from "@/components/layouts/PageHero";
 import BlogCard from "@/components/common/BlogCard";
 import { blogs } from "@/mock/blogs";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-const categories = ["All", "Editorial", "Journal", "Artisan", "Design", "Trends", "Masterclass"];
+const categories = [
+  "All",
+  "Editorial",
+  "Journal",
+  "Artisan",
+  "Design",
+  "Trends",
+  "Masterclass",
+];
 
 export default function BlogsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const featuredBlog = blogs.find(b => b.isFeatured) || blogs[0];
-  const trendingBlogs = blogs.filter(b => b.id !== featuredBlog.id).slice(0, 2);
+  const featuredBlog = blogs.find((b) => b.isFeatured) || blogs[0];
+  const trendingBlogs = blogs.filter((b) => b.id !== featuredBlog.id).slice(0, 2);
   const remainingBlogs = blogs.filter(
-    b => b.id !== featuredBlog.id && !trendingBlogs.includes(b) && (activeCategory === "All" || b.category === activeCategory)
+    (b) =>
+      b.id !== featuredBlog.id &&
+      !trendingBlogs.includes(b) &&
+      (activeCategory === "All" || b.category === activeCategory),
   );
 
   return (
-    <main className="min-h-screen bg-[#010102] pt-32 pb-32">
-      {/* Background Ambient Glow */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 w-[800px] h-[500px] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(214,195,165,0.03),transparent_70%)]" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(214,195,165,0.02),transparent_70%)]" />
-      </div>
+    <main className="cinematic-page min-h-screen">
+      <PageHero
+        image="/assets/hero-brand.png"
+        eyebrow="Elevāra Journal"
+        align="center"
+        title={
+          <>
+            The Art of <span className="text-accent-gold">Olfaction</span>
+          </>
+        }
+        description="A curated editorial space exploring scent, memory, craftsmanship, and modern luxury design."
+      />
 
-      <div className="relative z-10 container-page px-6 lg:px-12 max-w-[90rem] mx-auto">
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-24 flex flex-col items-center text-center"
-        >
-          <span className="subtitle-luxury block tracking-[0.55em] mb-6">
-            Elevāra Journal
-          </span>
-          <h1 className="text-[clamp(3rem,8vw,6rem)] font-serif font-light text-white leading-[0.9] mb-8 uppercase tracking-[-0.04em]">
-            The Art of <br />
-            <span className="italic text-white/90">Olfaction</span>
-          </h1>
-          <p className="text-white/60 max-w-2xl text-sm md:text-base leading-relaxed tracking-wide font-light">
-            A curated editorial space exploring the profound intersections of scent, memory, craftsmanship, and modern luxury design.
-          </p>
-        </motion.div>
-
-        {/* Featured Article */}
-        <section className="mb-32">
-          <div className="flex items-center gap-3 mb-10">
-            <Sparkles size={16} className="text-[#D4AF37]" />
-            <span className="text-[10px] uppercase tracking-[0.3em] text-[#D4AF37] font-medium">
-              Featured Story
-            </span>
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <BlogCard {...featuredBlog} variant="large" />
-          </motion.div>
-        </section>
-
-        {/* Trending & Categories */}
-        <div className="grid lg:grid-cols-12 gap-16 lg:gap-24 mb-32">
-          {/* Trending Stories */}
-          <div className="lg:col-span-8">
-            <div className="flex items-center justify-between mb-10 border-b border-white/10 pb-6">
-              <h2 className="text-2xl font-serif text-white tracking-wide">Trending Editorials</h2>
+      <div className="cinematic-section cinematic-section--a relative z-10 pb-32 pt-16 md:pt-20">
+        <div className="container-page relative z-10 max-w-[90rem] px-6 lg:px-12">
+          <section className="mb-24">
+            <div className="mb-10 flex items-center gap-3">
+              <Sparkles size={16} className="text-primary" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+                Featured Story
+              </span>
             </div>
-            <div className="grid sm:grid-cols-2 gap-8">
-              {trendingBlogs.map((blog, idx) => (
-                <motion.div
-                  key={blog.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: idx * 0.1 }}
-                >
-                  <BlogCard {...blog} variant="small" />
-                </motion.div>
-              ))}
-            </div>
-          </div>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <BlogCard {...featuredBlog} variant="large" />
+            </motion.div>
+          </section>
 
-          {/* Categories Sidebar */}
-          <div className="lg:col-span-4 lg:pt-0 pt-10">
-            <div className="sticky top-40">
-              <h3 className="text-[10px] uppercase tracking-[0.3em] text-white/50 font-medium mb-10">
-                Explore by Category
-              </h3>
-              <ul className="space-y-4">
-                {categories.map((cat, idx) => (
-                  <motion.li
-                    key={cat}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 + idx * 0.05 }}
+          <motion.div className="mb-32 grid gap-16 lg:grid-cols-12 lg:gap-24">
+            <div className="lg:col-span-8">
+              <div className="mb-10 flex items-center justify-between border-b border-white/10 pb-6">
+                <h2 className="font-serif text-2xl tracking-wide text-white">
+                  Trending Editorials
+                </h2>
+              </div>
+              <div className="grid gap-8 sm:grid-cols-2">
+                {trendingBlogs.map((blog, idx) => (
+                  <motion.div
+                    key={blog.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: idx * 0.1 }}
                   >
+                    <BlogCard {...blog} variant="small" />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <aside className="lg:col-span-4">
+              <div className="glass-clear glass-clear--card sticky top-28 p-8 md:p-10">
+                <h3 className="mb-8 font-serif text-xl text-white">Categories</h3>
+                <div className="flex flex-col gap-3">
+                  {categories.map((cat) => (
                     <button
+                      key={cat}
+                      type="button"
                       onClick={() => setActiveCategory(cat)}
-                      className={`group flex items-center justify-between w-full py-4 border-b border-white/5 transition-colors duration-500 ${
-                        activeCategory === cat ? "border-white/30" : "hover:border-white/20"
+                      className={`rounded-full px-5 py-3 text-left text-[9px] font-bold uppercase tracking-[0.32em] transition-all duration-500 ${
+                        activeCategory === cat
+                          ? "glass-clear text-primary"
+                          : "text-white/40 hover:text-white"
                       }`}
                     >
-                      <span className={`text-sm md:text-base font-serif tracking-wide transition-colors duration-500 ${
-                        activeCategory === cat ? "text-[#D4AF37]" : "text-white/70 group-hover:text-white"
-                      }`}>
-                        {cat}
-                      </span>
-                      <ArrowRight size={14} className={`transition-all duration-500 ${
-                        activeCategory === cat ? "text-[#D4AF37] opacity-100" : "text-white/20 opacity-0 group-hover:opacity-100 group-hover:-translate-x-2"
-                      }`} />
+                      {cat}
                     </button>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          </motion.div>
 
-        {/* Remaining Stories Grid */}
-        <section>
-          <div className="flex items-center justify-between mb-12 border-b border-white/10 pb-6">
-            <h2 className="text-2xl font-serif text-white tracking-wide">
-              {activeCategory === "All" ? "Latest Dispatches" : `${activeCategory} Dispatches`}
-            </h2>
-          </div>
-          
-          {remainingBlogs.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <section>
+            <div className="mb-12 flex flex-col justify-between gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end">
+              <h2 className="font-serif text-3xl text-white md:text-4xl">
+                Latest <span className="text-accent-gold">Entries</span>
+              </h2>
+              <p className="max-w-md text-sm font-light text-white/50">
+                Filtered by{" "}
+                <span className="text-primary">{activeCategory}</span>
+              </p>
+            </div>
+
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
               {remainingBlogs.map((blog, idx) => (
                 <motion.div
                   key={blog.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: (idx % 3) * 0.08 }}
                 >
-                  <BlogCard {...blog} variant="small" />
+                  <BlogCard {...blog} />
                 </motion.div>
               ))}
             </div>
-          ) : (
-            <div className="py-20 text-center">
-              <p className="text-white/40 font-serif italic text-lg">No stories found in this category.</p>
-            </div>
-          )}
-        </section>
 
+            {remainingBlogs.length === 0 ? (
+              <p className="py-20 text-center text-sm uppercase tracking-[0.3em] text-white/35">
+                No stories in this category yet.
+              </p>
+            ) : null}
+          </section>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-24 flex justify-center"
+          >
+            <Link
+              href="/"
+              className="glass-clear glass-clear--pill inline-flex items-center gap-3 px-8 py-4 text-[10px] font-bold uppercase tracking-[0.34em] text-white/80 transition hover:text-primary"
+            >
+              Return Home <ArrowRight size={14} />
+            </Link>
+          </motion.div>
+        </div>
       </div>
     </main>
   );

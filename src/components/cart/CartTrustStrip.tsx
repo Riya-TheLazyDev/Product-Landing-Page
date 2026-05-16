@@ -33,7 +33,7 @@ export default function CartTrustStrip() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-      className="mt-20 md:mt-28 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6"
+      className="trust-glass-bar mt-20 md:mt-28 grid grid-cols-1 gap-5 sm:grid-cols-2 md:gap-6 xl:grid-cols-4"
     >
       {items.map((item, idx) => (
         <motion.div
@@ -46,7 +46,7 @@ export default function CartTrustStrip() {
             duration: 0.7,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[rgba(8,10,18,0.55)] p-6 md:p-7 backdrop-blur-xl transition-[border-color,transform,box-shadow] duration-[1s] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-[0_24px_70px_-40px_rgba(214,195,165,0.12)]"
+          className="trust-glass-item group"
         >
           <div className="absolute inset-0 opacity-0 transition-opacity duration-1000 group-hover:opacity-100 pointer-events-none bg-gradient-to-br from-primary/[0.06] to-transparent" />
           <div className="relative flex flex-col gap-4">

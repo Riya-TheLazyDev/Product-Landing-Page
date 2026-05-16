@@ -17,18 +17,20 @@ export default function Subscribe() {
   };
 
   return (
-    <section id="subscribe" className="section-padding bg-[#000000]">
-      <div className="container-page">
-        <div className="glass-obsidian mx-auto max-w-4xl border border-white/[0.06] p-12 text-center md:p-24">
+    <section id="subscribe" className="cinematic-section cinematic-section--c section-padding relative overflow-hidden">
+      <div className="environment-scene environment-scene--waterfall" />
+      <div className="container-page relative z-10">
+        <div className="glass-liquid glass-shine glass-obsidian relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-6 text-center sm:rounded-3xl sm:p-10 md:p-16 lg:p-24">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_0%,rgba(214,195,165,0.09),transparent_62%),radial-gradient(ellipse_100%_42%_at_50%_100%,rgba(140,72,210,0.14),transparent_70%)]" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
             <span className="subtitle-luxury mb-8 block text-primary">Private List</span>
-            <h2 className="title-luxury text-4xl md:text-6xl text-white mb-10">
-              Join the <br /> 
-              <span className="text-primary/25 italic">Inner Circle</span>
+            <h2 className="heading-section-sm mb-8 sm:mb-10">
+              Join the{" "}
+              <span className="text-accent-gold">Inner Circle</span>
             </h2>
             <p className="mx-auto mb-16 max-w-md text-xs font-light uppercase leading-relaxed tracking-[0.2em] text-white/60 md:text-sm">
               Receive exclusive access to new collection launches and private olfactory events.

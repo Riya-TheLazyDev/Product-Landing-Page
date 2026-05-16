@@ -25,14 +25,16 @@ const NOTES = [
 
 export default function FragranceNotes() {
   return (
-    <section className="section-padding bg-[#010101]">
-      <div className="container-page">
+    <section className="cinematic-section cinematic-section--b section-padding relative overflow-hidden">
+      <div className="environment-scene environment-scene--rain" />
+      <div className="liquid-blob liquid-blob--gold pointer-events-none absolute -left-20 bottom-0 h-[280px] w-[280px] opacity-25" />
+      <motion.div className="container-page relative z-10">
         <div className="editorial-grid mb-24">
           <div>
             <span className="subtitle-luxury mb-6 block">Olfactory Pyramid</span>
-            <h2 className="title-luxury text-5xl md:text-7xl text-white">
-              The Architecture <br /> 
-              <span className="text-primary/25 italic">of Scent</span>
+            <h2 className="heading-section">
+              The Architecture <br />
+              <span className="text-accent-gold">of Scent</span>
             </h2>
           </div>
           <div className="flex items-end">
@@ -42,7 +44,7 @@ export default function FragranceNotes() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-12 lg:gap-16">
           {NOTES.map((note) => (
             <motion.div
               key={note.title}
@@ -50,8 +52,9 @@ export default function FragranceNotes() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: note.delay, ease: [0.16, 1, 0.3, 1] }}
-              className="group"
+              className="glass-liquid glass-shine group relative overflow-hidden rounded-2xl p-8 md:p-10"
             >
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_38%_at_50%_0%,rgba(214,195,165,0.055),transparent_62%),linear-gradient(180deg,transparent,rgba(2,4,8,0.28))]" />
               <div className="mb-8 h-[1px] w-full bg-white/5 relative overflow-hidden">
                 <motion.div 
                   initial={{ x: "-100%" }}
@@ -67,7 +70,7 @@ export default function FragranceNotes() {
 
               <div className="flex flex-wrap gap-3 mb-8">
                 {note.items.map((item) => (
-                  <span key={item} className="border border-white/[0.08] bg-black/50 px-4 py-2 text-[9px] font-bold uppercase tracking-widest text-white/70 transition-colors group-hover:border-primary/25">
+                  <span key={item} className="glass-chip px-4 py-2 text-[9px] font-bold uppercase tracking-widest text-white/70 transition-colors group-hover:border-primary/25">
                     {item}
                   </span>
                 ))}
@@ -79,7 +82,7 @@ export default function FragranceNotes() {
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

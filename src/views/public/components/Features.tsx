@@ -26,14 +26,15 @@ const FEATURES = [
 
 export default function Features() {
   return (
-    <section id="about" className="section-padding bg-[#010101]">
-      <div className="container-page">
+    <section id="about" className="cinematic-section cinematic-section--c section-padding relative overflow-hidden">
+      <div className="environment-scene environment-scene--rain" />
+      <div className="container-page relative z-10">
         <div className="editorial-grid mb-16 md:mb-20">
           <div>
             <span className="subtitle-luxury mb-6 block">Our Philosophy</span>
-            <h2 className="title-luxury text-5xl md:text-7xl text-white">
-              Conscious <br /> 
-              <span className="text-primary/25 italic">Excellence</span>
+            <h2 className="heading-section">
+              Conscious{" "}
+              <span className="text-accent-gold">Excellence</span>
             </h2>
           </div>
           <div className="flex items-end">
@@ -43,7 +44,7 @@ export default function Features() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-12 lg:gap-24">
+        <div className="grid gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 lg:gap-16">
           {FEATURES.map((feature) => (
             <motion.div
               key={feature.title}
@@ -51,8 +52,9 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: feature.delay, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col"
+              className="glass-liquid glass-shine relative flex min-h-[260px] flex-col overflow-hidden rounded-2xl p-8 md:p-10"
             >
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_100%,rgba(140,72,210,0.1),transparent_64%)]" />
               <div className="mb-8 text-primary">
                 <feature.icon size={24} strokeWidth={1} />
               </div>

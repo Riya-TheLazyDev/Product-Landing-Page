@@ -17,6 +17,14 @@ import { makeLineId } from "@/lib/cart-line";
 
 type Toast = { message: string; id: number } | null;
 
+export type OrderRecord = {
+  id: string;
+  createdAt: string;
+  total: number;
+  status: "Confirmed" | "Preparing" | "Shipped";
+  items: CartLine[];
+};
+
 export type AddToCartPayload = {
   productId: string | number;
   name: string;
@@ -39,6 +47,7 @@ interface CartState {
   selectedContactId: string | null;
   savedPaymentMethods: SavedPaymentMethod[];
   selectedPaymentId: string | null;
+  orders: OrderRecord[];
   addItem: (p: AddToCartPayload) => void;
   removeItem: (lineId: string) => void;
   setQuantity: (lineId: string, quantity: number) => void;
@@ -99,6 +108,7 @@ export const useCartStore = create<CartState>()(
       selectedContactId: null,
       savedPaymentMethods: [],
       selectedPaymentId: null,
+      orders: [],
 
       clearCheckoutAddressSelection: () => set({ selectedAddressId: null }),
 
@@ -374,8 +384,18 @@ export const useCartStore = create<CartState>()(
         }),
 
       placeOrder: () => {
+        const items = get().items;
+        const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const order: OrderRecord = {
+          id: `ELV-${Date.now().toString().slice(-6)}`,
+          createdAt: new Date().toISOString(),
+          total,
+          status: "Confirmed",
+          items,
+        };
         set({
           items: [],
+          orders: items.length > 0 ? [order, ...get().orders] : get().orders,
           checkoutStep: 0,
           checkoutDraft: defaultCheckoutDraft(),
           selectedAddressId: null,
@@ -512,6 +532,7 @@ export const useCartStore = create<CartState>()(
         selectedContactId: s.selectedContactId,
         savedPaymentMethods: s.savedPaymentMethods,
         selectedPaymentId: s.selectedPaymentId,
+        orders: s.orders,
       }),
       merge: (persisted, current) => {
         const p = persisted as Partial<CartState>;
@@ -544,6 +565,7 @@ export const useCartStore = create<CartState>()(
             p.selectedPaymentId === null
               ? p.selectedPaymentId
               : null,
+          orders: Array.isArray(p.orders) ? p.orders : [],
         };
       },
     }

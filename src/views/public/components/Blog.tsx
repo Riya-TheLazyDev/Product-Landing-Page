@@ -13,14 +13,14 @@ export default function BlogSection() {
   const sideBlogs = featuredBlogs.slice(1);
 
   return (
-    <section id="journal" className="section-padding bg-[#010101]">
+    <section id="journal" className="cinematic-section cinematic-section--b section-padding">
       <div className="container-page">
         <div className="editorial-grid mb-16 md:mb-20">
           <div>
             <span className="subtitle-luxury mb-6 block">The Journal</span>
-            <h2 className="title-luxury text-5xl md:text-7xl text-white">
-              Olfactory <br /> 
-              <span className="text-primary/25 italic">Stories</span>
+            <h2 className="heading-section">
+              Olfactory{" "}
+              <span className="text-accent-gold">Stories</span>
             </h2>
           </div>
           <div className="flex items-end">

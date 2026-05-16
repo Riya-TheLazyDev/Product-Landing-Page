@@ -33,7 +33,7 @@ export default function ProductPage({
   }));
 
   return (
-    <div className="min-h-screen pt-32 pb-20 px-4 md:px-8 bg-[#050505]">
+    <div className="cinematic-page cinematic-section cinematic-section--b min-h-screen pb-16 pt-24 sm:pb-20 sm:pt-28 md:pt-32">
       <div className="container-page">
         <Link
           href="/#shop"
@@ -46,9 +46,8 @@ export default function ProductPage({
           Back to Collection
         </Link>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Image Section */}
-          <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden glass-card p-12">
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl glass-card p-6 sm:rounded-[2rem] sm:p-10 md:p-12">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
             <div className="relative w-full h-full">
               <Image
@@ -66,7 +65,7 @@ export default function ProductPage({
             <span className="text-[10px] uppercase tracking-[0.4em] text-primary font-bold mb-4">
               {product.category}
             </span>
-            <h1 className="text-5xl md:text-7xl font-serif mb-6 text-white leading-tight">
+            <h1 className="heading-section mb-6 leading-tight">
               {product.name}
             </h1>
 

@@ -24,9 +24,9 @@ const FILTER_SECTIONS = [
 
 export default function ShopSidebar({ filters, setFilters }: any) {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="glass-clear glass-clear--card relative flex flex-col gap-10 overflow-hidden p-5 md:p-6">
       {/* Search/Filter Header */}
-      <div className="glass-card p-4 border-white/5 flex items-center justify-between group cursor-pointer">
+      <div className="glass-card relative flex cursor-pointer items-center justify-between border-white/5 p-4 group">
         <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-white group-hover:text-primary transition-colors">Filters</span>
         <div className="flex gap-1">
           <div className="w-3 h-[1px] bg-white/20" />

@@ -28,9 +28,7 @@ export default function CartPageView() {
   const [confirmClear, setConfirmClear] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#03040a] pt-28 pb-24 px-4 md:px-8">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(214,195,165,0.08),transparent)] pointer-events-none" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#070b18]/90 via-[#03040a] to-[#020205] pointer-events-none" />
+    <motion.div className="cinematic-page cinematic-section cinematic-section--a min-h-screen pb-16 pt-6 sm:pb-24 sm:pt-8">
 
       <div className="container-page">
         <header className="mb-16 md:mb-20 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
@@ -305,6 +303,6 @@ export default function CartPageView() {
 
         <CartTrustStrip />
       </div>
-    </div>
+    </motion.div>
   );
 }
