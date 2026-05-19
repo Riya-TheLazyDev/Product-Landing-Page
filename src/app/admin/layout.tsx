@@ -14,6 +14,8 @@ import {
   Image as ImageIcon,
   Warehouse,
   Star,
+  LineChart,
+  RotateCcw,
   Settings,
   LogOut,
   Bell,
@@ -36,6 +38,8 @@ const SIDEBAR_ITEMS = [
   { id: "cms", label: "Banners / CMS", icon: ImageIcon, href: "/admin/cms" },
   { id: "inventory", label: "Inventory", icon: Warehouse, href: "/admin/inventory" },
   { id: "reviews", label: "Reviews", icon: Star, href: "/admin/reviews" },
+  { id: "reports", label: "Reports", icon: LineChart, href: "/admin/reports" },
+  { id: "returns", label: "Returns & Refunds", icon: RotateCcw, href: "/admin/returns" },
   { id: "settings", label: "Settings", icon: Settings, href: "/admin/settings" },
 ];
 
@@ -79,9 +83,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           width: isSidebarOpen ? "280px" : "0px",
           x: isSidebarOpen ? 0 : -280,
         }}
-        className="fixed inset-y-0 left-0 z-50 flex flex-col bg-[#050308] border-r border-white/[0.05] lg:relative lg:translate-x-0"
+        className="fixed inset-y-0 left-0 z-50 flex flex-col bg-[#050308] border-r border-white/[0.05] lg:relative lg:translate-x-0 overflow-hidden"
       >
-        <div className="flex h-20 items-center justify-center border-b border-white/[0.05] px-8">
+        {/* Sidebar Background Image & Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/assets/Side_bar_Background.png" 
+            alt="" 
+            className="w-full h-full object-cover object-bottom opacity-40 transition-opacity duration-1000"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050308] via-[#050308]/92 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050308] to-transparent" />
+        </div>
+
+        <div className="relative z-10 flex h-20 items-center justify-center border-b border-white/[0.05] px-8">
           <Link href="/admin/dashboard" className="flex flex-col items-center">
             <h1 className="text-lg font-serif tracking-[0.3em] uppercase text-primary">
               ELEVARA
@@ -92,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-4 py-8 space-y-1 custom-scrollbar">
+        <nav className="relative z-10 flex-1 overflow-y-auto px-4 py-8 space-y-1 custom-scrollbar">
           {SIDEBAR_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -124,19 +139,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/[0.05]">
-          <div className="relative group cursor-pointer mb-6 rounded-2xl overflow-hidden aspect-square flex items-center justify-center bg-black/40 border border-white/[0.05]">
-            <img 
-              src="/assets/product.jpeg" 
-              alt="Admin Product" 
-              className="w-full h-full object-cover opacity-60 transition-opacity group-hover:opacity-80"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 text-center">
-              <p className="text-[9px] uppercase tracking-[0.2em] text-white/80 font-bold">Oud Noir</p>
-              <p className="text-[7px] uppercase tracking-[0.1em] text-white/40 mt-0.5">Extrait de Parfum</p>
-            </div>
-          </div>
+        <div className="relative z-10 p-4 border-t border-white/[0.05]">
 
           <button
             onClick={() => logout()}
@@ -154,12 +157,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Navbar */}
         <header className="sticky top-0 z-40 h-20 bg-[#050308]/80 backdrop-blur-md border-b border-white/[0.05] px-6 flex items-center justify-between">
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="flex items-center gap-3 lg:hidden text-white/60 hover:text-white"
-          >
-            <Menu size={20} />
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="flex items-center gap-3 lg:hidden text-white/60 hover:text-white"
+            >
+              <Menu size={20} />
+            </button>
+            <h2 className="text-lg font-serif text-white tracking-wide hidden sm:block">
+              {SIDEBAR_ITEMS.find(item => item.href === pathname)?.label || "Admin"}
+            </h2>
+          </div>
 
           <div className="hidden lg:flex flex-1 max-w-xl relative mx-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" size={16} />

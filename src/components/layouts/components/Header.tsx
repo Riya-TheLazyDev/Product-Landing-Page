@@ -6,6 +6,7 @@ import { Heart, MapPin, Menu, Package, Settings, ShoppingBag, UserRound, X } fro
 import { motion, AnimatePresence } from "framer-motion";
 import { selectCartQuantity, useCartStore } from "@/stores/cart-store";
 import { useAuthStore } from "@/stores/auth-store";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
 
   const cartCount = useCartStore((s) => selectCartQuantity(s.items));
+  const wishlistCount = useWishlistStore((s) => s.wishlistCount);
   const profile = useAuthStore((s) => s.profile);
   const logout = useAuthStore((s) => s.logout);
 
@@ -57,7 +59,7 @@ export default function Header() {
   const displayCount = mounted ? cartCount : 0;
   const accountLinks = [
     { label: "My Orders", href: "/orders", icon: Package },
-    { label: "Wishlist", href: "/wishlist", icon: Heart },
+    { label: `Wishlist (${mounted ? wishlistCount : 0})`, href: "/wishlist", icon: Heart },
     { label: "Saved Addresses", href: "/account/addresses", icon: MapPin },
     { label: "Account Settings", href: "/account/settings", icon: Settings },
   ];

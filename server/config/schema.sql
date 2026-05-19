@@ -1,0 +1,33 @@
+-- ELEVĀRA LUXURY PORTAL DATABASE MIGRATION SCHEMA
+
+-- Create database if not exists
+CREATE DATABASE IF NOT EXISTS elevara_db;
+USE elevara_db;
+
+-- Users Table (Customers, Staff, Administrators)
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  phone VARCHAR(50) NULL,
+  role VARCHAR(50) DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Products Table (Fragrances, Sizes, Custom Essences)
+CREATE TABLE IF NOT EXISTS products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  description TEXT NULL,
+  price DECIMAL(10, 2) NOT NULL,
+  discount_price DECIMAL(10, 2) NULL,
+  category VARCHAR(100) NOT NULL,
+  stock INT DEFAULT 0,
+  sku VARCHAR(100) UNIQUE NULL,
+  featured BOOLEAN DEFAULT FALSE,
+  status VARCHAR(50) DEFAULT 'Active',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

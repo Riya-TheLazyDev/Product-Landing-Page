@@ -55,8 +55,8 @@ function LoginPageInner() {
       await new Promise((r) => setTimeout(r, 450));
       const profile =
         isSignup && mode === "user"
-          ? signup(name, email, password)
-          : login(email, password, mode);
+          ? await signup(name, email, password)
+          : await login(email, password, mode);
       const target =
         profile.role === "admin"
           ? redirect?.startsWith("/admin")
