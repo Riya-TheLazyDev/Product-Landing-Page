@@ -63,7 +63,9 @@ export const initializeSchema = async (connection) => {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
+    const { seedUsersIfEmpty } = await import("../utils/seedUsers.js");
     const { seedProductsIfEmpty } = await import("../utils/seedProducts.js");
+    await seedUsersIfEmpty(connection);
     await seedProductsIfEmpty(connection);
 
     console.log("Elevāra SQL database schema validated successfully (users and products tables verified)");

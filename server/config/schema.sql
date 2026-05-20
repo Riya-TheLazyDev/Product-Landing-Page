@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Products Table (Fragrances, Sizes, Custom Essences)
+-- Future: product_images, product_variants, fragrance_notes, collections, ratings
 CREATE TABLE IF NOT EXISTS products (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,

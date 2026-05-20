@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Product } from "@/data/products";
+import { productService } from "@/services/productService";
 import { Order } from "@/data/orders";
 import { Customer } from "@/data/customers";
 
@@ -157,17 +158,28 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   },
 
   bulkDeleteProducts: async (ids) => {
-    set({ loading: true });
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        set((s) => ({
-          products: s.products.filter((p) => !ids.includes(p.id)),
-          selectedRows: [],
-          loading: false,
-        }));
-        resolve();
-      }, 500);
-    });
+    set({ loading: true, error: null });
+    try {
+      const results = await Promise.all(
+        ids.map((id) => productService.deleteProduct(id))
+      );
+      const failed = results.find((r) => !r.success);
+      if (failed) {
+        set({ error: failed.error || "Some products could not be deleted", loading: false });
+        throw new Error(failed.error || "Bulk delete failed");
+      }
+      set((s) => ({
+        products: s.products.filter((p) => !ids.includes(String(p.id))),
+        selectedRows: [],
+        loading: false,
+      }));
+    } catch (err) {
+      set({
+        loading: false,
+        error: err instanceof Error ? err.message : "Bulk delete failed",
+      });
+      throw err;
+    }
   },
 }));
 

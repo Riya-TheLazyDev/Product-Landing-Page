@@ -62,6 +62,7 @@ export default function ProductsPage() {
 
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
@@ -214,6 +215,24 @@ export default function ProductsPage() {
       return;
     }
     setDeleteTarget(null);
+    setSelectedProducts([]);
+    await loadProducts();
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedProducts.length === 0) return;
+    setBulkDeleting(true);
+    setError("");
+    const results = await Promise.all(
+      selectedProducts.map((id) => productService.deleteProduct(id))
+    );
+    setBulkDeleting(false);
+    const failed = results.find((r) => !r.success);
+    if (failed) {
+      setError(failed.error || "Some products could not be deleted");
+      return;
+    }
+    setSelectedProducts([]);
     await loadProducts();
   };
 
@@ -231,6 +250,16 @@ export default function ProductsPage() {
             <Download size={14} className="text-primary/60" />
             Export
           </button>
+          {selectedProducts.length > 0 ? (
+            <button
+              onClick={handleBulkDelete}
+              disabled={bulkDeleting}
+              className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-rose-300 transition-all hover:bg-rose-500/20 disabled:opacity-50"
+            >
+              {bulkDeleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+              Delete ({selectedProducts.length})
+            </button>
+          ) : null}
           <button
             onClick={openCreateModal}
             className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#050308] transition-all hover:bg-primary/90 shadow-[0_8px_20px_-6px_rgba(214,195,165,0.4)]"
@@ -417,7 +446,7 @@ export default function ProductsPage() {
                     <Star size={14} className={product.featured ? "text-primary fill-primary" : "text-white/10"} />
                   </td>
                   <td className="py-5 px-4 text-[10px] text-white/40 font-medium">
-                    {formatCreatedAt((product as Product & { created_at?: string }).created_at)}
+                    {formatCreatedAt(product.created_at)}
                   </td>
                   <td className="py-5 px-4">
                     <div className="flex items-center justify-center gap-2">

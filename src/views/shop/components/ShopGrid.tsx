@@ -1,13 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CollectionProductCard from "@/components/common/CollectionProductCard";
 import { useProducts } from "@/hooks/useProducts";
 import { toCollectionCardProps } from "@/lib/productMapper";
 
-export default function ShopGrid({ filters }: { filters?: unknown }) {
-  void filters;
-  const { products, loading, error } = useProducts();
+type ShopFilters = {
+  category?: string;
+};
+
+export default function ShopGrid({
+  filters,
+  onCountChange,
+}: {
+  filters?: ShopFilters;
+  onCountChange?: (count: number) => void;
+}) {
+  const category =
+    filters?.category && filters.category !== "All" ? filters.category : undefined;
+
+  const { products, loading, error } = useProducts(
+    category ? { category } : undefined
+  );
+
+  useEffect(() => {
+    if (!loading) onCountChange?.(products.length);
+  }, [loading, products.length, onCountChange]);
 
   if (loading) {
     return (

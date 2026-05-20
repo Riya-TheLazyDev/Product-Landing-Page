@@ -21,122 +21,13 @@ import {
   Activity,
   Layers,
   ArrowUpRight,
+  Loader2,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { productService } from "@/services/productService";
+import { toInventoryRow } from "@/lib/productMapper";
 
-// Mock Data
-const INVENTORY_DATA = [
-  {
-    id: 1,
-    product: { name: "Oud Noir", type: "Extrait de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-OUD-100",
-    category: "Luxury",
-    currentStock: 320,
-    reserved: 25,
-    available: 295,
-    status: "In Stock",
-    lastUpdated: "May 29, 2024\n10:30 AM",
-  },
-  {
-    id: 2,
-    product: { name: "Amber Royale", type: "Extrait de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-AMB-100",
-    category: "Luxury",
-    currentStock: 150,
-    reserved: 10,
-    available: 140,
-    status: "Low Stock",
-    lastUpdated: "May 29, 2024\n09:15 AM",
-  },
-  {
-    id: 3,
-    product: { name: "Velvet Oud", type: "Extrait de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-VEL-100",
-    category: "Premium",
-    currentStock: 0,
-    reserved: 0,
-    available: 0,
-    status: "Out of Stock",
-    lastUpdated: "May 28, 2024\n05:45 PM",
-  },
-  {
-    id: 4,
-    product: { name: "Mystic Rose", type: "Eau de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-MYR-100",
-    category: "Floral",
-    currentStock: 85,
-    reserved: 5,
-    available: 80,
-    status: "Low Stock",
-    lastUpdated: "May 28, 2024\n03:20 PM",
-  },
-  {
-    id: 5,
-    product: { name: "Citrus Zest", type: "Eau de Toilette", image: "/assets/product.jpeg" },
-    sku: "ELV-CIT-100",
-    category: "Fresh",
-    currentStock: 420,
-    reserved: 20,
-    available: 400,
-    status: "In Stock",
-    lastUpdated: "May 27, 2024\n11:10 AM",
-  },
-  {
-    id: 6,
-    product: { name: "Night Shadow", type: "Extrait de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-NIG-100",
-    category: "Luxury",
-    currentStock: 60,
-    reserved: 5,
-    available: 55,
-    status: "Low Stock",
-    lastUpdated: "May 27, 2024\n10:05 AM",
-  },
-  {
-    id: 7,
-    product: { name: "Sandal Essence", type: "Eau de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-SAN-100",
-    category: "Woody",
-    currentStock: 200,
-    reserved: 15,
-    available: 185,
-    status: "Restocking",
-    lastUpdated: "May 26, 2024\n04:50 PM",
-  },
-  {
-    id: 8,
-    product: { name: "Pure Aqua", type: "Eau de Toilette", image: "/assets/product.jpeg" },
-    sku: "ELV-PUR-100",
-    category: "Fresh",
-    currentStock: 0,
-    reserved: 0,
-    available: 0,
-    status: "Out of Stock",
-    lastUpdated: "May 26, 2024\n01:30 PM",
-  },
-  {
-    id: 9,
-    product: { name: "Golden Musk", type: "Extrait de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-GOL-100",
-    category: "Luxury",
-    currentStock: 110,
-    reserved: 10,
-    available: 100,
-    status: "Low Stock",
-    lastUpdated: "May 25, 2024\n09:45 AM",
-  },
-  {
-    id: 10,
-    product: { name: "Royal Leather", type: "Extrait de Parfum", image: "/assets/product.jpeg" },
-    sku: "ELV-ROY-100",
-    category: "Premium",
-    currentStock: 75,
-    reserved: 5,
-    available: 70,
-    status: "In Stock",
-    lastUpdated: "May 25, 2024\n08:20 AM",
-  },
-];
+type InventoryRow = ReturnType<typeof toInventoryRow>;
 
 const ANALYTICS_CARDS = [
   { label: "Total Stock (Units)", value: "8,245", change: "+12.5%", icon: Package, trend: "up", color: "text-amber-500" },
@@ -170,26 +61,44 @@ const TOP_MOVING = [
 ];
 
 export default function InventoryPage() {
-  const [inventory, setInventory] = useState(INVENTORY_DATA);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  
-  // Modals state
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<any>(null);
+  const [inventory, setInventory] = useState<InventoryRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [savingStock, setSavingStock] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
 
-  // Form state
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<InventoryRow | null>(null);
+
   const [formData, setFormData] = useState({
     addStock: 0,
     removeStock: 0,
     reason: "New delivery",
   });
 
+  const loadInventory = useCallback(async () => {
+    setLoading(true);
+    setLoadError("");
+    const res = await productService.getProducts();
+    if (res.success && res.data) {
+      setInventory(res.data.map(toInventoryRow));
+    } else {
+      setLoadError(res.error || "Failed to load inventory");
+      setInventory([]);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    loadInventory();
+  }, [loadInventory]);
+
   const toggleSelectAll = () => {
     if (selectedItems.length === inventory.length) setSelectedItems([]);
     else setSelectedItems(inventory.map((item) => item.id));
   };
 
-  const toggleSelect = (id: number) => {
+  const toggleSelect = (id: string | number) => {
     if (selectedItems.includes(id)) setSelectedItems(selectedItems.filter((item) => item !== id));
     else setSelectedItems([...selectedItems, id]);
   };
@@ -204,29 +113,23 @@ export default function InventoryPage() {
     setIsUpdateOpen(true);
   };
 
-  const handleUpdateStock = () => {
-    if (editingItem) {
-      const netChange = Number(formData.addStock) - Number(formData.removeStock);
-      const newStock = editingItem.currentStock + netChange;
-      const newAvailable = editingItem.available + netChange;
-      
-      let newStatus = "In Stock";
-      if (newStock === 0) newStatus = "Out of Stock";
-      else if (newStock < 100) newStatus = "Low Stock";
+  const handleUpdateStock = async () => {
+    if (!editingItem) return;
+    const netChange = Number(formData.addStock) - Number(formData.removeStock);
+    const newStock = Math.max(0, editingItem.currentStock + netChange);
 
-      setInventory(inventory.map(item => 
-        item.id === editingItem.id 
-          ? { 
-              ...item, 
-              currentStock: newStock, 
-              available: newAvailable, 
-              status: newStatus,
-              lastUpdated: `${new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}\n${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`
-            } 
-          : item
-      ));
+    setSavingStock(true);
+    const res = await productService.updateProduct(editingItem.id, { stock: newStock });
+    setSavingStock(false);
+
+    if (!res.success) {
+      setLoadError(res.error || "Failed to update stock");
+      return;
     }
+
     setIsUpdateOpen(false);
+    setEditingItem(null);
+    await loadInventory();
   };
 
   return (
@@ -333,8 +236,18 @@ export default function InventoryPage() {
             </div>
           </div>
 
+          {loadError ? (
+            <p className="mt-6 text-xs text-red-300/90">{loadError}</p>
+          ) : null}
+
           {/* Table */}
           <div className="mt-8 overflow-x-auto custom-scrollbar">
+            {loading ? (
+              <div className="flex items-center justify-center py-16 gap-3 text-white/40">
+                <Loader2 size={20} className="animate-spin text-primary" />
+                <span className="text-[11px] uppercase tracking-widest">Loading inventory...</span>
+              </div>
+            ) : (
             <table className="w-full text-left border-collapse min-w-[1100px]">
               <thead>
                 <tr className="border-b border-white/[0.05]">
@@ -405,6 +318,7 @@ export default function InventoryPage() {
                 </AnimatePresence>
               </tbody>
             </table>
+            )}
           </div>
 
           {/* Pagination */}
@@ -742,8 +656,10 @@ export default function InventoryPage() {
                 </button>
                 <button 
                   onClick={handleUpdateStock}
-                  className="px-6 py-2.5 rounded-xl bg-primary text-[#050308] text-[10px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-[0_4px_15px_-4px_rgba(214,195,165,0.4)]"
+                  disabled={savingStock}
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-[#050308] text-[10px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-[0_4px_15px_-4px_rgba(214,195,165,0.4)] disabled:opacity-50"
                 >
+                  {savingStock ? <Loader2 size={14} className="animate-spin" /> : null}
                   Confirm Update
                 </button>
               </div>

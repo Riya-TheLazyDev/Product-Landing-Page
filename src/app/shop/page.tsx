@@ -8,6 +8,7 @@ import ProductCollectionsSection from "@/components/common/ProductCollectionsSec
 import { useState } from "react";
 
 export default function ShopPage() {
+  const [productCount, setProductCount] = useState(0);
   const [activeFilters, setActiveFilters] = useState({
     category: "All",
     collection: "All",
@@ -35,7 +36,9 @@ export default function ShopPage() {
               <ProductCollectionsSection embedded showViewAll={false}>
                 <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-[9px] font-bold uppercase tracking-[0.35em] text-white/45 sm:text-[10px] sm:tracking-[0.4em]">
-                    Showing 1-12 of 48 products
+                    {productCount > 0
+                      ? `Showing ${Math.min(productCount, 12)} of ${productCount} products`
+                      : "Loading products..."}
                   </p>
                   <div className="flex flex-wrap items-center gap-3 sm:gap-6">
                     <span className="text-[9px] font-bold uppercase tracking-[0.35em] text-white/45 sm:text-[10px] sm:tracking-[0.4em]">
@@ -50,7 +53,10 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                <ShopGrid filters={activeFilters} />
+                <ShopGrid
+                  filters={activeFilters}
+                  onCountChange={setProductCount}
+                />
               </ProductCollectionsSection>
 
               <div className="mt-16 flex flex-wrap items-center justify-center gap-6 sm:mt-24 sm:gap-12">

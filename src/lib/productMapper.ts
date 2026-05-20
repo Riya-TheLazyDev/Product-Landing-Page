@@ -35,11 +35,14 @@ export function mapApiProduct(raw: ApiProduct): Product {
     price,
     discountPrice,
     images: [imageUrl],
+    image_url: raw.image_url || imageUrl,
     category: raw.category,
     stock: raw.stock ?? 0,
     sku: raw.sku || "",
     featured: !!raw.featured,
     status: raw.status || "Active",
+    created_at: raw.created_at,
+    updated_at: raw.updated_at,
     ratings: 4.8,
     isLuxuryPerfume: raw.category === "Luxury",
     perfumeType: raw.category === "Luxury" ? "Eau de Parfum" : undefined,
@@ -147,6 +150,34 @@ export function getStockStatus(stock: number): "In Stock" | "Low Stock" | "Out o
   if (stock <= 0) return "Out of Stock";
   if (stock <= 10) return "Low Stock";
   return "In Stock";
+}
+
+/** Maps API product to admin inventory table row shape. */
+export function toInventoryRow(product: Product) {
+  const stockStatus = getStockStatus(product.stock);
+  return {
+    id: product.id,
+    product: {
+      name: product.name,
+      type: product.perfumeType || "Eau de Parfum",
+      image: product.images[0] || "/assets/product.jpeg",
+    },
+    sku: product.sku || "—",
+    category: product.category,
+    currentStock: product.stock,
+    reserved: 0,
+    available: product.stock,
+    status: stockStatus,
+    lastUpdated: product.updated_at
+      ? new Date(product.updated_at).toLocaleString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).replace(", ", "\n")
+      : "—",
+  };
 }
 
 export function formatCreatedAt(dateStr?: string): string {

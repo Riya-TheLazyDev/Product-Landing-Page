@@ -1,4 +1,4 @@
-import type { Product } from "@/mock/product";
+import type { Product } from "@/data/products";
 
 export function getPerfumeType(product: Pick<Product, "perfumeType">): string {
   return product.perfumeType ?? "Eau de Parfum";
