@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from "./apiClient";
+import apiClient, { ApiResponse } from "./apiClient";
 
 export interface Coupon {
   id: string;
@@ -11,24 +11,39 @@ export interface Coupon {
 
 export const couponService = {
   async getCoupons(): Promise<ApiResponse<Coupon[]>> {
-    const coupons: Coupon[] = [
-      { id: "1", code: "ELEVARASUMMER", discount: 15, type: "percentage", expiryDate: "2026-08-31", status: "Active" },
-      { id: "2", code: "WELCOME100", discount: 100, type: "fixed", expiryDate: "2026-12-31", status: "Active" },
-      { id: "3", code: "SPRING20", discount: 20, type: "percentage", expiryDate: "2026-04-30", status: "Expired" },
-    ];
-    return apiClient.request<Coupon[]>("/coupons", { method: "GET" }, coupons);
+    try {
+      const response = await apiClient.get<ApiResponse<Coupon[]>>("/coupons");
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load coupons list",
+      };
+    }
   },
 
   async createCoupon(coupon: Omit<Coupon, "id">): Promise<ApiResponse<Coupon>> {
-    const newCoupon: Coupon = {
-      ...coupon,
-      id: Date.now().toString(),
-    };
-    return apiClient.request<Coupon>("/coupons", { method: "POST" }, newCoupon);
+    try {
+      const response = await apiClient.post<ApiResponse<Coupon>>("/coupons", coupon);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to create promo coupon",
+      };
+    }
   },
 
   async deleteCoupon(id: string): Promise<ApiResponse<{ id: string }>> {
-    return apiClient.request<{ id: string }>(`/coupons/${id}`, { method: "DELETE" }, { id });
+    try {
+      const response = await apiClient.delete<ApiResponse<{ id: string }>>(`/coupons/${id}`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || `Failed to delete coupon ${id}`,
+      };
+    }
   },
 };
 

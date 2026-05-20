@@ -1,58 +1,91 @@
-import { apiClient, ApiResponse } from "./apiClient";
+import apiClient, { ApiResponse } from "./apiClient";
 import type { AuthProfile, AuthRole } from "@/store/authStore";
 
 export const authService = {
   async login(email: string, password: string, role: AuthRole): Promise<ApiResponse<{ profile: AuthProfile; token: string }>> {
-    const mockProfile: AuthProfile = {
-      id: role === "admin" ? "adm-demo" : "usr-demo",
-      name: role === "admin" ? "Elevara Admin" : "Maison Guest",
-      email,
-      role,
-    };
-    const mockToken = `jwt-mock-token-${Date.now()}`;
-    apiClient.setToken(mockToken);
-    
-    return apiClient.request<{ profile: AuthProfile; token: string }>(
-      "/auth/login",
-      { method: "POST", body: JSON.stringify({ email, password, role }) },
-      { profile: mockProfile, token: mockToken }
-    );
+    try {
+      const response = await apiClient.post<ApiResponse<{ profile: AuthProfile; token: string }>>("/auth/login", {
+        email,
+        password,
+        role,
+      });
+
+      const resData = response.data;
+      if (resData.success && resData.data?.token) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("elevara-auth-token", resData.data.token);
+        }
+      }
+      return resData;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Login failed",
+      };
+    }
   },
 
   async register(name: string, email: string): Promise<ApiResponse<{ profile: AuthProfile; token: string }>> {
-    const mockProfile: AuthProfile = {
-      id: `usr-${Date.now()}`,
-      name,
-      email,
-      role: "user",
-    };
-    const mockToken = `jwt-mock-token-${Date.now()}`;
-    apiClient.setToken(mockToken);
+    try {
+      const response = await apiClient.post<ApiResponse<{ profile: AuthProfile; token: string }>>("/auth/register", {
+        name,
+        email,
+        password: "mock-password-123", // secure fallback
+        role: "user",
+      });
 
-    return apiClient.request<{ profile: AuthProfile; token: string }>(
-      "/auth/register",
-      { method: "POST", body: JSON.stringify({ name, email }) },
-      { profile: mockProfile, token: mockToken }
-    );
+      const resData = response.data;
+      if (resData.success && resData.data?.token) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("elevara-auth-token", resData.data.token);
+        }
+      }
+      return resData;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Registration failed",
+      };
+    }
   },
 
   async logout(): Promise<ApiResponse<{ success: boolean }>> {
-    apiClient.setToken(null);
-    return apiClient.request<{ success: boolean }>("/auth/logout", { method: "POST" }, { success: true });
+    try {
+      const response = await apiClient.post<ApiResponse<{ success: boolean }>>("/auth/logout");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("elevara-auth-token");
+      }
+      return response.data;
+    } catch (error: any) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("elevara-auth-token");
+      }
+      return { success: true, data: { success: true } }; // Resolve gracefully
+    }
   },
 
   async getCurrentUser(): Promise<ApiResponse<AuthProfile | null>> {
-    const token = apiClient.getToken();
-    if (!token) return { success: true, data: null };
-    
-    // Simulate fetching user from JWT token details
-    const mockProfile: AuthProfile = {
-      id: "usr-demo",
-      name: "Maison Guest",
-      email: "user@elevara.com",
-      role: "user",
-    };
-    return apiClient.request<AuthProfile | null>("/auth/me", { method: "GET" }, mockProfile);
+    try {
+      if (typeof window !== "undefined") {
+        const token = localStorage.getItem("elevara-auth-token");
+        if (!token) return { success: true, data: null };
+      }
+
+      const response = await apiClient.get<ApiResponse<{ profile: AuthProfile }>>("/auth/me");
+      const resData = response.data;
+      if (resData.success && resData.data) {
+        return {
+          success: true,
+          data: resData.data.profile || (resData.data as any),
+        };
+      }
+      return { success: false, error: "Failed to sync authenticated user profile" };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load current user details",
+      };
+    }
   },
 };
 

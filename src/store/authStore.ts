@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import apiClient from "@/services/apiClient";
 
 export type AuthRole = "user" | "admin";
 
@@ -63,6 +64,15 @@ function syncAuthCookie(profile: AuthProfile | null) {
   document.cookie = `elevara-role=${profile.role}; path=/; max-age=2592000; SameSite=Lax`;
 }
 
+function syncAuthToken(token: string | null) {
+  if (typeof window === "undefined") return;
+  if (token) {
+    localStorage.setItem("elevara-auth-token", token);
+  } else {
+    localStorage.removeItem("elevara-auth-token");
+  }
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -91,6 +101,7 @@ export const useAuthStore = create<AuthState>()(
 
       clearAuth: () => {
         syncAuthCookie(null);
+        syncAuthToken(null);
         set({
           profile: null,
           token: null,
@@ -102,46 +113,53 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (email, password, role) => {
         set({ loading: true, error: null });
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            try {
-              const normalized = email.trim().toLowerCase();
-              const foundUser = get().users.find(
-                (u) =>
-                  u.email.toLowerCase() === normalized &&
-                  u.password === password &&
-                  u.role === role
-              );
-              if (!foundUser) {
-                const errMsg = role === "admin"
-                  ? "Admin credentials were not recognized."
-                  : "Email or password is incorrect.";
-                set({ error: errMsg, loading: false });
-                reject(new Error(errMsg));
-                return;
-              }
-              const session: AuthProfile = {
-                id: foundUser.id,
-                name: foundUser.name,
-                email: foundUser.email,
-                role: foundUser.role,
-              };
-              const mockToken = `jwt-mock-token-${Date.now()}`;
-              syncAuthCookie(session);
-              set({
-                profile: session,
-                token: mockToken,
-                role: session.role,
-                isAuthenticated: true,
-                loading: false,
-              });
-              resolve(session);
-            } catch (err: any) {
-              set({ error: err.message || "Login failed", loading: false });
-              reject(err);
-            }
-          }, 400);
-        });
+        try {
+          const response = await apiClient.post<{
+            success: boolean;
+            token?: string;
+            user?: { id: number | string; name: string; email: string; role: AuthRole };
+            error?: string;
+          }>("/auth/login", { email, password });
+
+          const data = response.data;
+          if (!data.success || !data.token || !data.user) {
+            const errMsg = data.error || "Email or password is incorrect.";
+            set({ error: errMsg, loading: false });
+            throw new Error(errMsg);
+          }
+
+          if (data.user.role !== role) {
+            const errMsg =
+              role === "admin"
+                ? "Admin credentials were not recognized."
+                : "Email or password is incorrect.";
+            set({ error: errMsg, loading: false });
+            throw new Error(errMsg);
+          }
+
+          const session: AuthProfile = {
+            id: String(data.user.id),
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role,
+          };
+
+          syncAuthCookie(session);
+          syncAuthToken(data.token);
+          set({
+            profile: session,
+            token: data.token,
+            role: session.role,
+            isAuthenticated: true,
+            loading: false,
+          });
+          return session;
+        } catch (err: unknown) {
+          const message =
+            err instanceof Error ? err.message : "Login failed";
+          set({ error: message, loading: false });
+          throw err instanceof Error ? err : new Error(message);
+        }
       },
 
       signup: async (name, email, password) => {
@@ -165,6 +183,7 @@ export const useAuthStore = create<AuthState>()(
               const row: StoredUser = { ...session, password };
               const mockToken = `jwt-mock-token-${Date.now()}`;
               syncAuthCookie(session);
+              syncAuthToken(mockToken);
               set((s) => ({
                 users: [...s.users, row],
                 profile: session,
@@ -213,6 +232,7 @@ export const useAuthStore = create<AuthState>()(
           ),
         ];
         syncAuthCookie(p.profile ?? null);
+        if (p.token) syncAuthToken(p.token);
         return {
           ...current,
           ...p,

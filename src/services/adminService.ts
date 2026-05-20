@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from "./apiClient";
+import apiClient, { ApiResponse } from "./apiClient";
 
 export interface AdminStats {
   totalRevenue: number;
@@ -10,14 +10,15 @@ export interface AdminStats {
 
 export const adminService = {
   async getDashboardStats(): Promise<ApiResponse<AdminStats>> {
-    const stats: AdminStats = {
-      totalRevenue: 148250,
-      totalOrders: 342,
-      totalCustomers: 289,
-      averageOrderValue: 433.48,
-      conversionRate: 3.42,
-    };
-    return apiClient.request<AdminStats>("/admin/stats", { method: "GET" }, stats);
+    try {
+      const response = await apiClient.get<ApiResponse<AdminStats>>("/admin/stats");
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load dashboard metrics",
+      };
+    }
   },
 };
 

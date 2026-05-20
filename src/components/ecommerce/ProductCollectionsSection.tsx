@@ -4,8 +4,10 @@ import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PRODUCTS, Product } from "@/data/products";
+import type { Product } from "@/data/products";
 import CollectionProductCard from "@/components/ecommerce/CollectionProductCard";
+import { useProducts } from "@/hooks/useProducts";
+import { toCollectionCardProps } from "@/lib/productMapper";
 
 type Props = {
   sectionId?: string;
@@ -28,7 +30,16 @@ export default function ProductCollectionsSection({
   embedded = false,
   children,
 }: Props) {
-  const list = items ?? (limit != null ? PRODUCTS.slice(0, limit) : PRODUCTS);
+  const { products, loading, error } = useProducts(
+    items
+      ? undefined
+      : {
+          featured: limit === 5 ? true : undefined,
+          limit: limit ?? undefined,
+        }
+  );
+
+  const list = items ?? (limit != null ? products.slice(0, limit) : products);
 
   const inner = (
     <>
@@ -52,29 +63,53 @@ export default function ProductCollectionsSection({
 
       <div className="collection-panel">
         {children ?? (
-          <div
-            className={
-              limit === 5
-                ? "collection-grid collection-grid--home"
-                : "collection-grid collection-grid--shop"
-            }
-          >
-            {list.map((product, idx) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{
-                  duration: 0.75,
-                  delay: idx * 0.06,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
+          <>
+            {loading && !items ? (
+              <div
+                className={
+                  limit === 5
+                    ? "collection-grid collection-grid--home"
+                    : "collection-grid collection-grid--shop"
+                }
               >
-                <CollectionProductCard {...product} glowIndex={idx} />
-              </motion.div>
-            ))}
-          </div>
+                {Array.from({ length: limit ?? 5 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="collection-card h-[300px] animate-pulse rounded-2xl bg-white/[0.03]"
+                  />
+                ))}
+              </div>
+            ) : error && !items ? (
+              <p className="text-sm text-white/50 py-8">{error}</p>
+            ) : (
+              <div
+                className={
+                  limit === 5
+                    ? "collection-grid collection-grid--home"
+                    : "collection-grid collection-grid--shop"
+                }
+              >
+                {list.map((product, idx) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{
+                      duration: 0.75,
+                      delay: idx * 0.06,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <CollectionProductCard
+                      {...toCollectionCardProps(product)}
+                      glowIndex={idx}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
 

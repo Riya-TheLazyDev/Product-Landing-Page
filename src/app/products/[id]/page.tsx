@@ -1,129 +1,31 @@
 import React from "react";
-import { products } from "@/mock/product";
-import { ArrowLeft, Star, Shield, Truck, RefreshCw } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import PdpAddToCart from "@/components/pdp/PdpAddToCart";
-import PdpRelatedFragrances from "@/components/pdp/PdpRelatedFragrances";
-import {
-  getLuxurySubtitle,
-  getRelatedProducts,
-} from "@/lib/pdp-related";
+import { fetchProductByIdServer, fetchProductsServer } from "@/lib/productFetch";
+import ProductDetailView from "./ProductDetailView";
 
-export default function ProductPage({
+export default async function ProductPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = React.use(params);
-  const product = products.find((p) => p.id.toString() === id);
+  const { id } = await params;
+  const product = await fetchProductByIdServer(id);
 
   if (!product) {
     notFound();
   }
 
-  const relatedProducts = getRelatedProducts(product.id, 6);
-  const relatedItems = relatedProducts.map((p) => ({
-    id: p.id,
-    name: p.name,
-    price: p.price,
-    image: p.image,
-    subtitle: getLuxurySubtitle(p),
-  }));
+  const allProducts = await fetchProductsServer();
+  const relatedProducts = allProducts
+    .filter((p) => p.id.toString() !== product.id.toString())
+    .sort((a, b) => {
+      if (a.category === product.category && b.category !== product.category) return -1;
+      if (b.category === product.category && a.category !== product.category) return 1;
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0;
+    })
+    .slice(0, 6);
 
-  return (
-    <div className="cinematic-page cinematic-section cinematic-section--b min-h-screen pb-16 pt-24 sm:pb-20 sm:pt-28 md:pt-32">
-      <div className="container-page">
-        <Link
-          href="/#shop"
-          className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/40 hover:text-primary transition-colors mb-12 group"
-        >
-          <ArrowLeft
-            size={14}
-            className="group-hover:-translate-x-1 transition-transform"
-          />
-          Back to Collection
-        </Link>
-
-        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl glass-card p-6 sm:rounded-[2rem] sm:p-10 md:p-12">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <div className="relative w-full h-full">
-              <Image
-                src={product.image || "/assets/product.jpeg"}
-                alt={product.name}
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Info Section */}
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-primary font-bold mb-4">
-              {product.category}
-            </span>
-            <h1 className="heading-section mb-6 leading-tight">
-              {product.name}
-            </h1>
-
-            <div className="flex items-center gap-6 mb-8 pb-8 border-b border-white/5">
-              <p className="text-3xl font-serif text-primary">
-                ${product.price.toFixed(2)}
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="flex text-primary">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={14}
-                      fill={
-                        i < Math.floor(product.ratings)
-                          ? "currentColor"
-                          : "none"
-                      }
-                    />
-                  ))}
-                </div>
-                <span className="text-xs text-white/40 font-medium">
-                  ({product.ratings})
-                </span>
-              </div>
-            </div>
-
-            <p className="text-white/60 text-lg leading-relaxed mb-10 font-light max-w-lg">
-              {product.description ||
-                "A meticulously crafted essence designed to revitalize your skin's natural radiance. Infused with liquid glass technology and premium botanical extracts."}
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-              {[
-                { icon: Shield, text: "Pure Ingredients" },
-                { icon: Truck, text: "Global Shipping" },
-                { icon: RefreshCw, text: "30-Day Returns" },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col items-center sm:items-start gap-3"
-                >
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-primary">
-                    <item.icon size={18} />
-                  </div>
-                  <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">
-                    {item.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <PdpAddToCart product={product} />
-          </div>
-        </div>
-
-        <PdpRelatedFragrances items={relatedItems} />
-      </div>
-    </div>
-  );
+  return <ProductDetailView product={product} relatedProducts={relatedProducts} />;
 }

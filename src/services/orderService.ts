@@ -1,26 +1,41 @@
-import { apiClient, ApiResponse } from "./apiClient";
-import { ORDERS, Order } from "@/data/orders";
+import apiClient, { ApiResponse } from "./apiClient";
+import { Order } from "@/data/orders";
 
 export const orderService = {
   async getOrders(): Promise<ApiResponse<Order[]>> {
-    return apiClient.request<Order[]>("/orders", { method: "GET" }, ORDERS);
+    try {
+      const response = await apiClient.get<ApiResponse<Order[]>>("/orders");
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load orders",
+      };
+    }
   },
 
   async createOrder(order: Omit<Order, "id">): Promise<ApiResponse<Order>> {
-    const newOrder: Order = {
-      ...order,
-      id: `ORD-${Date.now().toString().slice(-6)}`,
-    };
-    return apiClient.request<Order>("/orders", { method: "POST" }, newOrder);
+    try {
+      const response = await apiClient.post<ApiResponse<Order>>("/orders", order);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to create order",
+      };
+    }
   },
 
   async updateOrderStatus(id: string, status: string): Promise<ApiResponse<Order>> {
-    const found = ORDERS.find((o) => o.id === id);
-    if (found) {
-      const updated = { ...found, status };
-      return apiClient.request<Order>(`/orders/${id}/status`, { method: "PATCH" }, updated);
+    try {
+      const response = await apiClient.patch<ApiResponse<Order>>(`/orders/${id}/status`, { status });
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || `Failed to update status for order ${id}`,
+      };
     }
-    return { success: false, error: `Order with ID ${id} not found` };
   },
 };
 

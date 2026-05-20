@@ -1,6 +1,9 @@
-import { products, type Product } from "@/mock/product";
+import type { Product } from "@/data/products";
 
-export type MockProduct = Product;
+export type MockProduct = Pick<
+  Product,
+  "id" | "name" | "price" | "category" | "ratings"
+> & { image?: string };
 
 const CATEGORY_SUBTITLE: Record<string, string> = {
   Luxury: "Noir oud · velvet dusk accord",
@@ -19,49 +22,20 @@ export function getLuxurySubtitle(product: MockProduct): string {
   );
 }
 
-function featuredOrder(excludeIdStr: string): MockProduct[] {
-  return [...products]
-    .filter((p) => p.id.toString() !== excludeIdStr)
-    .sort((a, b) => {
-      if (a.isLuxuryPerfume && !b.isLuxuryPerfume) return -1;
-      if (!a.isLuxuryPerfume && b.isLuxuryPerfume) return 1;
-      return b.ratings - a.ratings;
-    });
-}
-
 export function getRelatedProducts(
+  catalog: MockProduct[],
   currentId: string | number,
   limit = 6
 ): MockProduct[] {
   const currentIdStr = currentId.toString();
-  const current = products.find((p) => p.id.toString() === currentIdStr);
-  const others = products.filter((p) => p.id.toString() !== currentIdStr);
+  const current = catalog.find((p) => p.id.toString() === currentIdStr);
+  const others = catalog.filter((p) => p.id.toString() !== currentIdStr);
 
   if (!current || others.length === 0) {
-    return featuredOrder(currentIdStr).slice(0, limit);
+    return others.slice(0, limit);
   }
 
   const sameCategory = others.filter((p) => p.category === current.category);
   const rest = others.filter((p) => p.category !== current.category);
-  const ordered = [...sameCategory, ...rest];
-
-  const seen = new Set<string>();
-  const unique: MockProduct[] = [];
-  for (const p of ordered) {
-    const key = p.id.toString();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    unique.push(p);
-    if (unique.length >= limit) return unique;
-  }
-
-  for (const p of featuredOrder(currentIdStr)) {
-    const key = p.id.toString();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    unique.push(p);
-    if (unique.length >= limit) break;
-  }
-
-  return unique.slice(0, limit);
+  return [...sameCategory, ...rest].slice(0, limit);
 }

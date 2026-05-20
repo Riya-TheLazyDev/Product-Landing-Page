@@ -26,13 +26,25 @@ export const initializeSchema = async (connection) => {
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         phone VARCHAR(50) NULL,
+        avatar VARCHAR(500) NULL,
         role VARCHAR(50) DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
 
-    // 2. Create Products Table
+    // Ensure 'avatar' column exists for existing tables
+    try {
+      const [columns] = await connection.query("SHOW COLUMNS FROM users LIKE 'avatar'");
+      if (columns.length === 0) {
+        await connection.query("ALTER TABLE users ADD COLUMN avatar VARCHAR(500) NULL AFTER phone");
+        console.log("Database Migration: Added 'avatar' column to existing 'users' table");
+      }
+    } catch (columnErr) {
+      console.warn("Database Migration Warn: Could not verify/alter 'avatar' column:", columnErr.message);
+    }
+
+    // 2. Create Products Table with image_url and updated_at support
     await connection.query(`
       CREATE TABLE IF NOT EXISTS products (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,9 +58,14 @@ export const initializeSchema = async (connection) => {
         sku VARCHAR(100) UNIQUE NULL,
         featured BOOLEAN DEFAULT FALSE,
         status VARCHAR(50) DEFAULT 'Active',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        image_url VARCHAR(500) NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
+    const { seedProductsIfEmpty } = await import("../utils/seedProducts.js");
+    await seedProductsIfEmpty(connection);
+
     console.log("Elevāra SQL database schema validated successfully (users and products tables verified)");
   } catch (error) {
     console.error("Elevāra DB Tables initialisation failed:", error.message);

@@ -1,27 +1,41 @@
-import { apiClient, ApiResponse } from "./apiClient";
+import apiClient, { ApiResponse } from "./apiClient";
 import type { WishlistItem } from "@/store/wishlistStore";
 
 export const wishlistService = {
   async getWishlist(): Promise<ApiResponse<WishlistItem[]>> {
-    // In production: fetch from `/wishlist` via JWT token headers
-    const mockWishlist: WishlistItem[] = [];
-    return apiClient.request<WishlistItem[]>("/wishlist", { method: "GET" }, mockWishlist);
+    try {
+      const response = await apiClient.get<ApiResponse<WishlistItem[]>>("/wishlist");
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load wishlist",
+      };
+    }
   },
 
   async addToWishlist(product: WishlistItem): Promise<ApiResponse<WishlistItem>> {
-    return apiClient.request<WishlistItem>(
-      "/wishlist",
-      { method: "POST", body: JSON.stringify(product) },
-      product
-    );
+    try {
+      const response = await apiClient.post<ApiResponse<WishlistItem>>("/wishlist", product);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to add to wishlist",
+      };
+    }
   },
 
   async removeFromWishlist(productId: string): Promise<ApiResponse<{ productId: string }>> {
-    return apiClient.request<{ productId: string }>(
-      `/wishlist/${productId}`,
-      { method: "DELETE" },
-      { productId }
-    );
+    try {
+      const response = await apiClient.delete<ApiResponse<{ productId: string }>>(`/wishlist/${productId}`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to remove from wishlist",
+      };
+    }
   },
 };
 

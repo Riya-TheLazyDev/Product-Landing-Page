@@ -1,35 +1,53 @@
-import { apiClient, ApiResponse } from "./apiClient";
+import apiClient, { ApiResponse } from "./apiClient";
 import type { CartLine } from "@/types/cart";
 
 export const cartService = {
   async getCart(): Promise<ApiResponse<CartLine[]>> {
-    // In production: fetch active cart session from `/cart`
-    const mockCart: CartLine[] = [];
-    return apiClient.request<CartLine[]>("/cart", { method: "GET" }, mockCart);
+    try {
+      const response = await apiClient.get<ApiResponse<CartLine[]>>("/cart");
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load cart status",
+      };
+    }
   },
 
   async addToCart(item: CartLine): Promise<ApiResponse<CartLine>> {
-    return apiClient.request<CartLine>(
-      "/cart",
-      { method: "POST", body: JSON.stringify(item) },
-      item
-    );
+    try {
+      const response = await apiClient.post<ApiResponse<CartLine>>("/cart", item);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to append item to cart",
+      };
+    }
   },
 
   async updateCart(lineId: string, quantity: number): Promise<ApiResponse<{ lineId: string; quantity: number }>> {
-    return apiClient.request<{ lineId: string; quantity: number }>(
-      `/cart/${lineId}`,
-      { method: "PUT", body: JSON.stringify({ quantity }) },
-      { lineId, quantity }
-    );
+    try {
+      const response = await apiClient.put<ApiResponse<{ lineId: string; quantity: number }>>(`/cart/${lineId}`, { quantity });
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to update item quantity",
+      };
+    }
   },
 
   async removeFromCart(lineId: string): Promise<ApiResponse<{ lineId: string }>> {
-    return apiClient.request<{ lineId: string }>(
-      `/cart/${lineId}`,
-      { method: "DELETE" },
-      { lineId }
-    );
+    try {
+      const response = await apiClient.delete<ApiResponse<{ lineId: string }>>(`/cart/${lineId}`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to drop item from cart",
+      };
+    }
   },
 };
 

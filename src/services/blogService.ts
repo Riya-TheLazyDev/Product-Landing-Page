@@ -1,25 +1,41 @@
-import { apiClient, ApiResponse } from "./apiClient";
-import { BLOGS, Blog } from "@/data/blogs";
+import apiClient, { ApiResponse } from "./apiClient";
+import { Blog } from "@/data/blogs";
 
 export const blogService = {
   async getBlogs(): Promise<ApiResponse<Blog[]>> {
-    return apiClient.request<Blog[]>("/blogs", { method: "GET" }, BLOGS);
+    try {
+      const response = await apiClient.get<ApiResponse<Blog[]>>("/blogs");
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load blogs",
+      };
+    }
   },
 
   async getBlogBySlug(slug: string): Promise<ApiResponse<Blog>> {
-    const found = BLOGS.find((b) => b.id === slug || b.title.toLowerCase().replace(/ /g, "-") === slug);
-    if (found) {
-      return apiClient.request<Blog>(`/blogs/${slug}`, { method: "GET" }, found);
+    try {
+      const response = await apiClient.get<ApiResponse<Blog>>(`/blogs/${slug}`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || `Failed to fetch blog post ${slug}`,
+      };
     }
-    return { success: false, error: `Blog post with slug/id ${slug} not found` };
   },
 
   async createBlog(blog: Omit<Blog, "id">): Promise<ApiResponse<Blog>> {
-    const newBlog: Blog = {
-      ...blog,
-      id: Date.now().toString(),
-    };
-    return apiClient.request<Blog>("/blogs", { method: "POST" }, newBlog);
+    try {
+      const response = await apiClient.post<ApiResponse<Blog>>("/blogs", blog);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to create blog post",
+      };
+    }
   },
 };
 

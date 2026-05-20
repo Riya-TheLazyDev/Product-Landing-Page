@@ -1,5 +1,4 @@
-import { apiClient, ApiResponse } from "./apiClient";
-import { PRODUCTS, Product } from "@/data/products";
+import apiClient, { ApiResponse } from "./apiClient";
 
 export interface InventoryItem {
   id: string;
@@ -12,30 +11,27 @@ export interface InventoryItem {
 
 export const inventoryService = {
   async getInventory(): Promise<ApiResponse<InventoryItem[]>> {
-    const items: InventoryItem[] = PRODUCTS.map((p) => {
-      const stock = p.stock ?? 15;
-      let status: "In Stock" | "Low Stock" | "Out of Stock" = "In Stock";
-      if (stock === 0) status = "Out of Stock";
-      else if (stock < 5) status = "Low Stock";
-
+    try {
+      const response = await apiClient.get<ApiResponse<InventoryItem[]>>("/inventory");
+      return response.data;
+    } catch (error: any) {
       return {
-        id: p.id.toString(),
-        sku: p.sku || `SKU-${p.id}`,
-        name: p.name,
-        stock,
-        location: "Warehouse A",
-        status,
+        success: false,
+        error: error.response?.data?.error || error.message || "Failed to load inventory items",
       };
-    });
-    return apiClient.request<InventoryItem[]>("/inventory", { method: "GET" }, items);
+    }
   },
 
   async updateStock(id: string, quantity: number): Promise<ApiResponse<{ id: string; stock: number }>> {
-    return apiClient.request<{ id: string; stock: number }>(
-      `/inventory/${id}/stock`,
-      { method: "PATCH", body: JSON.stringify({ quantity }) },
-      { id, stock: quantity }
-    );
+    try {
+      const response = await apiClient.patch<ApiResponse<{ id: string; stock: number }>>(`/inventory/${id}/stock`, { quantity });
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || `Failed to update stock for item ${id}`,
+      };
+    }
   },
 };
 
