@@ -4,8 +4,23 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 import PageHero from "@/components/layouts/PageHero";
+import { useMedia } from "@/hooks/useMedia";
+import { resolveMediaUrl } from "@/services/mediaService";
 
 export default function AboutPage() {
+  const { bySection } = useMedia();
+  const storyMedia1 = bySection.story_media_1;
+  const storyMedia2 = bySection.story_media_2;
+  const storyQuote =
+    storyMedia2?.quote_text ||
+    "We measure our craft not by the ingredients we include, but by the memories they are capable of holding.";
+  const storyAuthor = storyMedia2?.quote_author || "The Master Perfumer";
+  const quoteSizeClass =
+    storyQuote.length > 180
+      ? "text-xl md:text-3xl"
+      : storyQuote.length > 120
+        ? "text-2xl md:text-4xl"
+        : "text-3xl md:text-5xl";
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -69,6 +84,24 @@ export default function AboutPage() {
                 fill
                 className="object-cover"
               />
+              {storyMedia1?.media_url ? (
+                storyMedia1.media_type === "video" ? (
+                  <video
+                    src={resolveMediaUrl(storyMedia1.media_url)}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={resolveMediaUrl(storyMedia1.media_url)}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                )
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             </motion.div>
           </div>
@@ -83,6 +116,24 @@ export default function AboutPage() {
             fill
             className="object-cover opacity-50"
           />
+          {storyMedia2?.media_url ? (
+            storyMedia2.media_type === "video" ? (
+              <video
+                src={resolveMediaUrl(storyMedia2.media_url)}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 h-full w-full object-cover opacity-50"
+              />
+            ) : (
+              <img
+                src={resolveMediaUrl(storyMedia2.media_url)}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover opacity-50"
+              />
+            )
+          ) : null}
           <div className="absolute inset-0 bg-black/55" />
         </motion.div>
 
@@ -92,13 +143,12 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2 }}
-            className="font-serif text-2xl italic leading-relaxed text-white/92 md:text-4xl"
+            className={`mx-auto max-w-4xl break-words font-serif italic leading-relaxed text-white/92 ${quoteSizeClass}`}
           >
-            &ldquo;We measure our craft not by the ingredients we include, but
-            by the memories they are capable of holding.&rdquo;
+            &ldquo;{storyQuote}&rdquo;
           </motion.p>
           <p className="mt-8 text-[10px] uppercase tracking-[0.4em] text-primary">
-            — The Master Perfumer
+            &mdash; {storyAuthor}
           </p>
         </div>
       </section>

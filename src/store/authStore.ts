@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import apiClient from "@/services/apiClient";
+import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 export type AuthRole = "user" | "admin";
 
@@ -73,6 +75,17 @@ function syncAuthToken(token: string | null) {
   }
 }
 
+function syncUserCommerceSession(profile: AuthProfile | null) {
+  if (profile?.id) {
+    useCartStore.getState().loadForUser(profile.id);
+    useWishlistStore.getState().loadForUser(profile.id);
+    return;
+  }
+
+  useCartStore.getState().clearSession();
+  useWishlistStore.getState().clearSession();
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -85,6 +98,7 @@ export const useAuthStore = create<AuthState>()(
       error: null,
       users: demoUsers,
       hydrated: false,
+      activeUserId: null,
 
       setHydrated: () => set({ hydrated: true }),
 
@@ -94,7 +108,9 @@ export const useAuthStore = create<AuthState>()(
           profile,
           role: profile?.role || null,
           isAuthenticated: !!profile,
+          activeUserId: profile?.id || null,
         });
+        syncUserCommerceSession(profile);
       },
 
       setToken: (token) => set({ token }),
@@ -102,11 +118,13 @@ export const useAuthStore = create<AuthState>()(
       clearAuth: () => {
         syncAuthCookie(null);
         syncAuthToken(null);
+        syncUserCommerceSession(null);
         set({
           profile: null,
           token: null,
           role: null,
           isAuthenticated: false,
+          activeUserId: null,
           error: null,
         });
       },
@@ -144,15 +162,19 @@ export const useAuthStore = create<AuthState>()(
             role: data.user.role,
           };
 
-          syncAuthCookie(session);
-          syncAuthToken(data.token);
-          set({
+          // First update auth store state so activeUserId becomes available
+          set((s) => ({
             profile: session,
             token: data.token,
             role: session.role,
             isAuthenticated: true,
             loading: false,
-          });
+            activeUserId: session.id,
+          }));
+          // Then synchronize cart/wishlist with the now‑available user id
+          syncAuthCookie(session);
+          syncAuthToken(data.token);
+          syncUserCommerceSession(session);
           return session;
         } catch (err: unknown) {
           const message =
@@ -164,41 +186,47 @@ export const useAuthStore = create<AuthState>()(
 
       signup: async (name, email, password) => {
         set({ loading: true, error: null });
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            try {
-              const normalized = email.trim().toLowerCase();
-              if (get().users.some((u) => u.email.toLowerCase() === normalized)) {
-                const errMsg = "An account already exists for this email.";
-                set({ error: errMsg, loading: false });
-                reject(new Error(errMsg));
-                return;
-              }
-              const session: AuthProfile = {
-                id: `usr-${Date.now()}`,
-                name: name.trim() || "Elevara Client",
-                email: normalized,
-                role: "user",
-              };
-              const row: StoredUser = { ...session, password };
-              const mockToken = `jwt-mock-token-${Date.now()}`;
-              syncAuthCookie(session);
-              syncAuthToken(mockToken);
-              set((s) => ({
-                users: [...s.users, row],
-                profile: session,
-                token: mockToken,
-                role: "user",
-                isAuthenticated: true,
-                loading: false,
-              }));
-              resolve(session);
-            } catch (err: any) {
-              set({ error: err.message || "Signup failed", loading: false });
-              reject(err);
-            }
-          }, 400);
-        });
+        try {
+          const response = await apiClient.post<{
+            success: boolean;
+            token?: string;
+            user?: { id: number | string; name: string; email: string; role: AuthRole };
+            error?: string;
+          }>("/auth/register", { name, email, password, role: "user" });
+
+          const data = response.data;
+          if (!data.success || !data.token || !data.user) {
+            const errMsg = data.error || "Registration failed.";
+            set({ error: errMsg, loading: false });
+            throw new Error(errMsg);
+          }
+
+          const session: AuthProfile = {
+            id: String(data.user.id),
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role,
+          };
+
+          // Update auth state first
+          set((s) => ({
+            profile: session,
+            token: data.token,
+            role: session.role,
+            isAuthenticated: true,
+            loading: false,
+            activeUserId: session.id,
+          }));
+          // Then sync cart/wishlist
+          syncAuthCookie(session);
+          syncAuthToken(data.token);
+          syncUserCommerceSession(session);
+          return session;
+        } catch (err: any) {
+          const message = err.response?.data?.error || err.message || "Registration failed";
+          set({ error: message, loading: false });
+          throw new Error(message);
+        }
       },
 
       logout: async () => {
@@ -216,11 +244,12 @@ export const useAuthStore = create<AuthState>()(
       name: "elevara-auth",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
-        profile: s.profile,
-        token: s.token,
-        role: s.role,
-        isAuthenticated: s.isAuthenticated,
-        users: s.users,
+          profile: s.profile,
+          token: s.token,
+          role: s.role,
+          isAuthenticated: s.isAuthenticated,
+          users: s.users,
+          activeUserId: s.activeUserId,
       }),
       merge: (persisted, current) => {
         const p = persisted as Partial<AuthState>;
@@ -233,6 +262,7 @@ export const useAuthStore = create<AuthState>()(
         ];
         syncAuthCookie(p.profile ?? null);
         if (p.token) syncAuthToken(p.token);
+        syncUserCommerceSession(p.profile ?? null);
         return {
           ...current,
           ...p,
@@ -241,6 +271,7 @@ export const useAuthStore = create<AuthState>()(
           token: p.token ?? null,
           role: p.role ?? null,
           isAuthenticated: p.isAuthenticated ?? false,
+          activeUserId: p.activeUserId ?? null,
           hydrated: true,
         };
       },

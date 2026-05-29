@@ -180,6 +180,55 @@ export function toInventoryRow(product: Product) {
   };
 }
 
+export type ProductFormInput = {
+  name: string;
+  slug?: string;
+  description?: string;
+  price: string;
+  discountPrice?: string;
+  category: string;
+  stock: string;
+  sku?: string;
+  imageUrl?: string;
+};
+
+/** Client-side validation before POST/PUT. Returns error message or null. */
+export function validateProductForm(form: ProductFormInput): string | null {
+  if (!form.name.trim()) return "Product name is required.";
+  if (form.name.trim().length < 2) return "Product name must be at least 2 characters.";
+  if (!form.category.trim()) return "Category is required.";
+
+  const price = parseFloat(form.price);
+  if (Number.isNaN(price) || price < 0) return "Enter a valid price.";
+
+  const stock = parseInt(form.stock, 10);
+  if (Number.isNaN(stock) || stock < 0) return "Enter a valid stock quantity (0 or greater).";
+
+  if (form.discountPrice?.trim()) {
+    const discount = parseFloat(form.discountPrice);
+    if (Number.isNaN(discount) || discount < 0) return "Enter a valid discount price.";
+    if (discount > price) return "Discount price cannot exceed regular price.";
+  }
+
+  if (form.slug?.trim()) {
+    const slug = form.slug.trim();
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(slug)) {
+      return "Slug may only contain letters, numbers, and hyphens.";
+    }
+  }
+
+  const imageUrl = form.imageUrl?.trim();
+  if (imageUrl) {
+    const isRelative = imageUrl.startsWith("/");
+    const isAbsolute = /^https?:\/\/.+/i.test(imageUrl);
+    if (!isRelative && !isAbsolute) {
+      return "Image URL must be a valid http(s) link or path starting with /.";
+    }
+  }
+
+  return null;
+}
+
 export function formatCreatedAt(dateStr?: string): string {
   if (!dateStr) return "—";
   try {

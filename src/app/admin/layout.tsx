@@ -35,7 +35,7 @@ const SIDEBAR_ITEMS = [
   { id: "customers", label: "Customers", icon: Users, href: "/admin/customers" },
   { id: "coupons", label: "Coupons", icon: TicketPercent, href: "/admin/coupons" },
   { id: "blogs", label: "Blogs", icon: FileText, href: "/admin/blogs" },
-  { id: "cms", label: "Banners / CMS", icon: ImageIcon, href: "/admin/cms" },
+  { id: "cms", label: "Media Manager", icon: ImageIcon, href: "/admin/cms" },
   { id: "inventory", label: "Inventory", icon: Warehouse, href: "/admin/inventory" },
   { id: "reviews", label: "Reviews", icon: Star, href: "/admin/reviews" },
   { id: "reports", label: "Reports", icon: LineChart, href: "/admin/reports" },

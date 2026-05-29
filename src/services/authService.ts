@@ -25,12 +25,12 @@ export const authService = {
     }
   },
 
-  async register(name: string, email: string): Promise<ApiResponse<{ profile: AuthProfile; token: string }>> {
+  async register(name: string, email: string, password: string): Promise<ApiResponse<{ profile: AuthProfile; token: string }>> {
     try {
       const response = await apiClient.post<ApiResponse<{ profile: AuthProfile; token: string }>>("/auth/register", {
         name,
         email,
-        password: "mock-password-123", // secure fallback
+        password,
         role: "user",
       });
 

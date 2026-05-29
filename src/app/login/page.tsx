@@ -6,6 +6,8 @@ import { Suspense, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react";
 import { useAuthStore, type AuthRole } from "@/stores/auth-store";
+import { useMedia } from "@/hooks/useMedia";
+import { resolveMediaUrl } from "@/services/mediaService";
 
 function LoginPageInner() {
   const router = useRouter();
@@ -30,6 +32,17 @@ function LoginPageInner() {
 
   const login = useAuthStore((s) => s.login);
   const signup = useAuthStore((s) => s.signup);
+
+  const { bySection } = useMedia();
+  const loginMedia = bySection.login_media;
+  const loginUrl = resolveMediaUrl(loginMedia?.media_url, "/assets/Video.mp4");
+  const loginQuote = loginMedia?.quote_text || "Scent held in shadow and light.";
+  const quoteSizeClass =
+    loginQuote.length > 180
+      ? "text-3xl md:text-4xl"
+      : loginQuote.length > 120
+        ? "text-4xl md:text-5xl"
+        : "text-6xl";
 
   const copy = useMemo(
     () =>
@@ -91,19 +104,27 @@ function LoginPageInner() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="relative hidden min-h-[680px] overflow-hidden rounded-[2rem] border border-white/[0.06] lg:block"
         >
-          <video
-            src="/assets/Video.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover opacity-55"
-          />
+          {loginMedia?.media_type === "image" ? (
+            <img
+              src={loginUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-55"
+            />
+          ) : (
+            <video
+              src={loginUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 h-full w-full object-cover opacity-55"
+            />
+          )}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_58%_44%_at_62%_30%,rgba(195,75,165,0.16),transparent_62%),linear-gradient(180deg,rgba(8,4,18,0.2),rgba(3,1,8,0.92))]" />
           <div className="absolute bottom-10 left-10 right-10">
             <p className="subtitle-luxury mb-5">Elevara · Maison</p>
-            <h1 className="title-luxury mb-6 max-w-xl text-6xl text-white">
-              Scent held in shadow and light.
+            <h1 className={`title-luxury mb-6 max-w-xl text-white ${quoteSizeClass}`}>
+              {loginQuote}
             </h1>
             <p className="max-w-md text-sm leading-relaxed text-white/62">
               A private portal for orders, saved rituals, and the quiet work of

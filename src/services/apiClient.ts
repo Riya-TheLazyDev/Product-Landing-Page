@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getApiBaseUrl } from "@/lib/apiConfig";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -8,7 +9,7 @@ export interface ApiResponse<T> {
 }
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api",
+  baseURL: getApiBaseUrl(),
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

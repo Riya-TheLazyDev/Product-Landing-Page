@@ -20,6 +20,7 @@ import CheckoutStepper from "@/components/checkout/CheckoutStepper";
 import { computeCartTotals } from "@/lib/cart-totals";
 import { validateCheckoutStep, type FieldErrors } from "@/lib/checkout-validation";
 import { useCartStore } from "@/stores/cart-store";
+import { orderService } from "@/services/orderService";
 
 const PRIMARY_LABELS = [
   "Continue to shipping",
@@ -38,7 +39,8 @@ export default function CheckoutPageView() {
   const selectedPaymentId = useCartStore((s) => s.selectedPaymentId);
   const savedPaymentMethods = useCartStore((s) => s.savedPaymentMethods);
   const setCheckoutStep = useCartStore((s) => s.setCheckoutStep);
-  const placeOrder = useCartStore((s) => s.placeOrder);
+  const clearCart = useCartStore((s) => s.clearCart);
+  const resetCheckoutSession = useCartStore((s) => s.resetCheckoutSession);
   const showToast = useCartStore((s) => s.showToast);
 
   const [hydrated, setHydrated] = useState(false);
@@ -123,10 +125,48 @@ export default function CheckoutPageView() {
     }
     setFieldErrors({});
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 900));
-    placeOrder();
+
+    const paymentMethod =
+      checkoutDraft.cardNumber.replace(/\s/g, "").length >= 4 || selectedPaymentId
+        ? "Card"
+        : "COD";
+
+    const res = await orderService.createOrder({
+      items: items.map((line) => ({
+        productId: line.productId,
+        quantity: line.quantity,
+      })),
+      shippingAddress: {
+        full_name: checkoutDraft.fullName.trim(),
+        phone: checkoutDraft.phone.trim(),
+        address_line_1: checkoutDraft.address.trim(),
+        address_line_2: "",
+        city: checkoutDraft.city.trim(),
+        state: checkoutDraft.state.trim(),
+        postal_code: checkoutDraft.zip.trim(),
+        country: checkoutDraft.country.trim() || "India",
+      },
+      paymentMethod,
+      idempotencyKey:
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `order-${Date.now()}`,
+      saveAddress: checkoutDraft.saveInfo,
+    });
+
     setBusy(false);
-    router.push("/");
+
+    if (!res.success) {
+      setFieldErrors({
+        terms: res.error || "Could not place your order. Please try again.",
+      });
+      return;
+    }
+
+    clearCart();
+    resetCheckoutSession();
+    showToast("Merci — your Elevāra order is confirmed.");
+    router.push("/orders");
   };
 
   const handleExpress = () => {

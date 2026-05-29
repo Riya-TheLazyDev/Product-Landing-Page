@@ -27,10 +27,12 @@ import {
   formatCreatedAt,
   formatPriceINR,
   getStockStatus,
+  validateProductForm,
 } from "@/lib/productMapper";
 
 const EMPTY_FORM = {
   name: "",
+  slug: "",
   description: "",
   price: "",
   discountPrice: "",
@@ -48,6 +50,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<(string | number)[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All Categories");
@@ -80,6 +83,12 @@ export default function ProductsPage() {
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+  useEffect(() => {
+    if (!successMessage) return;
+    const timer = setTimeout(() => setSuccessMessage(""), 4000);
+    return () => clearTimeout(timer);
+  }, [successMessage]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -138,6 +147,7 @@ export default function ProductsPage() {
     setEditingProduct(product);
     setFormData({
       name: product.name,
+      slug: product.slug,
       description: product.description,
       price: String(product.price),
       discountPrice: product.discountPrice != null ? String(product.discountPrice) : "",
@@ -152,22 +162,8 @@ export default function ProductsPage() {
     setIsEditorOpen(true);
   };
 
-  const validateForm = (): string | null => {
-    if (!formData.name.trim()) return "Product name is required.";
-    if (!formData.category.trim()) return "Category is required.";
-    const price = parseFloat(formData.price);
-    if (Number.isNaN(price) || price < 0) return "Enter a valid price.";
-    const stock = parseInt(formData.stock, 10);
-    if (Number.isNaN(stock) || stock < 0) return "Enter a valid stock quantity.";
-    if (formData.discountPrice) {
-      const discount = parseFloat(formData.discountPrice);
-      if (Number.isNaN(discount) || discount < 0) return "Enter a valid discount price.";
-    }
-    return null;
-  };
-
   const handleSave = async () => {
-    const validationError = validateForm();
+    const validationError = validateProductForm(formData);
     if (validationError) {
       setFormError(validationError);
       return;
@@ -178,6 +174,7 @@ export default function ProductsPage() {
 
     const payload = {
       name: formData.name.trim(),
+      slug: formData.slug.trim() || undefined,
       description: formData.description.trim(),
       price: parseFloat(formData.price),
       discountPrice: formData.discountPrice ? parseFloat(formData.discountPrice) : undefined,
@@ -195,27 +192,42 @@ export default function ProductsPage() {
 
     setSaving(false);
 
-    if (!res.success) {
+    if (!res.success || !res.data) {
       setFormError(res.error || "Failed to save product");
       return;
     }
 
     setIsEditorOpen(false);
+    setSuccessMessage(
+      editingProduct ? `"${res.data.name}" updated successfully.` : `"${res.data.name}" created successfully.`
+    );
+    setProducts((prev) => {
+      if (editingProduct) {
+        return prev.map((p) => (p.id === editingProduct.id ? res.data! : p));
+      }
+      return [res.data!, ...prev];
+    });
     await loadProducts();
   };
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
+    const removed = deleteTarget;
     setDeleting(true);
-    const res = await productService.deleteProduct(deleteTarget.id);
+    setDeleteTarget(null);
+    setProducts((prev) => prev.filter((p) => p.id !== removed.id));
+    setSelectedProducts((prev) => prev.filter((id) => id !== removed.id));
+
+    const res = await productService.deleteProduct(removed.id);
     setDeleting(false);
+
     if (!res.success) {
       setError(res.error || "Failed to delete product");
-      setDeleteTarget(null);
+      await loadProducts();
       return;
     }
-    setDeleteTarget(null);
-    setSelectedProducts([]);
+
+    setSuccessMessage(`"${removed.name}" deleted successfully.`);
     await loadProducts();
   };
 
@@ -223,16 +235,21 @@ export default function ProductsPage() {
     if (selectedProducts.length === 0) return;
     setBulkDeleting(true);
     setError("");
+    const idsToRemove = [...selectedProducts];
+    setProducts((prev) => prev.filter((p) => !idsToRemove.includes(p.id)));
+    setSelectedProducts([]);
+
     const results = await Promise.all(
-      selectedProducts.map((id) => productService.deleteProduct(id))
+      idsToRemove.map((id) => productService.deleteProduct(id))
     );
     setBulkDeleting(false);
     const failed = results.find((r) => !r.success);
     if (failed) {
       setError(failed.error || "Some products could not be deleted");
+      await loadProducts();
       return;
     }
-    setSelectedProducts([]);
+    setSuccessMessage(`${idsToRemove.length} product(s) deleted successfully.`);
     await loadProducts();
   };
 
@@ -366,8 +383,23 @@ export default function ProductsPage() {
           </div>
         </div>
 
+        {successMessage ? (
+          <p className="mt-6 text-xs text-emerald-300/90 rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3">
+            {successMessage}
+          </p>
+        ) : null}
+
         {error ? (
-          <p className="mt-6 text-xs text-red-300/90">{error}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <p className="text-xs text-red-300/90">{error}</p>
+            <button
+              type="button"
+              onClick={() => loadProducts()}
+              className="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-primary/80"
+            >
+              Retry
+            </button>
+          </div>
         ) : null}
 
         <div className="mt-8 overflow-x-auto custom-scrollbar">
@@ -375,6 +407,22 @@ export default function ProductsPage() {
             <div className="flex items-center justify-center py-16 gap-3 text-white/40">
               <Loader2 size={20} className="animate-spin text-primary" />
               <span className="text-[11px] uppercase tracking-widest">Loading products...</span>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 gap-4 text-white/40">
+              <Package size={28} className="text-primary/40" />
+              <p className="text-[11px] uppercase tracking-widest">
+                {products.length === 0 ? "No products in inventory yet." : "No products match your filters."}
+              </p>
+              {products.length === 0 ? (
+                <button
+                  type="button"
+                  onClick={openCreateModal}
+                  className="text-[10px] font-bold uppercase tracking-wider text-primary"
+                >
+                  Add your first product
+                </button>
+              ) : null}
             </div>
           ) : (
           <table className="w-full text-left border-collapse min-w-[1000px]">
@@ -536,6 +584,17 @@ export default function ProductsPage() {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/40"
                     placeholder="Product name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Slug</label>
+                  <input
+                    type="text"
+                    value={formData.slug}
+                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                    className="w-full bg-white/[0.02] border border-white/[0.05] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/40"
+                    placeholder="auto-generated-from-title"
                   />
                 </div>
 

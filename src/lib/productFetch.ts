@@ -1,7 +1,8 @@
 import type { Product } from "@/data/products";
+import { getApiBaseUrl } from "@/lib/apiConfig";
 import { ApiProduct, mapApiProduct, mapApiProducts } from "@/lib/productMapper";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_BASE = getApiBaseUrl();
 
 type ApiEnvelope<T> = {
   success: boolean;
@@ -18,7 +19,7 @@ export async function fetchProductsServer(
   const url = `${API_BASE}/products${qs ? `?${qs}` : ""}`;
 
   try {
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    const res = await fetch(url, { cache: "no-store" });
     const json: ApiEnvelope<ApiProduct[]> = await res.json();
     if (json.success && json.data) return mapApiProducts(json.data);
     return [];
@@ -32,7 +33,7 @@ export async function fetchProductByIdServer(
 ): Promise<Product | null> {
   try {
     const res = await fetch(`${API_BASE}/products/${id}`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     const json: ApiEnvelope<ApiProduct> = await res.json();
     if (json.success && json.data) return mapApiProduct(json.data);

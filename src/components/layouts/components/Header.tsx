@@ -7,12 +7,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { selectCartQuantity, useCartStore } from "@/stores/cart-store";
 import { useAuthStore } from "@/stores/auth-store";
 import { useWishlistStore } from "@/store/wishlistStore";
+import { useMedia } from "@/hooks/useMedia";
+import { resolveMediaUrl } from "@/services/mediaService";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mounted, setMounted] = useState(false);
+  const { bySection } = useMedia();
+  const logoUrl = resolveMediaUrl(bySection.website_logo?.media_url);
+  const faviconUrl = resolveMediaUrl(bySection.website_favicon?.media_url);
 
   const cartCount = useCartStore((s) => selectCartQuantity(s.items));
   const wishlistCount = useWishlistStore((s) => s.wishlistCount);
@@ -22,6 +27,18 @@ export default function Header() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!faviconUrl) return;
+
+    let link = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = faviconUrl;
+  }, [faviconUrl]);
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
@@ -77,9 +94,13 @@ export default function Header() {
             href="/"
             className="flex items-center gap-2 cursor-pointer group"
           >
-            <h1 className="text-xs font-serif font-light tracking-[0.3em] uppercase text-white transition-all duration-1000 group-hover:tracking-[0.4em] sm:text-sm md:text-base md:group-hover:tracking-[0.5em]">
-              ELEVARA
-            </h1>
+            {logoUrl ? (
+              <img src={logoUrl} alt="Elevara" className="max-h-8 max-w-[140px] object-contain" />
+            ) : (
+              <h1 className="text-xs font-serif font-light tracking-[0.3em] uppercase text-white transition-all duration-1000 group-hover:tracking-[0.4em] sm:text-sm md:text-base md:group-hover:tracking-[0.5em]">
+                ELEVARA
+              </h1>
+            )}
           </Link>
 
           <nav className="hidden lg:flex items-center gap-2 absolute left-1/2 -translate-x-1/2">

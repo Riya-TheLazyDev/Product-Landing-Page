@@ -1,5 +1,6 @@
 import apiClient, { ApiResponse } from "./apiClient";
 import { Product } from "@/data/products";
+import { notifyProductCatalogChanged } from "@/lib/productCatalog";
 import {
   ApiProduct,
   mapApiProduct,
@@ -74,6 +75,7 @@ export const productService = {
       const response = await apiClient.post<ApiResponse<ApiProduct>>("/products", payload);
       const body = response.data;
       if (body.success && body.data) {
+        notifyProductCatalogChanged();
         return { ...body, data: mapApiProduct(body.data) };
       }
       return { success: false, error: body.error || "Failed to create product" };
@@ -95,6 +97,7 @@ export const productService = {
       const response = await apiClient.put<ApiResponse<ApiProduct>>(`/products/${id}`, payload);
       const body = response.data;
       if (body.success && body.data) {
+        notifyProductCatalogChanged();
         return { ...body, data: mapApiProduct(body.data) };
       }
       return { success: false, error: body.error || `Failed to update product ${id}` };
@@ -114,7 +117,9 @@ export const productService = {
       const response = await apiClient.delete<ApiResponse<{ id: string | number }>>(
         `/products/${id}`
       );
-      return response.data;
+      const body = response.data;
+      if (body.success) notifyProductCatalogChanged();
+      return body;
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } }; message?: string };
       return {

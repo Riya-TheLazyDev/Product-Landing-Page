@@ -1,41 +1,56 @@
 export interface OrderItem {
-  productId: string;
+  productId: string | number;
   name: string;
   price: number;
   quantity: number;
+  imageUrl?: string;
 }
 
 export interface Order {
-  id: string;
+  id: string | number;
+  orderNumber: string;
   customerName: string;
   customerEmail: string;
   items: OrderItem[];
+  subtotal: number;
+  shippingCost: number;
+  taxAmount: number;
   totalAmount: number;
-  status: string;
+  paymentStatus: string;
+  orderStatus: string;
+  paymentMethod: string;
   createdAt: string;
+  shippingAddress?: {
+    full_name: string;
+    phone: string;
+    address_line_1: string;
+    address_line_2?: string | null;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+  };
 }
 
-export const ORDERS: Order[] = [
-  {
-    id: "ORD-1025",
-    customerName: "Sneha Reddy",
-    customerEmail: "sneha@email.com",
-    items: [
-      { productId: "noir-eternel", name: "Noir Éternel", price: 385, quantity: 1 }
-    ],
-    totalAmount: 385,
-    status: "Completed",
-    createdAt: "May 29, 2024",
-  },
-  {
-    id: "ORD-1024",
-    customerName: "Rohan Mehta",
-    customerEmail: "rohan@email.com",
-    items: [
-      { productId: "harmony", name: "Harmony", price: 25, quantity: 2 }
-    ],
-    totalAmount: 50,
-    status: "Processing",
-    createdAt: "May 28, 2024",
-  },
-];
+/** Admin orders table row shape (matches existing mock structure). */
+export type AdminOrderRow = {
+  id: string;
+  numericId: number;
+  customer: { name: string; email: string; avatar: string };
+  products: { image: string; count: number }[];
+  productOverflow: number;
+  amount: string;
+  paymentStatus: string;
+  orderStatus: string;
+  date: string;
+  time: string;
+};
+
+export type AdminOrderStats = {
+  total: number;
+  pending: number;
+  processing: number;
+  shipped: number;
+  delivered: number;
+  cancelled: number;
+};

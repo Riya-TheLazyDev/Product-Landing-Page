@@ -1,6 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { productService } from "@/services/productService";
+import { formatPriceINR } from "@/lib/productMapper";
+import type { Product } from "@/data/products";
+import { subscribeProductCatalog } from "@/lib/productCatalog";
 import {
   TrendingUp,
   ShoppingBag,
@@ -33,7 +38,7 @@ const STATS = [
   },
   {
     label: "Total Products",
-    value: "86",
+    value: "—",
     change: "+ 3.2%",
     trend: "up",
     icon: Package,
@@ -57,19 +62,50 @@ const RECENT_ORDERS = [
   { id: "#ORD-1254", customer: "Karan Malhotra", amount: "₹2,199", status: "Processing", time: "3h ago" },
 ];
 
-const TOP_PRODUCTS = [
-  { name: "Oud Noir", category: "Extrait de Parfum", price: "₹2,199", sales: 325, image: "/assets/product.jpeg" },
-  { name: "Amber Shade", category: "Eau de Parfum", price: "₹1,899", sales: 287, image: "/assets/product.jpeg" },
-  { name: "Midnight Whisper", category: "Extrait de Parfum", price: "₹2,299", sales: 231, image: "/assets/product.jpeg" },
-];
-
-const LOW_STOCK = [
-  { name: "Oud Noir", type: "Extrait de Parfum", left: 12, image: "/assets/product.jpeg" },
-  { name: "Citrus Cedrat", type: "Eau de Parfum", left: 15, image: "/assets/product.jpeg" },
-  { name: "Velvet Musk", type: "Eau de Parfum", left: 18, image: "/assets/product.jpeg" },
-];
-
 export default function AdminDashboard() {
+  const [topProducts, setTopProducts] = useState<
+    { name: string; category: string; price: string; sales: number; image: string }[]
+  >([]);
+  const [lowStock, setLowStock] = useState<
+    { name: string; type: string; left: number; image: string }[]
+  >([]);
+  const [productCount, setProductCount] = useState(0);
+
+  const loadProductWidgets = async () => {
+    const res = await productService.getProducts();
+    if (!res.success || !res.data) return;
+
+    const items = res.data;
+    setProductCount(items.length);
+
+    const featured = items.filter((p) => p.featured).slice(0, 3);
+    const top = (featured.length ? featured : items.slice(0, 3)).map((p: Product) => ({
+      name: p.name,
+      category: p.perfumeType || p.category,
+      price: formatPriceINR(p.discountPrice ?? p.price),
+      sales: p.stock,
+      image: p.images[0] || "/assets/product.jpeg",
+    }));
+    setTopProducts(top);
+
+    const low = items
+      .filter((p) => p.stock > 0 && p.stock <= 10)
+      .sort((a, b) => a.stock - b.stock)
+      .slice(0, 3)
+      .map((p: Product) => ({
+        name: p.name,
+        type: p.perfumeType || p.category,
+        left: p.stock,
+        image: p.images[0] || "/assets/product.jpeg",
+      }));
+    setLowStock(low);
+  };
+
+  useEffect(() => {
+    loadProductWidgets();
+    return subscribeProductCatalog(loadProductWidgets);
+  }, []);
+
   return (
     <div className="space-y-10">
       {/* Welcome Header */}
@@ -91,7 +127,12 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        {STATS.map((stat, i) => (
+        {STATS.map((stat, i) => {
+          const display =
+            stat.label === "Total Products"
+              ? { ...stat, value: productCount > 0 ? String(productCount) : "—" }
+              : stat;
+          return (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
@@ -115,7 +156,7 @@ export default function AdminDashboard() {
             </p>
             <div className="flex items-end justify-between gap-4">
               <h3 className="text-2xl font-bold text-white tracking-tight">
-                {stat.value}
+                {display.value}
               </h3>
               <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
                 stat.trend === 'up' ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
@@ -141,7 +182,7 @@ export default function AdminDashboard() {
               </svg>
             </div>
           </motion.div>
-        ))}
+        );})}
       </div>
 
       {/* Charts & Tables Section */}
@@ -274,7 +315,7 @@ export default function AdminDashboard() {
             <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">View All</button>
           </div>
           <div className="space-y-5">
-            {TOP_PRODUCTS.map((p, i) => (
+            {(topProducts.length ? topProducts : [{ name: "—", category: "—", price: "—", sales: 0, image: "/assets/product.jpeg" }]).map((p, i) => (
               <div key={p.name} className="flex items-center justify-between group">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-10 rounded-lg bg-black/40 overflow-hidden border border-white/[0.05]">
@@ -304,7 +345,7 @@ export default function AdminDashboard() {
             <button className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">View All</button>
           </div>
           <div className="space-y-5">
-            {LOW_STOCK.map((p) => (
+            {(lowStock.length ? lowStock : [{ name: "—", type: "—", left: 0, image: "/assets/product.jpeg" }]).map((p) => (
               <div key={p.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-10 rounded-lg bg-black/40 overflow-hidden border border-white/[0.05]">

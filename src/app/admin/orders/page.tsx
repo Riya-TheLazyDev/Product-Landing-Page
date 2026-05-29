@@ -16,117 +16,21 @@ import {
   Truck,
   CheckCircle2,
   XCircle,
-  ArrowUpRight,
   ShoppingCart,
+  Loader2,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { AdminOrderRow, AdminOrderStats } from "@/data/orders";
+import { orderService } from "@/services/orderService";
 
-// Mock Data
-const ORDERS_DATA = [
-  {
-    id: "#ORD-1258",
-    customer: { name: "Arjun Mehta", email: "arjun@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 2 },
-    ],
-    amount: "₹4,299",
-    paymentStatus: "Paid",
-    orderStatus: "Delivered",
-    date: "May 26, 2025",
-    time: "10:30 AM",
-  },
-  {
-    id: "#ORD-1257",
-    customer: { name: "Sneha Kapoor", email: "sneha@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 1 },
-    ],
-    amount: "₹2,999",
-    paymentStatus: "Paid",
-    orderStatus: "Shipped",
-    date: "May 26, 2025",
-    time: "09:15 AM",
-  },
-  {
-    id: "#ORD-1256",
-    customer: { name: "Rohan Verma", email: "rohan@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 3 },
-    ],
-    amount: "₹1,199",
-    paymentStatus: "Paid",
-    orderStatus: "Confirmed",
-    date: "May 26, 2025",
-    time: "08:45 AM",
-  },
-  {
-    id: "#ORD-1255",
-    customer: { name: "Ishita Rao", email: "ishita@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 1 },
-    ],
-    amount: "₹3,499",
-    paymentStatus: "COD",
-    orderStatus: "Confirmed",
-    date: "May 25, 2025",
-    time: "07:20 PM",
-  },
-  {
-    id: "#ORD-1254",
-    customer: { name: "Karan Malhotra", email: "karan@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 2 },
-    ],
-    amount: "₹2,199",
-    paymentStatus: "Paid",
-    orderStatus: "Cancelled",
-    date: "May 25, 2025",
-    time: "06:10 PM",
-  },
-  {
-    id: "#ORD-1253",
-    customer: { name: "Meera Joshi", email: "meera@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 1 },
-    ],
-    amount: "₹1,899",
-    paymentStatus: "Paid",
-    orderStatus: "Cancelled",
-    date: "May 24, 2025",
-    time: "05:35 PM",
-  },
-  {
-    id: "#ORD-1252",
-    customer: { name: "Dev Sharma", email: "dev@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 2 },
-    ],
-    amount: "₹2,499",
-    paymentStatus: "Refunded",
-    orderStatus: "Returned",
-    date: "May 24, 2025",
-    time: "04:50 PM",
-  },
-  {
-    id: "#ORD-1251",
-    customer: { name: "Aditi Singh", email: "aditi@example.com", avatar: "/assets/product.jpeg" },
-    products: [
-      { image: "/assets/product.jpeg", count: 1 },
-    ],
-    amount: "₹1,299",
-    paymentStatus: "COD",
-    orderStatus: "Pending",
-    date: "May 24, 2025",
-    time: "03:40 PM",
-  },
-];
-
-const ANALYTICS_CARDS = [
-  { label: "Total Orders", value: "1,248", change: "+12.4%", icon: ShoppingCart, color: "text-primary" },
-  { label: "Pending", value: "86", change: "+8.6%", icon: Clock, color: "text-amber-500" },
-  { label: "Shipped", value: "342", change: "+5.3%", icon: Truck, color: "text-blue-500" },
-  { label: "Delivered", value: "786", change: "+14.2%", icon: CheckCircle2, color: "text-emerald-500" },
-  { label: "Cancelled", value: "34", change: "-2.1%", icon: XCircle, color: "text-rose-500" },
+const ORDER_STATUS_OPTIONS = [
+  "Pending",
+  "Processing",
+  "Shipped",
+  "Delivered",
+  "Cancelled",
+  "Returned",
+  "Refunded",
 ];
 
 const STATUS_COLORS: Record<string, string> = {
@@ -146,16 +50,73 @@ const PAYMENT_COLORS: Record<string, string> = {
 };
 
 export default function OrdersPage() {
+  const [orders, setOrders] = useState<AdminOrderRow[]>([]);
+  const [stats, setStats] = useState<AdminOrderStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Order Status");
+  const [paymentFilter, setPaymentFilter] = useState("All Payment Status");
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+  const [updatingId, setUpdatingId] = useState<number | null>(null);
+
+  const loadOrders = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    const res = await orderService.getAdminOrders({
+      search: searchQuery.trim() || undefined,
+      order_status: statusFilter === "All Order Status" ? undefined : statusFilter,
+      payment_status:
+        paymentFilter === "All Payment Status"
+          ? undefined
+          : paymentFilter === "COD"
+            ? "Pending"
+            : paymentFilter,
+    });
+    if (res.success && res.data) {
+      setOrders(res.data.orders);
+      setStats(res.data.stats);
+    } else {
+      setError(res.error || "Failed to load orders");
+      setOrders([]);
+    }
+    setLoading(false);
+  }, [searchQuery, statusFilter, paymentFilter]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
+
+  const analyticsCards = useMemo(
+    () => [
+      { label: "Total Orders", value: String(stats?.total ?? 0), change: "—", icon: ShoppingCart, color: "text-primary" },
+      { label: "Pending", value: String(stats?.pending ?? 0), change: "—", icon: Clock, color: "text-amber-500" },
+      { label: "Shipped", value: String(stats?.shipped ?? 0), change: "—", icon: Truck, color: "text-blue-500" },
+      { label: "Delivered", value: String(stats?.delivered ?? 0), change: "—", icon: CheckCircle2, color: "text-emerald-500" },
+      { label: "Cancelled", value: String(stats?.cancelled ?? 0), change: "—", icon: XCircle, color: "text-rose-500" },
+    ],
+    [stats]
+  );
 
   const toggleSelectAll = () => {
-    if (selectedOrders.length === ORDERS_DATA.length) setSelectedOrders([]);
-    else setSelectedOrders(ORDERS_DATA.map((o) => o.id));
+    if (selectedOrders.length === orders.length) setSelectedOrders([]);
+    else setSelectedOrders(orders.map((o) => o.id));
   };
 
   const toggleSelect = (id: string) => {
     if (selectedOrders.includes(id)) setSelectedOrders(selectedOrders.filter((o) => o !== id));
     else setSelectedOrders([...selectedOrders, id]);
+  };
+
+  const handleStatusChange = async (numericId: number, status: string) => {
+    setUpdatingId(numericId);
+    const res = await orderService.updateOrderStatus(numericId, status);
+    setUpdatingId(null);
+    if (!res.success) {
+      setError(res.error || "Failed to update status");
+      return;
+    }
+    await loadOrders();
   };
 
   return (
@@ -172,7 +133,7 @@ export default function OrdersPage() {
 
         {/* Stats Grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {ANALYTICS_CARDS.map((card, i) => (
+          {analyticsCards.map((card, i) => (
             <motion.div
               key={card.label}
               initial={{ opacity: 0, y: 10 }}
@@ -213,6 +174,8 @@ export default function OrdersPage() {
                 <input
                   type="text"
                   placeholder="Search by order ID or customer..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-xl border border-white/[0.05] bg-white/[0.02] py-2.5 pl-11 pr-4 text-[11px] text-white placeholder:text-white/20 focus:border-primary/40 focus:outline-none transition-all"
                 />
               </div>
@@ -220,19 +183,26 @@ export default function OrdersPage() {
                 <Calendar size={14} className="text-primary/60" />
                 <span className="text-[11px] text-white/60 font-medium whitespace-nowrap">May 20, 2025 - May 26, 2025</span>
               </div>
-              <select className="w-full sm:w-auto rounded-xl border border-white/[0.05] bg-white/[0.02] px-4 py-2.5 text-[11px] text-white/60 focus:outline-none">
+              <select
+                value={paymentFilter}
+                onChange={(e) => setPaymentFilter(e.target.value)}
+                className="w-full sm:w-auto rounded-xl border border-white/[0.05] bg-white/[0.02] px-4 py-2.5 text-[11px] text-white/60 focus:outline-none"
+              >
                 <option>All Payment Status</option>
                 <option>Paid</option>
                 <option>COD</option>
                 <option>Refunded</option>
-              </select>
-              <select className="w-full sm:w-auto rounded-xl border border-white/[0.05] bg-white/[0.02] px-4 py-2.5 text-[11px] text-white/60 focus:outline-none">
-                <option>All Order Status</option>
-                <option>Delivered</option>
-                <option>Shipped</option>
-                <option>Confirmed</option>
                 <option>Pending</option>
-                <option>Cancelled</option>
+              </select>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full sm:w-auto rounded-xl border border-white/[0.05] bg-white/[0.02] px-4 py-2.5 text-[11px] text-white/60 focus:outline-none"
+              >
+                <option>All Order Status</option>
+                {ORDER_STATUS_OPTIONS.map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
               </select>
               <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-primary">
                 <Filter size={14} />
@@ -251,15 +221,25 @@ export default function OrdersPage() {
             </div>
           </div>
 
+          {error ? (
+            <p className="mt-6 text-xs text-red-300/90">{error}</p>
+          ) : null}
+
           {/* Table */}
           <div className="mt-8 overflow-x-auto custom-scrollbar">
+            {loading ? (
+              <div className="flex items-center justify-center py-16 gap-3 text-white/40">
+                <Loader2 size={20} className="animate-spin text-primary" />
+                <span className="text-[11px] uppercase tracking-widest">Loading orders...</span>
+              </div>
+            ) : (
             <table className="w-full text-left border-collapse min-w-[1100px]">
               <thead>
                 <tr className="border-b border-white/[0.05]">
                   <th className="py-4 px-4 w-10">
                     <input
                       type="checkbox"
-                      checked={selectedOrders.length === ORDERS_DATA.length}
+                      checked={orders.length > 0 && selectedOrders.length === orders.length}
                       onChange={toggleSelectAll}
                       className="h-3.5 w-3.5 rounded border-white/20 bg-transparent text-primary focus:ring-primary/40"
                     />
@@ -275,7 +255,7 @@ export default function OrdersPage() {
                 </tr>
               </thead>
               <tbody>
-                {ORDERS_DATA.map((order) => (
+                {orders.map((order) => (
                   <tr key={order.id} className="group border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors">
                     <td className="py-5 px-4">
                       <input
@@ -304,9 +284,9 @@ export default function OrdersPage() {
                             <img src={p.image} className="w-full h-full object-cover opacity-70" />
                           </div>
                         ))}
-                        {order.products[0].count > 1 && (
+                        {order.productOverflow > 0 && (
                           <div className="h-10 w-10 flex items-center justify-center text-[10px] font-bold text-white/40 pl-4">
-                            +{order.products[0].count}
+                            +{order.productOverflow}
                           </div>
                         )}
                       </div>
@@ -318,9 +298,16 @@ export default function OrdersPage() {
                       </span>
                     </td>
                     <td className="py-5 px-4">
-                      <span className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border ${STATUS_COLORS[order.orderStatus] || 'text-white/20 border-white/10'}`}>
-                        {order.orderStatus}
-                      </span>
+                      <select
+                        value={order.orderStatus}
+                        disabled={updatingId === order.numericId}
+                        onChange={(e) => handleStatusChange(order.numericId, e.target.value)}
+                        className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border bg-transparent focus:outline-none ${STATUS_COLORS[order.orderStatus] || 'text-white/20 border-white/10'}`}
+                      >
+                        {ORDER_STATUS_OPTIONS.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
                     </td>
                     <td className="py-5 px-4">
                       <p className="text-[10px] font-bold text-white/60">{order.date}</p>
@@ -337,11 +324,14 @@ export default function OrdersPage() {
                 ))}
               </tbody>
             </table>
+            )}
           </div>
 
           {/* Pagination */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-white/[0.05] pt-8">
-            <p className="text-[10px] text-white/20 uppercase tracking-widest font-bold">Showing 1 to 10 of 1,248 orders</p>
+            <p className="text-[10px] text-white/20 uppercase tracking-widest font-bold">
+              Showing {orders.length} order{orders.length === 1 ? "" : "s"}
+            </p>
             <div className="flex items-center gap-2">
                <button className="p-2 rounded-lg border border-white/[0.05] text-white/20 hover:text-white transition-all">
                   <ChevronLeft size={16} />
@@ -406,17 +396,17 @@ export default function OrdersPage() {
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <p className="text-2xl font-bold text-white tracking-tight">1,248</p>
+              <p className="text-2xl font-bold text-white tracking-tight">{stats?.total ?? 0}</p>
               <p className="text-[8px] uppercase tracking-widest text-white/30 font-bold">Total Orders</p>
             </div>
           </div>
 
           <div className="mt-8 space-y-4">
             {[
-              { label: "Delivered", value: "786", percent: "62.9%", color: "bg-emerald-500" },
-              { label: "Shipped", value: "342", percent: "27.4%", color: "bg-blue-500" },
-              { label: "Pending", value: "86", percent: "6.9%", color: "bg-amber-500" },
-              { label: "Cancelled", value: "34", percent: "2.8%", color: "bg-rose-500" },
+              { label: "Delivered", value: String(stats?.delivered ?? 0), color: "bg-emerald-500" },
+              { label: "Shipped", value: String(stats?.shipped ?? 0), color: "bg-blue-500" },
+              { label: "Pending", value: String(stats?.pending ?? 0), color: "bg-amber-500" },
+              { label: "Cancelled", value: String(stats?.cancelled ?? 0), color: "bg-rose-500" },
             ].map(item => (
               <div key={item.label} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -424,7 +414,7 @@ export default function OrdersPage() {
                   <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest">{item.label}</span>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold text-white">{item.value} <span className="text-[8px] text-white/20 ml-1">({item.percent})</span></p>
+                  <p className="text-[10px] font-bold text-white">{item.value}</p>
                 </div>
               </div>
             ))}
@@ -438,7 +428,7 @@ export default function OrdersPage() {
             <button className="text-[8px] font-bold uppercase tracking-[0.2em] text-primary">View All</button>
           </div>
           <div className="space-y-4">
-            {ORDERS_DATA.slice(0, 5).map((order) => (
+            {orders.slice(0, 5).map((order) => (
               <div key={order.id} className="flex items-center justify-between group cursor-pointer">
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-full bg-white/[0.05] border border-white/[0.1] flex items-center justify-center overflow-hidden">

@@ -7,6 +7,8 @@ import BlogCard from "@/components/common/BlogCard";
 import { blogs } from "@/mock/blogs";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useMedia } from "@/hooks/useMedia";
+import { resolveMediaUrl } from "@/services/mediaService";
 
 const categories = [
   "All",
@@ -19,7 +21,18 @@ const categories = [
 ];
 
 export default function BlogsPage() {
+  const { bySection } = useMedia();
+  const blogBanner = bySection.blog_hero;
   const [activeCategory, setActiveCategory] = useState("All");
+
+  const blogQuote = blogBanner?.quote_text;
+  const quoteSizeClass = blogQuote
+    ? blogQuote.length > 180
+      ? "text-3xl md:text-4xl"
+      : blogQuote.length > 120
+        ? "text-4xl md:text-5xl"
+        : "text-5xl md:text-6xl"
+    : "";
 
   const featuredBlog = blogs.find((b) => b.isFeatured) || blogs[0];
   const trendingBlogs = blogs.filter((b) => b.id !== featuredBlog.id).slice(0, 2);
@@ -33,13 +46,18 @@ export default function BlogsPage() {
   return (
     <main className="cinematic-page min-h-screen">
       <PageHero
-        image="/assets/hero-brand.png"
+        image={resolveMediaUrl(bySection.blog_hero?.media_url, "/assets/hero-brand.png")}
+        mediaType={bySection.blog_hero?.media_type}
         eyebrow="Elevāra Journal"
         align="center"
         title={
-          <>
-            The Art of <span className="text-accent-gold">Olfaction</span>
-          </>
+          blogQuote ? (
+            <span className={`block leading-tight ${quoteSizeClass}`}>{blogQuote}</span>
+          ) : (
+            <>
+              The Art of <span className="text-accent-gold">Olfaction</span>
+            </>
+          )
         }
         description="A curated editorial space exploring scent, memory, craftsmanship, and modern luxury design."
       />

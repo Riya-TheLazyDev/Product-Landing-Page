@@ -2,8 +2,12 @@
 
 import { Instagram, Twitter, Facebook } from "lucide-react";
 import { motion } from "framer-motion";
+import { useMedia } from "@/hooks/useMedia";
+import { resolveMediaUrl } from "@/services/mediaService";
 
 export default function Footer() {
+  const { bySection } = useMedia();
+  const logoUrl = resolveMediaUrl(bySection.website_logo?.media_url);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -22,7 +26,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="glass-premium relative mt-8 rounded-t-3xl border-t border-white/10 pt-24 pb-12">
+    <footer className="glass-premium relative mt-8 overflow-hidden rounded-t-3xl border-t border-white/10 pt-24 pb-12">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -31,7 +35,11 @@ export default function Footer() {
         className="container-page mb-16 grid grid-cols-1 gap-10 sm:mb-20 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4"
       >
         <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start text-center md:text-left">
-          <h3 className="text-2xl font-serif mb-4 tracking-[0.2em] gradient-text">ELEVARA</h3>
+          {logoUrl ? (
+            <img src={logoUrl} alt="Elevara" className="mb-4 max-h-12 max-w-[180px] object-contain" />
+          ) : (
+            <h3 className="text-2xl font-serif mb-4 tracking-[0.2em] gradient-text">ELEVARA</h3>
+          )}
           <p className="text-[10px] uppercase tracking-[0.3em] text-foreground/40 mb-8">Facial & skincare</p>
           
           <div className="flex gap-6 text-foreground/40">

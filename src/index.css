@@ -1219,3 +1219,41 @@
 html {
   scrollbar-gutter: stable;
 }
+
+/* Elevāra Admin Luxury Dropdown Styling */
+select {
+  color-scheme: dark;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.4)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  padding-right: 32px !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px -5px rgba(0,0,0,0.3);
+}
+
+select:hover {
+  border-color: rgba(214, 195, 165, 0.2) !important; /* Subtle gold border glow */
+  box-shadow: 0 8px 30px -5px rgba(0,0,0,0.5), inset 0 0 10px rgba(214, 195, 165, 0.05);
+  background-color: #0d0a14 !important; /* Solid dark instead of translucent for consistent native render */
+}
+
+select option {
+  background-color: #050308; /* Solid deep obsidian */
+  color: #d6c3a5; /* Gold text */
+  padding: 12px;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+select option:checked,
+select option:hover,
+select option:focus {
+  background-color: #1a1610 !important; /* Solid dark gold tint to fix white background bug */
+  color: #ffffff !important;
+}

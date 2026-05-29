@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 type PageHeroProps = {
   image: string | StaticImageData;
+  mediaType?: "image" | "video" | null;
   eyebrow: string;
   title: ReactNode;
   description?: string;
@@ -15,6 +16,7 @@ type PageHeroProps = {
 
 export default function PageHero({
   image,
+  mediaType = "image",
   eyebrow,
   title,
   description,
@@ -26,14 +28,27 @@ export default function PageHero({
   return (
     <section className="page-hero-fullbleed -mt-14 pt-14 md:-mt-16 md:pt-16">
       <div className="page-hero-fullbleed__media">
-        <Image
-          src={image}
-          alt=""
-          fill
-          priority={priority}
-          className="object-cover object-center"
-          sizes="100vw"
-        />
+        {mediaType === "video" && typeof image === "string" ? (
+          <video
+            src={image}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="h-full w-full object-cover object-center"
+          />
+        ) : typeof image === "string" && /^https?:\/\//i.test(image) ? (
+          <img src={image} alt="" className="h-full w-full object-cover object-center" />
+        ) : (
+          <Image
+            src={image}
+            alt=""
+            fill
+            priority={priority}
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        )}
         <div className="page-hero-fullbleed__scrim" />
       </div>
 

@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Clock, Flower2, Shield, Truck } from "lucide-react";
+import { useMedia } from "@/hooks/useMedia";
+import { resolveMediaUrl } from "@/services/mediaService";
 
 /** Served from public/assets — reliable in all browsers (no bundler image URL) */
 const HERO_BG = "/assets/hero-brand.png";
@@ -31,6 +33,19 @@ const TRUST_ITEMS = [
 ];
 
 export default function Hero() {
+  const { bySection } = useMedia();
+  const heroMedia = bySection.hero_background;
+  const heroUrl = resolveMediaUrl(heroMedia?.media_url, HERO_BG);
+
+  const heroQuote = heroMedia?.quote_text;
+  const quoteSizeClass = heroQuote
+    ? heroQuote.length > 180
+      ? "text-3xl md:text-5xl"
+      : heroQuote.length > 120
+        ? "text-4xl md:text-6xl"
+        : "text-6xl md:text-7xl"
+    : "";
+
   return (
     <section
       id="hero"
@@ -41,13 +56,24 @@ export default function Hero() {
         role="img"
         aria-label="Elevāra Luxe Noir fragrance — obsidian and gold atmospheric background"
       >
-        <img
-          src={HERO_BG}
-          alt=""
-          className="hero-environment__image hero-environment__image--brand"
-          fetchPriority="high"
-          decoding="async"
-        />
+        {heroMedia?.media_type === "video" ? (
+          <video
+            src={heroUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="hero-environment__image hero-environment__image--brand"
+          />
+        ) : (
+          <img
+            src={heroUrl}
+            alt=""
+            className="hero-environment__image hero-environment__image--brand"
+            fetchPriority="high"
+            decoding="async"
+          />
+        )}
         <div className="hero-environment__scrim hero-environment__scrim--readable" />
       </div>
 
@@ -61,10 +87,16 @@ export default function Hero() {
           <span className="subtitle-luxury mb-6 block text-primary drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Essence of elegance
           </span>
-          <h1 className="heading-display mb-6 text-white drop-shadow-[0_8px_48px_rgba(0,0,0,0.85)]">
-            Crafted to Leave a{" "}
-            <span className="text-accent-gold">Legacy</span>
-          </h1>
+          {heroQuote ? (
+            <h1 className={`heading-display mb-6 text-white drop-shadow-[0_8px_48px_rgba(0,0,0,0.85)] ${quoteSizeClass}`}>
+              {heroQuote}
+            </h1>
+          ) : (
+            <h1 className="heading-display mb-6 text-white drop-shadow-[0_8px_48px_rgba(0,0,0,0.85)]">
+              Crafted to Leave a{" "}
+              <span className="text-accent-gold">Legacy</span>
+            </h1>
+          )}
           <p className="mb-10 max-w-lg text-sm leading-relaxed text-white/88 drop-shadow-[0_4px_32px_rgba(0,0,0,0.75)] md:text-base">
             Luxe Noir unfolds in liquid obsidian — rare resins, smoked woods, and
             a sillage that lingers long after the room falls silent.

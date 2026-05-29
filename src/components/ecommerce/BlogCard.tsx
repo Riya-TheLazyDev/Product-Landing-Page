@@ -26,6 +26,7 @@ export default function BlogCard({
   variant = "small",
 }: BlogCardProps) {
   const isLarge = variant === "large";
+  const isVideo = /\.(mp4|webm)(\?.*)?$/i.test(image);
 
   return (
     <Link href={`/blogs/${id}`}>
@@ -38,14 +39,32 @@ export default function BlogCard({
         }`}
       >
         <div className="absolute inset-0 z-0">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover transition-transform duration-1000 group-hover:scale-105"
-            loading="lazy"
-            sizes={isLarge ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
-          />
+          {isVideo ? (
+            <video
+              src={image}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+          ) : /^https?:\/\//i.test(image) ? (
+            <img
+              src={image}
+              alt={title}
+              className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              loading="lazy"
+              sizes={isLarge ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
         </div>
 

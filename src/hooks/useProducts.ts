@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { productService, ProductQueryParams } from "@/services/productService";
 import { Product } from "@/data/products";
+import { subscribeProductCatalog } from "@/lib/productCatalog";
 
 export function useProducts(params?: ProductQueryParams) {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,6 +23,12 @@ export function useProducts(params?: ProductQueryParams) {
 
   useEffect(() => {
     fetchProducts();
+  }, [fetchProducts]);
+
+  useEffect(() => {
+    return subscribeProductCatalog(() => {
+      fetchProducts();
+    });
   }, [fetchProducts]);
 
   return { products, loading, error, refetch: fetchProducts };

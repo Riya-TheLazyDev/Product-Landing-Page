@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 222a72b1-5db9-43f2-86b4-661c34725383
+
+localResources:
+  docs:
+    - ..\README_REDESIGN.md

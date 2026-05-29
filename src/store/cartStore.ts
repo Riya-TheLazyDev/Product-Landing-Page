@@ -40,6 +40,7 @@ interface CartState {
   items: CartLine[];
   wishlist: WishlistEntry[];
   toast: Toast;
+  activeUserId: string | null;
   checkoutStep: number;
   checkoutDraft: CheckoutDraft;
   savedAddresses: SavedAddress[];
@@ -58,6 +59,8 @@ interface CartState {
   error: string | null;
 
   // Actions
+  loadForUser: (userId: string) => void;
+  clearSession: () => void;
   addItem: (p: AddToCartPayload) => void;
   removeItem: (lineId: string) => void;
   setQuantity: (lineId: string, quantity: number) => void;
@@ -106,6 +109,82 @@ interface CartState {
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
+type PersistedCartSession = {
+  items: CartLine[];
+  wishlist: WishlistEntry[];
+  checkoutStep: number;
+  checkoutDraft: CheckoutDraft;
+  savedAddresses: SavedAddress[];
+  selectedAddressId: string | null;
+  savedContacts: SavedContact[];
+  selectedContactId: string | null;
+  savedPaymentMethods: SavedPaymentMethod[];
+  selectedPaymentId: string | null;
+  orders: OrderRecord[];
+};
+
+const emptyCartSession = (): PersistedCartSession => ({
+  items: [],
+  wishlist: [],
+  checkoutStep: 0,
+  checkoutDraft: defaultCheckoutDraft(),
+  savedAddresses: [],
+  selectedAddressId: null,
+  savedContacts: [],
+  selectedContactId: null,
+  savedPaymentMethods: [],
+  selectedPaymentId: null,
+  orders: [],
+});
+
+const getCartStorageKey = (userId: string) => `cart_${userId}`;
+
+const readCartSession = (userId: string): PersistedCartSession => {
+  if (typeof window === "undefined") return emptyCartSession();
+
+  try {
+    const raw = localStorage.getItem(getCartStorageKey(userId));
+    if (!raw) return emptyCartSession();
+    const parsed = JSON.parse(raw);
+    return {
+      ...emptyCartSession(),
+      ...(parsed && typeof parsed === "object" ? parsed : {}),
+      checkoutDraft: {
+        ...defaultCheckoutDraft(),
+        ...(parsed?.checkoutDraft || {}),
+      },
+    };
+  } catch {
+    return emptyCartSession();
+  }
+};
+
+const writeCartSession = (userId: string | null, state: CartState) => {
+  if (typeof window === "undefined" || !userId) return;
+
+  const payload: PersistedCartSession = {
+    items: state.items,
+    wishlist: state.wishlist,
+    checkoutStep: state.checkoutStep,
+    checkoutDraft: state.checkoutDraft,
+    savedAddresses: state.savedAddresses,
+    selectedAddressId: state.selectedAddressId,
+    savedContacts: state.savedContacts,
+    selectedContactId: state.selectedContactId,
+    savedPaymentMethods: state.savedPaymentMethods,
+    selectedPaymentId: state.selectedPaymentId,
+    orders: state.orders,
+  };
+
+  localStorage.setItem(getCartStorageKey(userId), JSON.stringify(payload));
+};
+
+const totalsFor = (items: CartLine[]) => {
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  return { totalQuantity, subtotal, totalPrice: subtotal };
+};
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
@@ -113,6 +192,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       wishlist: [],
       toast: null,
+      activeUserId: null,
       checkoutStep: 0,
       checkoutDraft: defaultCheckoutDraft(),
       savedAddresses: [],
@@ -129,6 +209,30 @@ export const useCartStore = create<CartState>()(
       totalPrice: 0,
       loading: false,
       error: null,
+
+      loadForUser: (userId) => {
+        const session = readCartSession(userId);
+        set({
+          ...session,
+          ...totalsFor(session.items),
+          activeUserId: userId,
+          toast: null,
+          loading: false,
+          error: null,
+        });
+      },
+
+      clearSession: () => {
+        const session = emptyCartSession();
+        set({
+          ...session,
+          ...totalsFor(session.items),
+          activeUserId: null,
+          toast: null,
+          loading: false,
+          error: null,
+        });
+      },
 
       calculateTotals: () => {
         const items = get().items;
@@ -558,29 +662,23 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: "elevara-commerce",
+      name: "cart_guest",
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({
-        items: s.items,
-        wishlist: s.wishlist,
-        checkoutStep: s.checkoutStep,
-        checkoutDraft: s.checkoutDraft,
-        savedAddresses: s.savedAddresses,
-        selectedAddressId: s.selectedAddressId,
-        savedContacts: s.savedContacts,
-        selectedContactId: s.selectedContactId,
-        savedPaymentMethods: s.savedPaymentMethods,
-        selectedPaymentId: s.selectedPaymentId,
-        orders: s.orders,
-        totalQuantity: s.totalQuantity,
-        subtotal: s.subtotal,
-        totalPrice: s.totalPrice,
+        ...emptyCartSession(),
+        totalQuantity: 0,
+        subtotal: 0,
+        totalPrice: 0,
+        activeUserId: null,
       }),
     }
   )
 );
 
+useCartStore.subscribe((state) => {
+  writeCartSession(state.activeUserId, state);
+});
+
 export function selectCartQuantity(items: CartLine[]): number {
   return items.reduce((n, i) => n + i.quantity, 0);
 }
-

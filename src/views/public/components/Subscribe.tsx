@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Check } from "lucide-react";
 
 export default function Subscribe() {
   const [email, setEmail] = useState("");
