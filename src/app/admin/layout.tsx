@@ -44,6 +44,7 @@ const SIDEBAR_ITEMS = [
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
   const profile = useAuthStore((s) => s.profile);
@@ -51,6 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Auto-close sidebar on mobile
   useEffect(() => {
+    setMounted(true);
     const handleResize = () => {
       if (window.innerWidth < 1024) setIsSidebarOpen(false);
       else setIsSidebarOpen(true);
@@ -179,6 +181,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+
             <button className="relative p-2.5 text-white/40 hover:text-white hover:bg-white/[0.05] rounded-xl transition-all">
               <Bell size={18} strokeWidth={1.5} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-[#050308]" />

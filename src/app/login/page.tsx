@@ -266,7 +266,7 @@ function LoginPageInner() {
                   <button
                     type="submit"
                     disabled={busy}
-                    className="btn-liquid w-full disabled:opacity-55"
+                    className="btn-luxury w-full disabled:opacity-55"
                   >
                     {busy
                       ? "Opening..."

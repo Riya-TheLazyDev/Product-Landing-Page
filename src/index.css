@@ -8,7 +8,8 @@
   :root {
     --background: 225 26% 3%;
     --foreground: 0 0% 98%;
-    --primary: 35 25% 60%; /* Muted Antique Gold */
+    --primary: 35 25% 60%;
+    /* Muted Antique Gold */
     --primary-foreground: 0 0% 5%;
     --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 98%;
@@ -17,7 +18,14 @@
     --accent: 35 20% 40%;
     --accent-foreground: 0 0% 98%;
     --border: 0 0% 12%;
-    --radius: 0rem; /* Sharp edges for luxury feel */
+    --card: 225 26% 4%;
+    --card-foreground: 0 0% 98%;
+    --popover: 225 26% 4%;
+    --popover-foreground: 0 0% 98%;
+    --input: 0 0% 12%;
+    --ring: 35 25% 60%;
+    --radius: 0rem;
+    /* Sharp edges for luxury feel */
     --site-margin: 0px;
 
     /* Elevāra liquid luxury palette (reference: obsidian · charcoal · gold) */
@@ -34,6 +42,7 @@
     --cin-midnight-rgb: 8, 4, 15;
   }
 
+
   body {
     @apply bg-background text-foreground antialiased font-sans selection:bg-primary/25;
     overflow-x: hidden;
@@ -45,6 +54,26 @@
     padding: 0;
     letter-spacing: -0.01em;
     min-width: 320px;
+    transition: background-color 0.5s ease, background 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+  }
+
+  body,
+  header,
+  footer,
+  main,
+  section,
+  .glass-clear,
+  .glass-card,
+  .btn-liquid,
+  .btn-luxury,
+  .auth-input,
+  select,
+  table,
+  tr,
+  th,
+  td,
+  input {
+    transition: background-color 0.5s ease, background 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
   }
 
   /* Handle cursor suppression for touch devices */
@@ -60,12 +89,16 @@
     @apply relative z-[1] min-w-0 pt-14 md:pt-16;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     @apply font-serif font-light tracking-[-0.03em] leading-[1.05];
   }
 }
 
 @layer components {
+
   /* ——— Cinematic atmosphere (global) ——— */
   .cinematic-atmosphere {
     position: fixed;
@@ -79,35 +112,27 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(
-        165deg,
+      linear-gradient(165deg,
         #050505 0%,
         var(--cin-obsidian) 22%,
         #030303 48%,
         var(--cin-graphite) 72%,
-        var(--cin-deep) 100%
-      );
+        var(--cin-deep) 100%);
   }
 
   .cinematic-atmosphere__plume {
     position: absolute;
     inset: -15%;
     background:
-      radial-gradient(
-        ellipse 55% 45% at 72% 18%,
+      radial-gradient(ellipse 55% 45% at 72% 18%,
         rgba(var(--cin-charcoal-rgb), 0.28),
-        transparent 58%
-      ),
-      radial-gradient(
-        ellipse 50% 42% at 28% 55%,
+        transparent 58%),
+      radial-gradient(ellipse 50% 42% at 28% 55%,
         rgba(var(--cin-obsidian-rgb), 0.22),
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 60% 38% at 50% 88%,
+        transparent 55%),
+      radial-gradient(ellipse 60% 38% at 50% 88%,
         rgba(var(--cin-navy-rgb), 0.18),
-        transparent 60%
-      );
+        transparent 60%);
     filter: blur(48px);
     opacity: 0.75;
     animation: cinematicPlumeDrift 32s ease-in-out infinite;
@@ -118,21 +143,15 @@
     position: absolute;
     inset: -8%;
     background:
-      radial-gradient(
-        ellipse 70% 55% at 18% 22%,
+      radial-gradient(ellipse 70% 55% at 18% 22%,
         rgba(var(--cin-obsidian-rgb), 0.16),
-        transparent 58%
-      ),
-      radial-gradient(
-        ellipse 65% 50% at 82% 68%,
+        transparent 58%),
+      radial-gradient(ellipse 65% 50% at 82% 68%,
         rgba(var(--cin-gold), 0.08),
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 90% 40% at 50% 100%,
+        transparent 55%),
+      radial-gradient(ellipse 90% 40% at 50% 100%,
         rgba(10, 10, 15, 0.7),
-        transparent 62%
-      );
+        transparent 62%);
     animation: cinematicAmbientShift 28s ease-in-out infinite;
     will-change: transform, opacity;
   }
@@ -149,11 +168,9 @@
     height: min(55vw, 520px);
     top: -8%;
     right: -6%;
-    background: radial-gradient(
-      circle,
-      rgba(var(--cin-gold), 0.11),
-      transparent 68%
-    );
+    background: radial-gradient(circle,
+        rgba(var(--cin-gold), 0.11),
+        transparent 68%);
     animation: cinematicGlowGold 22s ease-in-out infinite;
   }
 
@@ -162,11 +179,9 @@
     height: min(60vw, 560px);
     bottom: 5%;
     left: -12%;
-    background: radial-gradient(
-      circle,
-      rgba(var(--cin-obsidian-rgb), 0.2),
-      transparent 70%
-    );
+    background: radial-gradient(circle,
+        rgba(var(--cin-obsidian-rgb), 0.2),
+        transparent 70%);
     animation: cinematicGlowBlue 26s ease-in-out infinite;
   }
 
@@ -175,22 +190,18 @@
     height: min(50vw, 440px);
     top: 38%;
     left: 42%;
-    background: radial-gradient(
-      circle,
-      rgba(var(--cin-charcoal-rgb), 0.14),
-      transparent 72%
-    );
+    background: radial-gradient(circle,
+        rgba(var(--cin-charcoal-rgb), 0.14),
+        transparent 72%);
     animation: cinematicGlowMid 32s ease-in-out infinite;
   }
 
   .cinematic-atmosphere__vignette {
     position: absolute;
     inset: 0;
-    background: radial-gradient(
-      ellipse 85% 75% at 50% 45%,
-      transparent 42%,
-      rgba(4, 5, 10, 0.55) 100%
-    );
+    background: radial-gradient(ellipse 85% 75% at 50% 45%,
+        transparent 42%,
+        rgba(4, 5, 10, 0.55) 100%);
   }
 
   .cinematic-atmosphere__grain {
@@ -217,16 +228,23 @@
   }
 
   @keyframes cinematicMistDrift {
-    from { transform: translateX(-2%) translateY(1%); }
-    to { transform: translateX(2%) translateY(-1%); }
+    from {
+      transform: translateX(-2%) translateY(1%);
+    }
+
+    to {
+      transform: translateX(2%) translateY(-1%);
+    }
   }
 
   @keyframes cinematicPlumeDrift {
+
     0%,
     100% {
       opacity: 0.65;
       transform: translate(0, 0) scale(1);
     }
+
     50% {
       opacity: 0.9;
       transform: translate(-2%, 1.5%) scale(1.04);
@@ -234,11 +252,13 @@
   }
 
   @keyframes cinematicAmbientShift {
+
     0%,
     100% {
       opacity: 0.85;
       transform: translate(0, 0) scale(1);
     }
+
     50% {
       opacity: 1;
       transform: translate(1.5%, -1%) scale(1.03);
@@ -246,11 +266,13 @@
   }
 
   @keyframes cinematicGlowGold {
+
     0%,
     100% {
       opacity: 0.75;
       transform: translate(0, 0);
     }
+
     50% {
       opacity: 1;
       transform: translate(-3%, 2%);
@@ -258,11 +280,13 @@
   }
 
   @keyframes cinematicGlowBlue {
+
     0%,
     100% {
       opacity: 0.7;
       transform: translate(0, 0);
     }
+
     50% {
       opacity: 0.95;
       transform: translate(4%, -2%);
@@ -270,16 +294,19 @@
   }
 
   @keyframes cinematicGlowMid {
+
     0%,
     100% {
       opacity: 0.5;
     }
+
     50% {
       opacity: 0.75;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+
     .cinematic-atmosphere__shift,
     .cinematic-atmosphere__plume,
     .cinematic-atmosphere__glow {
@@ -322,57 +349,41 @@
 
   .cinematic-section--a::before {
     background:
-      linear-gradient(
-        180deg,
+      linear-gradient(180deg,
         rgba(8, 8, 8, 0.55) 0%,
         rgba(4, 4, 4, 0.12) 45%,
-        rgba(10, 10, 10, 0.5) 100%
-      ),
-      radial-gradient(
-        ellipse 90% 52% at 18% 6%,
+        rgba(10, 10, 10, 0.5) 100%),
+      radial-gradient(ellipse 90% 52% at 18% 6%,
         rgba(var(--cin-obsidian-rgb), 0.14),
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 70% 42% at 86% 78%,
+        transparent 55%),
+      radial-gradient(ellipse 70% 42% at 86% 78%,
         rgba(var(--cin-gold), 0.06),
-        transparent 55%
-      );
+        transparent 55%);
   }
 
   .cinematic-section--b::before {
     background:
-      linear-gradient(
-        175deg,
+      linear-gradient(175deg,
         rgba(12, 12, 12, 0.5) 0%,
         rgba(6, 6, 6, 0.18) 50%,
-        rgba(9, 9, 9, 0.48) 100%
-      ),
-      radial-gradient(
-        ellipse 70% 45% at 100% 50%,
+        rgba(9, 9, 9, 0.48) 100%),
+      radial-gradient(ellipse 70% 45% at 100% 50%,
         rgba(var(--cin-charcoal-rgb), 0.12),
-        transparent 60%
-      ),
-      radial-gradient(
-        ellipse 45% 35% at 14% 70%,
+        transparent 60%),
+      radial-gradient(ellipse 45% 35% at 14% 70%,
         rgba(var(--cin-gold), 0.05),
-        transparent 62%
-      );
+        transparent 62%);
   }
 
   .cinematic-section--c::before {
     background:
-      linear-gradient(
-        185deg,
+      linear-gradient(185deg,
         rgba(7, 7, 7, 0.48) 0%,
         rgba(4, 4, 4, 0.2) 55%,
-        rgba(5, 5, 5, 0.55) 100%
-      ),
-      radial-gradient(
-        ellipse 60% 40% at 0% 80%,
+        rgba(5, 5, 5, 0.55) 100%),
+      radial-gradient(ellipse 60% 40% at 0% 80%,
         rgba(var(--cin-obsidian-rgb), 0.1),
-        transparent 58%
-      );
+        transparent 58%);
   }
 
   .environment-scene {
@@ -455,29 +466,23 @@
 
   .hero-environment__scrim--readable {
     background:
-      linear-gradient(
-        90deg,
+      linear-gradient(90deg,
         rgba(0, 0, 0, 0.62) 0%,
         rgba(0, 0, 0, 0.28) 42%,
         rgba(0, 0, 0, 0.08) 62%,
-        transparent 78%
-      ),
-      linear-gradient(
-        180deg,
+        transparent 78%),
+      linear-gradient(180deg,
         rgba(0, 0, 0, 0.35) 0%,
         transparent 38%,
-        rgba(0, 0, 0, 0.55) 100%
-      );
+        rgba(0, 0, 0, 0.55) 100%);
   }
 
   /* Reference glass: no tint — only vertical transparency + blur */
   .glass-clear {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.4) 45%,
-      rgba(255, 255, 255, 0.1) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.4) 45%,
+        rgba(255, 255, 255, 0.1) 100%);
     backdrop-filter: blur(28px) saturate(110%);
     -webkit-backdrop-filter: blur(28px) saturate(110%);
     border: 1px solid rgba(255, 255, 255, 0.14);
@@ -499,22 +504,16 @@
     z-index: 0;
     pointer-events: none;
     background:
-      linear-gradient(
-        165deg,
+      linear-gradient(165deg,
         rgba(10, 10, 12, 0.72) 0%,
         rgba(4, 4, 6, 0.28) 38%,
-        rgba(2, 2, 3, 0.94) 100%
-      ),
-      radial-gradient(
-        ellipse 100% 80% at 50% -15%,
+        rgba(2, 2, 3, 0.94) 100%),
+      radial-gradient(ellipse 100% 80% at 50% -15%,
         rgba(var(--cin-charcoal-rgb), 0.14),
-        transparent 52%
-      ),
-      radial-gradient(
-        ellipse 58% 46% at 78% 56%,
+        transparent 52%),
+      radial-gradient(ellipse 58% 46% at 78% 56%,
         rgba(var(--cin-obsidian-rgb), 0.2),
-        transparent 58%
-      );
+        transparent 58%);
   }
 
   .cinematic-hero::after {
@@ -523,11 +522,9 @@
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background: linear-gradient(
-      to top,
-      var(--cin-deep) 0%,
-      transparent 38%
-    );
+    background: linear-gradient(to top,
+        var(--cin-deep) 0%,
+        transparent 38%);
     opacity: 0.9;
   }
 
@@ -537,16 +534,12 @@
     inset: 0;
     z-index: 0;
     background:
-      radial-gradient(
-        ellipse 120% 60% at 50% 110%,
+      radial-gradient(ellipse 120% 60% at 50% 110%,
         rgba(var(--cin-navy-rgb), 0.35),
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 90% 50% at 20% 30%,
+        transparent 55%),
+      radial-gradient(ellipse 90% 50% at 20% 30%,
         rgba(var(--cin-charcoal-rgb), 0.12),
-        transparent 50%
-      );
+        transparent 50%);
   }
 
   .hero-environment {
@@ -629,20 +622,18 @@
   .glass-card {
     @apply glass-clear glass-clear--card;
     transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 
+    box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.12),
       0 12px 32px -12px rgba(0, 0, 0, 0.5);
   }
 
   .glass-card:hover {
     border-color: rgba(255, 255, 255, 0.22);
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(255, 255, 255, 0.04) 50%,
-      rgba(255, 255, 255, 0.12) 100%
-    );
-    box-shadow: 
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0.04) 50%,
+        rgba(255, 255, 255, 0.12) 100%);
+    box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.25),
       0 24px 48px -18px rgba(0, 0, 0, 0.7);
     transform: translateY(-2px);
@@ -691,11 +682,9 @@
   }
 
   .glass-obsidian {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(2, 2, 4, 0.94) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(2, 2, 4, 0.94) 100%);
     backdrop-filter: blur(20px) saturate(115%);
     -webkit-backdrop-filter: blur(20px) saturate(115%);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -713,14 +702,12 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 40%,
-      rgba(255, 255, 255, 0.04) 48%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.04) 52%,
-      transparent 60%
-    );
+    background: linear-gradient(105deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.04) 48%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.04) 52%,
+        transparent 60%);
     transform: translateX(-100%);
     transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
@@ -733,23 +720,19 @@
 
   .liquid-blob {
     border-radius: 50%;
-    background: radial-gradient(
-      circle at 30% 30%,
-      rgba(var(--cin-charcoal-rgb), 0.18),
-      rgba(var(--cin-obsidian-rgb), 0.1) 42%,
-      transparent 70%
-    );
+    background: radial-gradient(circle at 30% 30%,
+        rgba(var(--cin-charcoal-rgb), 0.18),
+        rgba(var(--cin-obsidian-rgb), 0.1) 42%,
+        transparent 70%);
     filter: blur(60px);
     animation: liquidDrift 14s ease-in-out infinite;
   }
 
   .liquid-blob--gold {
-    background: radial-gradient(
-      circle at 70% 40%,
-      rgba(var(--cin-gold), 0.14),
-      rgba(var(--cin-charcoal-rgb), 0.06) 50%,
-      transparent 70%
-    );
+    background: radial-gradient(circle at 70% 40%,
+        rgba(var(--cin-gold), 0.14),
+        rgba(var(--cin-charcoal-rgb), 0.06) 50%,
+        transparent 70%);
   }
 
   .text-accent-gold {
@@ -758,12 +741,10 @@
   }
 
   .gradient-text {
-    background: linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(var(--cin-gold), 0.95) 45%,
-      rgba(255, 255, 255, 0.85) 100%
-    );
+    background: linear-gradient(120deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(var(--cin-gold), 0.95) 45%,
+        rgba(255, 255, 255, 0.85) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -783,12 +764,10 @@
 
   .btn-liquid {
     @apply glass-shine relative overflow-hidden rounded-full border border-white/10 px-8 py-3.5 text-[9px] font-bold uppercase tracking-[0.32em] text-white transition-all duration-700;
-    background: linear-gradient(
-      135deg,
-      rgba(var(--cin-obsidian-rgb), 0.35) 0%,
-      rgba(15, 15, 20, 0.75) 50%,
-      rgba(8, 8, 12, 0.9) 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(var(--cin-obsidian-rgb), 0.35) 0%,
+        rgba(15, 15, 20, 0.75) 50%,
+        rgba(8, 8, 12, 0.9) 100%);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.12),
       0 10px 30px -10px rgba(0, 0, 0, 0.6),
@@ -806,12 +785,10 @@
 
   .btn-liquid--ghost {
     @apply glass-clear;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.14) 0%,
-      rgba(0, 0, 0, 0.4) 50%,
-      rgba(255, 255, 255, 0.1) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(255, 255, 255, 0.1) 100%);
   }
 
   .trust-glass-bar {
@@ -820,11 +797,9 @@
 
   .trust-glass-item {
     @apply relative rounded-2xl border border-white/[0.1] p-5 transition-all duration-700;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.02) 100%);
   }
 
   .trust-glass-item:hover {
@@ -842,12 +817,10 @@
 
   .page-hero-fullbleed__scrim {
     @apply absolute inset-0 z-[1];
-    background: linear-gradient(
-        90deg,
+    background: linear-gradient(90deg,
         rgba(0, 0, 0, 0.7) 0%,
         rgba(0, 0, 0, 0.35) 40%,
-        transparent 70%
-      ),
+        transparent 70%),
       linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent 50%, rgba(0, 0, 0, 0.75));
   }
 
@@ -856,13 +829,11 @@
   }
 
   .text-mood-gradient {
-    background: linear-gradient(
-      115deg,
-      #f0e6d4 0%,
-      #d6c3a5 38%,
-      #c0b090 72%,
-      #d6c3a5 100%
-    );
+    background: linear-gradient(115deg,
+        #f0e6d4 0%,
+        #d6c3a5 38%,
+        #c0b090 72%,
+        #d6c3a5 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -922,12 +893,10 @@
 
   .collection-card {
     @apply relative overflow-hidden rounded-2xl border border-white/[0.09];
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.07) 0%,
-      rgba(255, 255, 255, 0.02) 55%,
-      rgba(0, 0, 0, 0.35) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.07) 0%,
+        rgba(255, 255, 255, 0.02) 55%,
+        rgba(0, 0, 0, 0.35) 100%);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     transition: border-color 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -982,11 +951,9 @@
 
   .collection-card__add {
     @apply absolute bottom-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white transition duration-500;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.14) 0%,
-      rgba(255, 255, 255, 0.04) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0.04) 100%);
     backdrop-filter: blur(10px);
   }
 
@@ -996,13 +963,16 @@
   }
 
   @keyframes liquidDrift {
+
     0%,
     100% {
       transform: translate(0, 0) scale(1);
     }
+
     33% {
       transform: translate(2%, -3%) scale(1.05);
     }
+
     66% {
       transform: translate(-2%, 2%) scale(0.98);
     }
@@ -1111,14 +1081,12 @@
     left: -100%;
     width: 300%;
     height: 300%;
-    background: linear-gradient(
-      45deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.01) 45%,
-      rgba(255, 255, 255, 0.03) 50%,
-      rgba(255, 255, 255, 0.01) 55%,
-      transparent 100%
-    );
+    background: linear-gradient(45deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.01) 45%,
+        rgba(255, 255, 255, 0.03) 50%,
+        rgba(255, 255, 255, 0.01) 55%,
+        transparent 100%);
     transform: rotate(25deg);
     transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
@@ -1187,14 +1155,23 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(214,195,165,0.2), transparent);
-  border: 1px solid rgba(214,195,165,0.2);
+  background: linear-gradient(135deg, rgba(214, 195, 165, 0.2), transparent);
+  border: 1px solid rgba(214, 195, 165, 0.2);
   animation: bubbleFloat 2s ease-in-out infinite;
 }
 
 @keyframes bubbleFloat {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
-  50% { transform: translateY(-10px) scale(1.1); opacity: 1; }
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(-10px) scale(1.1);
+    opacity: 1;
+  }
 }
 
 /* Custom Scrollbar for Admin */
@@ -1234,18 +1211,22 @@ select {
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 12px;
-  box-shadow: 0 4px 20px -5px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.3);
 }
 
 select:hover {
-  border-color: rgba(214, 195, 165, 0.2) !important; /* Subtle gold border glow */
-  box-shadow: 0 8px 30px -5px rgba(0,0,0,0.5), inset 0 0 10px rgba(214, 195, 165, 0.05);
-  background-color: #0d0a14 !important; /* Solid dark instead of translucent for consistent native render */
+  border-color: rgba(214, 195, 165, 0.2) !important;
+  /* Subtle gold border glow */
+  box-shadow: 0 8px 30px -5px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(214, 195, 165, 0.05);
+  background-color: #0d0a14 !important;
+  /* Solid dark instead of translucent for consistent native render */
 }
 
 select option {
-  background-color: #050308; /* Solid deep obsidian */
-  color: #d6c3a5; /* Gold text */
+  background-color: #050308;
+  /* Solid deep obsidian */
+  color: #d6c3a5;
+  /* Gold text */
   padding: 12px;
   font-family: inherit;
   font-weight: 500;
@@ -1254,6 +1235,168 @@ select option {
 select option:checked,
 select option:hover,
 select option:focus {
-  background-color: #1a1610 !important; /* Solid dark gold tint to fix white background bug */
+  background-color: #1a1610 !important;
+  /* Solid dark gold tint to fix white background bug */
   color: #ffffff !important;
+}
+
+/* 1. Light Mode Body Background Overrides */
+.light body {
+  background:
+    radial-gradient(ellipse 75% 55% at 15% -8%, rgba(249, 236, 239, 0.35), transparent 58%),
+    radial-gradient(ellipse 65% 50% at 88% 12%, rgba(242, 237, 249, 0.3), transparent 52%),
+    radial-gradient(ellipse 90% 40% at 50% 100%, rgba(253, 251, 248, 0.8), transparent 55%),
+    linear-gradient(168deg, #FFFDFC 0%, #FDFBF8 35%, #F8F4EF 100%) !important;
+}
+
+/* 2. Cinematic Atmosphere Overrides */
+.light .cinematic-atmosphere__base {
+  background: linear-gradient(165deg,
+      #FDFBF8 0%,
+      #F8F4EF 40%,
+      #FFFDFC 100%) !important;
+}
+
+.light .cinematic-atmosphere__plume {
+  background:
+    radial-gradient(ellipse 55% 45% at 72% 18%, rgba(249, 236, 239, 0.5), transparent 58%),
+    radial-gradient(ellipse 50% 42% at 28% 55%, rgba(242, 237, 249, 0.45), transparent 55%),
+    radial-gradient(ellipse 60% 38% at 50% 88%, rgba(234, 242, 234, 0.5), transparent 60%) !important;
+}
+
+.light .cinematic-atmosphere__shift {
+  background:
+    radial-gradient(ellipse 70% 55% at 18% 22%, rgba(245, 235, 221, 0.4), transparent 58%),
+    radial-gradient(ellipse 65% 50% at 82% 68%, rgba(214, 185, 154, 0.2), transparent 55%) !important;
+}
+
+.light .cinematic-atmosphere__glow--gold {
+  background: radial-gradient(circle, rgba(214, 185, 154, 0.22), transparent 68%) !important;
+}
+
+.light .cinematic-atmosphere__glow--midnight {
+  background: radial-gradient(circle, rgba(242, 237, 249, 0.35), transparent 70%) !important;
+}
+
+.light .cinematic-atmosphere__glow--charcoal {
+  background: radial-gradient(circle, rgba(249, 236, 239, 0.4), transparent 72%) !important;
+}
+
+.light .cinematic-atmosphere__vignette {
+  background: radial-gradient(ellipse 85% 75% at 50% 45%,
+      transparent 42%,
+      rgba(232, 221, 210, 0.12) 100%) !important;
+}
+
+.light .cinematic-atmosphere__mist {
+  background:
+    radial-gradient(ellipse 60% 32% at 32% 75%, rgba(245, 235, 221, 0.35), transparent 70%),
+    radial-gradient(ellipse 70% 38% at 68% 68%, rgba(249, 236, 239, 0.3), transparent 68%),
+    linear-gradient(to top, rgba(253, 251, 248, 0.8), transparent) !important;
+}
+
+/* 3. Text Contrast and Overrides for Hardcoded text-white */
+.light .text-white {
+  color: #2F2B28 !important;
+}
+
+.light .text-white\/90,
+.light .text-white\/88,
+.light .text-white\/85,
+.light .text-white\/75,
+.light .text-white\/70,
+.light .text-white\/62,
+.light .text-white\/60 {
+  color: rgba(47, 43, 40, 0.9) !important;
+}
+
+.light .text-white\/54,
+.light .text-white\/50,
+.light .text-white\/45,
+.light .text-white\/44,
+.light .text-white\/40 {
+  color: rgba(110, 102, 95, 0.8) !important;
+}
+
+.light .text-white\/36,
+.light .text-white\/34,
+.light .text-white\/30 {
+  color: rgba(110, 102, 95, 0.65) !important;
+}
+
+.light .text-white\/22,
+.light .text-white\/20,
+.light .text-white\/15,
+.light .text-white\/10 {
+  color: rgba(110, 102, 95, 0.38) !important;
+}
+
+/* Ensure blog cards, collections banners, and other white-text overlay containers keep their light text */
+.light article h3.text-white,
+.light article p.text-white,
+.light article span.text-white,
+.light article .text-white\/45,
+.light article .text-white\/62,
+.light article .text-white\/88,
+.light article .text-white\/90 {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.light article .text-white\/45 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.light article .text-white\/62 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.light article .text-white\/38 {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.light .gradient-text {
+  background: linear-gradient(120deg,
+      #2F2B28 0%,
+      #D6B99A 60%,
+      #6E665F 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.light .text-mood-gradient {
+  background: linear-gradient(115deg,
+      #2F2B28 0%,
+      #D6B99A 50%,
+      #6E665F 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.light .text-primary\/45 {
+  color: rgba(214, 185, 154, 0.95) !important;
+}
+
+/* 4. Borders and Backgrounds (Hardcoded Overrides) */
+.light .border-white\/10,
+.light .border-white\/20,
+.light .border-white\/5,
+.light .border-white\/15,
+.light .border-white\/22,
+.light .border-white\/\[0\.1\],
+.light .border-white\/\[0\.09\],
+.light .border-white\/\[0\.07\],
+.light .border-white\/\[0\.05\],
+.light .border-white\/\[0\.06\],
+.light .border-white\/\[0\.04\] {
+  border-color: rgba(232, 221, 210, 0.8) !important;
+}
+
+.light .bg-white\/\[0\.02\] {
+  background-color: rgba(110, 102, 95, 0.02) !important;
+}
+
+.light .bg-white\/\[0\.03\] {
+  background-color: rgba(110, 102, 95, 0.04) !important;
 }

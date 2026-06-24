@@ -9,7 +9,6 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useMedia } from "@/hooks/useMedia";
 import { resolveMediaUrl } from "@/services/mediaService";
-
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -124,6 +123,8 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-5 text-[8px] font-bold uppercase tracking-[0.45em] text-white/30 md:gap-7">
+
+
             <Link
               href="/cart"
               className="relative flex items-center gap-2 text-white/30 transition-all hover:text-primary group"

@@ -33,6 +33,8 @@ export const viewport: Viewport = {
 
 import { headers } from "next/headers";
 
+import { ThemeProvider } from "@/context/ThemeContext";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -45,11 +47,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
-        {!isAdmin && <CinematicAtmosphere />}
-        {!isAdmin && <Header />}
-        <main className={isAdmin ? "" : "main-content"}>{children}</main>
-        {!isAdmin && <Footer />}
-        <CartToast />
+        <ThemeProvider>
+          {!isAdmin && <CinematicAtmosphere />}
+          {!isAdmin && <Header />}
+          <main className={isAdmin ? "" : "main-content"}>{children}</main>
+          {!isAdmin && <Footer />}
+          <CartToast />
+        </ThemeProvider>
       </body>
     </html>
   );
