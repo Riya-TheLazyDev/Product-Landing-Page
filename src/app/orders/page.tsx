@@ -69,8 +69,13 @@ export default function OrdersPage() {
                       <p className="text-[10px] uppercase tracking-[0.35em] text-primary">
                         {order.orderNumber}
                       </p>
-                      <h2 className="mt-3 font-serif text-3xl text-white">
+                      <h2 className="mt-3 flex items-center gap-3 font-serif text-3xl text-white">
                         {order.orderStatus}
+                        {order.orderStatus === "Cancelled" && (
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-widest bg-red-900/30 text-red-400 px-2.5 py-1 rounded-full border border-red-500/20">
+                            Cancelled
+                          </span>
+                        )}
                       </h2>
                       <p className="mt-2 text-sm text-white/45">
                         {new Date(order.createdAt).toLocaleDateString()} ·{" "}

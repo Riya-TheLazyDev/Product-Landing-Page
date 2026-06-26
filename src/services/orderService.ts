@@ -62,6 +62,19 @@ export const orderService = {
     }
   },
 
+  async cancelOrder(id: string | number): Promise<ApiResponse<null>> {
+    try {
+      const response = await apiClient.put<ApiResponse<null>>(`/orders/${id}/cancel`);
+      return response.data;
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } }; message?: string };
+      return {
+        success: false,
+        error: err.response?.data?.error || err.message || `Failed to cancel order ${id}`,
+      };
+    }
+  },
+
   async getAdminOrders(params?: {
     order_status?: string;
     payment_status?: string;

@@ -299,6 +299,55 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+/** PUT /api/orders/:id/cancel */
+export const cancelOrder = async (req, res) => {
+  const connection = await pool.getConnection();
+  let began = false;
+  try {
+    const orderId = parseInt(req.params.id, 10);
+    if (Number.isNaN(orderId)) {
+      return sendError(res, "Invalid order ID", 400);
+    }
+
+    const order = await findOrderById(orderId);
+    if (!order) {
+      return sendError(res, "Order not found", 404);
+    }
+
+    if (order.user_id !== req.user.id) {
+      return sendError(res, "Not authorized to cancel this order", 403);
+    }
+
+    if (order.order_status === "Cancelled") {
+      return sendError(res, "Order is already cancelled", 400);
+    }
+
+    if (order.order_status !== "Pending" && order.order_status !== "Processing") {
+      return sendError(res, `Order cannot be cancelled because it is already ${order.order_status}`, 400);
+    }
+
+    await connection.beginTransaction();
+    began = true;
+
+    await connection.query(
+      "UPDATE orders SET order_status = 'Cancelled', updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+      [orderId]
+    );
+
+    await restoreOrderStock(connection, orderId);
+
+    await connection.commit();
+
+    return sendSuccess(res, null, "Order cancelled successfully");
+  } catch (error) {
+    if (began) await connection.rollback();
+    console.error("CancelOrder error:", error.message);
+    return sendError(res, "Failed to cancel order", 500);
+  } finally {
+    connection.release();
+  }
+};
+
 /** Restore inventory when order is cancelled/returned/refunded */
 async function restoreOrderStock(connection, orderId) {
   const [items] = await connection.query(

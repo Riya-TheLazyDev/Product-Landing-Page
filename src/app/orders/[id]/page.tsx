@@ -15,6 +15,21 @@ export default function OrderDetailPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const handleCancelOrder = async () => {
+    if (!order) return;
+    setIsCancelling(true);
+    const res = await orderService.cancelOrder(order.id);
+    if (res.success) {
+      setOrder({ ...order, orderStatus: "Cancelled" });
+      setIsCancelModalOpen(false);
+    } else {
+      alert(res.error || "Failed to cancel order");
+    }
+    setIsCancelling(false);
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -54,8 +69,28 @@ export default function OrderDetailPage() {
           </div>
         ) : (
           <div className="glass-liquid rounded-3xl p-8 md:p-10 max-w-3xl">
-            <p className="text-[10px] uppercase tracking-[0.35em] text-primary">{order.orderNumber}</p>
-            <h1 className="mt-4 font-serif text-4xl text-white">{order.orderStatus}</h1>
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-primary">{order.orderNumber}</p>
+                <h1 className="mt-4 flex items-center gap-4 font-serif text-4xl text-white">
+                  {order.orderStatus}
+                  {order.orderStatus === "Cancelled" && (
+                    <span className="text-xs font-sans font-bold uppercase tracking-widest bg-red-900/30 text-red-400 px-3 py-1 rounded-full border border-red-500/20">
+                      Cancelled
+                    </span>
+                  )}
+                </h1>
+              </div>
+              {(order.orderStatus === "Pending" || order.orderStatus === "Processing") && (
+                <button
+                  type="button"
+                  onClick={() => setIsCancelModalOpen(true)}
+                  className="glass-liquid text-xs font-bold uppercase tracking-widest text-red-400 hover:text-red-300 hover:border-red-400/50 transition border border-white/10 px-4 py-2.5 rounded-xl"
+                >
+                  Cancel Order
+                </button>
+              )}
+            </div>
             <p className="mt-2 text-sm text-white/45">
               Placed {new Date(order.createdAt).toLocaleString()}
             </p>
@@ -100,6 +135,38 @@ export default function OrderDetailPage() {
             <div className="mt-8 flex flex-wrap gap-4 text-[10px] uppercase tracking-widest text-white/40">
               <span>Payment: {order.paymentMethod}</span>
               <span>Status: {order.paymentStatus}</span>
+            </div>
+          </div>
+        )}
+
+        {isCancelModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="glass-liquid p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl border border-white/10">
+              <h3 className="font-serif text-3xl text-white mb-4">Cancel Order?</h3>
+              <p className="text-sm text-white/60 mb-8 leading-relaxed">
+                Are you sure you want to cancel this order?
+                <br />
+                This action cannot be undone.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsCancelModalOpen(false)}
+                  className="w-full bg-white text-black font-bold uppercase tracking-[0.2em] text-[10px] py-4 rounded-xl hover:bg-primary transition"
+                  disabled={isCancelling}
+                >
+                  Keep Order
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelOrder}
+                  className="w-full glass-liquid font-bold uppercase tracking-[0.2em] text-[10px] text-red-400 py-4 rounded-xl border border-white/10 hover:border-red-500/30 hover:bg-red-950/20 transition flex justify-center items-center gap-2"
+                  disabled={isCancelling}
+                >
+                  {isCancelling && <Loader2 size={14} className="animate-spin" />}
+                  Cancel Order
+                </button>
+              </div>
             </div>
           </div>
         )}
