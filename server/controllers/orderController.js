@@ -348,6 +348,59 @@ export const cancelOrder = async (req, res) => {
   }
 };
 
+/** PUT /api/orders/:id/exchange */
+export const requestExchange = async (req, res) => {
+  const connection = await pool.getConnection();
+  let began = false;
+  try {
+    const orderId = parseInt(req.params.id, 10);
+    const { reason } = req.body;
+
+    if (Number.isNaN(orderId)) {
+      return sendError(res, "Invalid order ID", 400);
+    }
+    if (!reason || !reason.trim()) {
+      return sendError(res, "Exchange reason is required", 400);
+    }
+
+    const order = await findOrderById(orderId);
+    if (!order) {
+      return sendError(res, "Order not found", 404);
+    }
+
+    if (order.user_id !== req.user.id) {
+      return sendError(res, "Not authorized to exchange this order", 403);
+    }
+
+    if (order.order_status !== "Delivered") {
+      return sendError(res, `Order cannot be exchanged because it is ${order.order_status}`, 400);
+    }
+
+    await connection.beginTransaction();
+    began = true;
+
+    await connection.query(
+      `UPDATE orders SET 
+        order_status = 'Exchange Requested', 
+        exchange_reason = ?, 
+        exchange_requested_at = CURRENT_TIMESTAMP,
+        updated_at = CURRENT_TIMESTAMP 
+       WHERE id = ?`,
+      [reason.trim(), orderId]
+    );
+
+    await connection.commit();
+
+    return sendSuccess(res, null, "Exchange requested successfully");
+  } catch (error) {
+    if (began) await connection.rollback();
+    console.error("requestExchange error:", error.message);
+    return sendError(res, "Failed to request exchange", 500);
+  } finally {
+    connection.release();
+  }
+};
+
 /** Restore inventory when order is cancelled/returned/refunded */
 async function restoreOrderStock(connection, orderId) {
   const [items] = await connection.query(

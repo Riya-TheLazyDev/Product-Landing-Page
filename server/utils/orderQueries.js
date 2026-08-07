@@ -8,6 +8,9 @@ export const ORDER_STATUSES = [
   "Cancelled",
   "Returned",
   "Refunded",
+  "Exchange Requested",
+  "Exchange Approved",
+  "Exchange Rejected",
 ];
 
 export const PAYMENT_STATUSES = ["Pending", "Paid", "Failed", "Refunded"];

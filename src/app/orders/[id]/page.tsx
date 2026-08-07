@@ -17,6 +17,10 @@ export default function OrderDetailPage() {
   const [error, setError] = useState("");
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
+  const [isExchanging, setIsExchanging] = useState(false);
+  const [exchangeReason, setExchangeReason] = useState("");
+  const [exchangeOtherReason, setExchangeOtherReason] = useState("");
 
   const handleCancelOrder = async () => {
     if (!order) return;
@@ -29,6 +33,25 @@ export default function OrderDetailPage() {
       alert(res.error || "Failed to cancel order");
     }
     setIsCancelling(false);
+  };
+
+  const handleRequestExchange = async () => {
+    if (!order) return;
+    const finalReason = exchangeReason === "Other" ? exchangeOtherReason : exchangeReason;
+    if (!finalReason.trim()) {
+      alert("Please provide an exchange reason.");
+      return;
+    }
+
+    setIsExchanging(true);
+    const res = await orderService.requestExchange(order.id, finalReason);
+    if (res.success) {
+      setOrder({ ...order, orderStatus: "Exchange Requested" });
+      setIsExchangeModalOpen(false);
+    } else {
+      alert(res.error || "Failed to request exchange");
+    }
+    setIsExchanging(false);
   };
 
   useEffect(() => {
@@ -89,6 +112,21 @@ export default function OrderDetailPage() {
                 >
                   Cancel Order
                 </button>
+              )}
+              {order.orderStatus === "Delivered" && (
+                <button
+                  type="button"
+                  onClick={() => setIsExchangeModalOpen(true)}
+                  className="glass-liquid text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 hover:border-primary/50 transition border border-white/10 px-4 py-2.5 rounded-xl"
+                >
+                  Request Exchange
+                </button>
+              )}
+              {order.orderStatus === "Exchange Requested" && (
+                <div className="text-right">
+                  <p className="text-[10px] uppercase tracking-widest text-primary font-bold">Exchange Requested</p>
+                  <p className="text-[9px] text-white/50 mt-1 uppercase tracking-widest">Waiting for Admin Approval</p>
+                </div>
               )}
             </div>
             <p className="mt-2 text-sm text-white/45">
@@ -165,6 +203,62 @@ export default function OrderDetailPage() {
                 >
                   {isCancelling && <Loader2 size={14} className="animate-spin" />}
                   Cancel Order
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isExchangeModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="glass-liquid p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl border border-white/10">
+              <h3 className="font-serif text-3xl text-white mb-4">Request Exchange</h3>
+              <p className="text-sm text-white/60 mb-6 leading-relaxed">
+                Please tell us why you would like to exchange this order.
+              </p>
+              
+              <div className="text-left mb-6 space-y-4">
+                <select
+                  value={exchangeReason}
+                  onChange={(e) => setExchangeReason(e.target.value)}
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/50"
+                >
+                  <option value="" disabled>Select a reason</option>
+                  <option value="Wrong Size / Variant">Wrong Size / Variant</option>
+                  <option value="Received Wrong Product">Received Wrong Product</option>
+                  <option value="Damaged Product">Damaged Product</option>
+                  <option value="Product Not as Expected">Product Not as Expected</option>
+                  <option value="Quality Issue">Quality Issue</option>
+                  <option value="Other">Other</option>
+                </select>
+                
+                {exchangeReason === "Other" && (
+                  <textarea
+                    value={exchangeOtherReason}
+                    onChange={(e) => setExchangeOtherReason(e.target.value)}
+                    placeholder="Please provide details..."
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/50 resize-none h-24"
+                  />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsExchangeModalOpen(false)}
+                  className="w-full bg-white/10 text-white font-bold uppercase tracking-[0.2em] text-[10px] py-4 rounded-xl hover:bg-white/20 transition"
+                  disabled={isExchanging}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRequestExchange}
+                  className="w-full bg-primary font-bold uppercase tracking-[0.2em] text-[10px] text-black py-4 rounded-xl border border-primary/20 hover:border-primary hover:bg-primary/90 transition flex justify-center items-center gap-2"
+                  disabled={isExchanging || !exchangeReason || (exchangeReason === "Other" && !exchangeOtherReason.trim())}
+                >
+                  {isExchanging && <Loader2 size={14} className="animate-spin" />}
+                  Submit Request
                 </button>
               </div>
             </div>

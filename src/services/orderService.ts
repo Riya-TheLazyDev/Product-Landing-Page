@@ -75,6 +75,19 @@ export const orderService = {
     }
   },
 
+  async requestExchange(id: string | number, reason: string): Promise<ApiResponse<null>> {
+    try {
+      const response = await apiClient.put<ApiResponse<null>>(`/orders/${id}/exchange`, { reason });
+      return response.data;
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } }; message?: string };
+      return {
+        success: false,
+        error: err.response?.data?.error || err.message || `Failed to request exchange for order ${id}`,
+      };
+    }
+  },
+
   async getAdminOrders(params?: {
     order_status?: string;
     payment_status?: string;
